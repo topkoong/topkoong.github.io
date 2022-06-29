@@ -1,0 +1,40 @@
+name: Deploy to Github Pages
+
+on:
+  push:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checking out the latest code
+        uses: actions/checkout@v3
+
+      - name: Setting up nodejs for building codebase and Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install yarn   
+      - run: npm install -g yarn
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build
+        run: |
+          yarn run build
+          yarn run export
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./out
