@@ -27,13 +27,17 @@ jobs:
       - name: Install yarn   
       - run: npm install -g yarn
 
-      - name: Install dependencies
+      - name: Install packages
         run: yarn install
+
+      - name: Lint
+        run: yarn lint
 
       - name: Build
         run: yarn run build
 
-      - run: yarn export
+      - name: Export
+        run: yarn export
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
