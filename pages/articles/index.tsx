@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import type { NextPage } from 'next';
-import { articles } from '../../mockData/articles';
+import getArticles from '../../utils/getArticles';
 
 const handleArticleBackgroundColor = (index: number) => {
   if (index % 4 === 0) return 'bg-light-indigo';
@@ -9,7 +9,7 @@ const handleArticleBackgroundColor = (index: number) => {
   return 'bg-white';
 };
 
-const Articles: NextPage = () => {
+const Articles: NextPage = ({ articles }: any) => {
   return (
     <>
       <Head>
@@ -24,7 +24,7 @@ const Articles: NextPage = () => {
           </h1>
         </header>
         <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-3 lg:gap-4'>
-          {articles.map((article, idx) => (
+          {articles.map((article: any, idx: number) => (
             <li key={article.title}>
               <article
                 className={`my-8 p-8 border-2 border-black ${handleArticleBackgroundColor(
@@ -36,10 +36,8 @@ const Articles: NextPage = () => {
                     {article.title}
                   </h3>
                 </header>
-                <summary>{article.spoiler}</summary>
-                <small className='text-sm font-apercu'>
-                  {article.createdAt}
-                </small>
+                <summary>{article.description}</summary>
+                <small className='text-sm font-apercu'>{article.date}</small>
               </article>
             </li>
           ))}
@@ -47,6 +45,16 @@ const Articles: NextPage = () => {
       </section>
     </>
   );
+};
+
+export const getStaticProps = () => {
+  const articles = getArticles();
+
+  return {
+    props: {
+      articles,
+    },
+  };
 };
 
 export default Articles;
