@@ -1,7 +1,26 @@
 {
-  "name": "exploring-new-design",
+  "name": "exploring-new-designs",
+  "author": "Theerut Top",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://topkoong.github.io",
+  "keywords": [
+    "nextjs",
+    "typescript",
+    "ghactions",
+    "eslint",
+    "prettier",
+    "husky",
+    "tailwindcss"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/topkoong/topkoong.github.io.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/topkoong/topkoong.github.io/issues"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
