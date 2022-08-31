@@ -1,6 +1,6 @@
+import getArticle from '@utils/getArticle';
+import getArticles from '@utils/getArticles';
 import { MDXRemote } from 'next-mdx-remote';
-import getArticle from '../../utils/getArticle';
-import getArticles from '../../utils/getArticles';
 import { serialize } from 'next-mdx-remote/serialize';
 
 function ArticleContent({ data, content }: any) {

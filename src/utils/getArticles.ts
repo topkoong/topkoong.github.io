@@ -6,10 +6,7 @@ const getArticles = () => {
   const files = fs.readdirSync(path.join(process.cwd(), 'articles'));
   const allArticlesData = files.map((fileName) => {
     const slug = fileName.replace('.mdx', '');
-    const fileContents = fs.readFileSync(
-      path.join(`articles/${slug}.mdx`),
-      'utf8'
-    );
+    const fileContents = fs.readFileSync(path.join(`articles/${slug}.mdx`), 'utf8');
     const { data } = matter(fileContents);
     return {
       slug,

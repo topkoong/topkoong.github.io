@@ -1,9 +1,9 @@
-import { ArticleFeed } from '../components/ArticleFeed';
-import { BlogFeed } from '../components/BlogFeed';
-import Head from 'next/head';
-import { Hero } from '../components/Hero';
+import ArticleFeed from '@components/ArticleFeed';
+import BlogFeed from '@components/BlogFeed';
+import Hero from '@components/Hero';
+import getArticles from '@utils/getArticles';
 import type { NextPage } from 'next';
-import getArticles from '../utils/getArticles';
+import Head from 'next/head';
 
 const Home: NextPage = ({ articles }: any) => {
   return (

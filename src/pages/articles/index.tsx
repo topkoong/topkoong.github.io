@@ -1,11 +1,11 @@
-import Head from 'next/head';
+import getArticles from '@utils/getArticles';
 import type { NextPage } from 'next';
-import getArticles from '../../utils/getArticles';
+import Head from 'next/head';
 
 const handleArticleBackgroundColor = (index: number) => {
   if (index % 4 === 0) return 'bg-light-indigo';
-  else if (index % 4 === 1) return 'bg-red-orange';
-  else if (index % 4 === 2) return 'bg-bright-yellow';
+  if (index % 4 === 1) return 'bg-red-orange';
+  if (index % 4 === 2) return 'bg-bright-yellow';
   return 'bg-white';
 };
 
@@ -28,13 +28,11 @@ const Articles: NextPage = ({ articles }: any) => {
             <li key={article.title}>
               <article
                 className={`my-8 p-8 border-2 border-black ${handleArticleBackgroundColor(
-                  idx
+                  idx,
                 )}`}
               >
                 <header>
-                  <h3 className='text-xl font-bold font-apercu'>
-                    {article.title}
-                  </h3>
+                  <h3 className='text-xl font-bold font-apercu'>{article.title}</h3>
                 </header>
                 <summary>{article.description}</summary>
                 <small className='text-sm font-apercu'>{article.date}</small>

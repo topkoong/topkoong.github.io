@@ -1,15 +1,15 @@
-import { blogs } from '../mockData/blogs';
+import blogs from '@mock/blogs';
 
 const handleBlogBackgroundColor = (index: number) => {
   if (index % 5 === 0 && index !== 5) return 'bg-bright-green';
-  else if (index % 5 === 1) return 'bg-pale-orange';
-  else if (index % 5 === 2) return 'bg-light-blue';
-  else if (index % 5 === 3) return 'bg-darken-pink';
-  else if (index % 5 === 4) return 'bg-bright-yellow';
+  if (index % 5 === 1) return 'bg-pale-orange';
+  if (index % 5 === 2) return 'bg-light-blue';
+  if (index % 5 === 3) return 'bg-darken-pink';
+  if (index % 5 === 4) return 'bg-bright-yellow';
   return 'bg-darken-sky';
 };
 
-export const BlogFeed = () => {
+const BlogFeed = () => {
   return (
     <aside className='hidden lg:block bg-red-orange p-16'>
       <h2 className='text-3xl text-center font-extrabold font-apercu uppercase'>
@@ -31,3 +31,5 @@ export const BlogFeed = () => {
     </aside>
   );
 };
+
+export default BlogFeed;
