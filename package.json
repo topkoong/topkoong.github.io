@@ -33,24 +33,24 @@
     "lint:check": "yarn lint:format && yarn lint:fix"
   },
   "dependencies": {
-    "@mdx-js/loader": "^2.1.3",
-    "@next/mdx": "^12.2.5",
+    "@mdx-js/loader": "^2.1.5",
+    "@next/mdx": "^13.0.0",
     "gray-matter": "^4.0.3",
-    "next": "12.2.5",
+    "next": "^13.0.0",
     "next-mdx-remote": "^4.1.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "17.0.36",
-    "@types/react": "18.0.18",
-    "@types/react-dom": "18.0.6",
+    "@types/node": "^18.11.8",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
-    "autoprefixer": "^10.4.8",
+    "autoprefixer": "^10.4.13",
     "eslint": "8.23.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-next": "12.2.5",
+    "eslint-config-next": "^13.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^3.5.0",
     "eslint-plugin-import": "^2.26.0",
@@ -62,8 +62,8 @@
     "lint-staged": "^13.0.3",
     "postcss": "^8.4.16",
     "prettier": "^2.7.1",
-    "tailwindcss": "^3.1.8",
-    "typescript": "4.8.0"
+    "tailwindcss": "^3.2.1",
+    "typescript": "^4.8.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css,md,json}": [
