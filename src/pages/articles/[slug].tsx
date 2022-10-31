@@ -4,7 +4,7 @@ import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
 
 function ArticleContent({ data, content }: any) {
-  console.log('content: ', content);
+  // console.log('content: ', content);
   return (
     <section className='h-full bg-bright-green p-8 md:p-16'>
       <header>
