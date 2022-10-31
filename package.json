@@ -28,7 +28,7 @@
     "export": "next export",
     "lint": "next lint",
     "prepare": "husky install",
-    "lint:fix": "yarn lint --quiet --fix --ignore-path ./.gitignore",
+    "lint:fix": "yarn lint ./src --quiet --fix --ignore-path ./.gitignore",
     "lint:format": "prettier  --loglevel warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" ",
     "lint:check": "yarn lint:format && yarn lint:fix"
   },
@@ -42,32 +42,33 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.8",
-    "@types/react": "^18.0.24",
-    "@types/react-dom": "^18.0.8",
-    "@typescript-eslint/eslint-plugin": "^5.36.1",
-    "@typescript-eslint/parser": "^5.36.1",
-    "autoprefixer": "^10.4.13",
-    "eslint": "8.23.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-next": "^13.0.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-import-resolver-typescript": "^3.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-promise": "^6.0.1",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "autoprefixer": "latest",
+    "eslint": "latest",
+    "eslint-config-airbnb": "latest",
+    "eslint-config-next": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-import-resolver-typescript": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-jsx-a11y": "latest",
+    "eslint-plugin-prettier": "latest",
+    "eslint-plugin-promise": "latest",
+    "eslint-plugin-simple-import-sort": "latest",
     "husky": "^8.0.0",
     "lint-staged": "^13.0.3",
     "postcss": "^8.4.16",
     "prettier": "^2.7.1",
     "tailwindcss": "^3.2.1",
-    "typescript": "^4.8.4"
+    "typescript": "latest"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css,md,json}": [
-      "prettier --write"
-    ]
+      "prettier --loglevel warn --write"
+    ],
+    "*.{ts,tsx}": "eslint --fix --quiet --fix --ignore-path ./.gitignore"
   }
 }
