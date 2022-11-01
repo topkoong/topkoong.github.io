@@ -18,7 +18,7 @@ const Navbar = () => {
       <ul className='w-full md:w-100 flex items-center justify-between md:justify-start'>
         <li className='px-4'>
           <Link href='/'>
-            <Image src={logo} alt='logo' width={60} height={60} />
+            <Image src={logo} alt='logo' />
           </Link>
         </li>
         <li className='px-4 font-apercu text-7xl font-extrabold uppercase'>
