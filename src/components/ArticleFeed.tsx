@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 const handleArticleBackgroundColor = (index: number) => {
   if (index % 4 === 0) return 'bg-darken-pink';
   if (index % 4 === 1) return 'bg-red-orange';
@@ -14,13 +16,15 @@ const ArticleFeed = ({ articles }: any) => {
       <ul>
         {articles.map((article: any, idx: number) => (
           <li key={article.title}>
-            <article className='my-6'>
-              <header>
-                <h3 className='text-xl font-bold font-apercu'>{article.title}</h3>
-              </header>
-              <summary>{article.description}</summary>
-              <small className='text-sm font-apercu'>{article.date}</small>
-            </article>
+            <Link href={article.slug}>
+              <article className='my-6'>
+                <header>
+                  <h3 className='text-xl font-bold font-apercu'>{article.title}</h3>
+                </header>
+                <summary>{article.description}</summary>
+                <small className='text-sm font-apercu'>{article.date}</small>
+              </article>
+            </Link>
           </li>
         ))}
       </ul>

@@ -1,6 +1,7 @@
 import getArticles from '@utils/getArticles';
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 
 const handleArticleBackgroundColor = (index: number) => {
   if (index % 4 === 0) return 'bg-light-indigo';
@@ -26,17 +27,19 @@ const Articles: NextPage = ({ articles }: any) => {
         <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-3 lg:gap-4'>
           {articles.map((article: any, idx: number) => (
             <li key={article.title}>
-              <article
-                className={`my-8 p-8 border-2 border-black ${handleArticleBackgroundColor(
-                  idx,
-                )}`}
-              >
-                <header>
-                  <h3 className='text-xl font-bold font-apercu'>{article.title}</h3>
-                </header>
-                <summary>{article.description}</summary>
-                <small className='text-sm font-apercu'>{article.date}</small>
-              </article>
+              <Link href={`/${article.slug}`}>
+                <article
+                  className={`my-8 p-8 border-2 border-black ${handleArticleBackgroundColor(
+                    idx,
+                  )}`}
+                >
+                  <header>
+                    <h3 className='text-xl font-bold font-apercu'>{article.title}</h3>
+                  </header>
+                  <summary>{article.description}</summary>
+                  <small className='text-sm font-apercu'>{article.date}</small>
+                </article>
+              </Link>
             </li>
           ))}
         </ul>
