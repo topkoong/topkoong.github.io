@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
+import logo from '../../public/images/smiley.png';
+
 const Navbar = () => {
   const buttonShadowClass = `before:content-[''] before:top-1 before:left-5 before:-z-10 before:w-10/12 before:h-full before:transition-translate before:translate-x-px before:translate-y-px before:border-2 before:bg-white before:absolute before:block before:rounded-3xl before:border-black before:opacity-100 before:hover:opacity-0`;
   const buttonClass = `w-10/12 md:w-36 mx-4 border-2 bg-bright-yellow border-black rounded-3xl p-2 text-center z-20 hover:transition hover:transform hover:translate-y-1 hover:translate-x-1`;
@@ -16,7 +18,7 @@ const Navbar = () => {
       <ul className='w-full md:w-100 flex items-center justify-between md:justify-start'>
         <li className='px-4'>
           <Link href='/'>
-            <Image src='/images/smiley.png' alt='logo' width={60} height={60} />
+            <Image src={logo} alt='logo' width={60} height={60} />
           </Link>
         </li>
         <li className='px-4 font-apercu text-7xl font-extrabold uppercase'>
