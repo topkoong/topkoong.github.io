@@ -9,13 +9,12 @@ const Hero = () => {
             Hi, my name is
           </h1>
         </header>
-        <Link href='https://www.linkedin.com/in/theerut-foongkiatcharoen/'>
-          <a
-            data-text='Theerut'
-            className='w-fit font-apercu uppercase text-6xl md:text-7xl lg:text-8xl relative overflow-hidden pb-8 before:content-[attr(data-text)attr(data-text)] before:underline before:underline-offset-8 before:decoration-wavy before:decoration-yellow-300 before:absolute before:whitespace-nowrap before:text-transparent before:animate-wave'
-          >
-            Theerut
-          </a>
+        <Link
+          href='https://www.linkedin.com/in/theerut-foongkiatcharoen/'
+          data-text='Theerut'
+          className='w-fit font-apercu uppercase text-6xl md:text-7xl lg:text-8xl relative overflow-hidden pb-8 before:content-[attr(data-text)attr(data-text)] before:underline before:underline-offset-8 before:decoration-wavy before:decoration-yellow-300 before:absolute before:whitespace-nowrap before:text-transparent before:animate-wave'
+        >
+          Theerut
         </Link>
         <h3 className='text-6xl md:text-7xl lg:text-8xl font-extrabold font-apercu uppercase'>
           &lt;{' '}

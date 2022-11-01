@@ -19,10 +19,8 @@ const Navbar = () => {
             <Image src='/images/smiley.png' alt='logo' width={60} height={60} />
           </Link>
         </li>
-        <li className='px-4'>
-          <Link href='/'>
-            <a className='font-apercu text-7xl font-extrabold uppercase'>Toppy</a>
-          </Link>
+        <li className='px-4 font-apercu text-7xl font-extrabold uppercase'>
+          <Link href='/'>Toppy</Link>
         </li>
         <button
           className='md:hidden flex flex-col h-12 w-12 rounded justify-center items-center group'
@@ -55,47 +53,53 @@ const Navbar = () => {
         } mt-20 md:mt-0 md:flex flex-col md:flex-row w-full`}
       >
         <li className='relative z-0 hover:cursor-pointer my-8 md:my-auto'>
-          <Link href='/about'>
-            <span
-              className={`block hover:bg-red-orange ${buttonShadowClass} ${buttonClass}`}
-            >
-              <a className='font-apercu text-2xl font-extrabold uppercase'>About</a>
-            </span>
-          </Link>
+          <span
+            className={`block hover:bg-red-orange ${buttonShadowClass} ${buttonClass}`}
+          >
+            <Link href='/about' className='font-apercu text-2xl font-extrabold uppercase'>
+              About
+            </Link>
+          </span>
         </li>
         <li className='relative z-0 hover:cursor-pointer my-8 md:my-auto'>
-          <Link href='/blogs'>
-            <span
-              className={`block hover:bg-light-indigo ${buttonShadowClass} ${buttonClass}`}
-            >
-              <a className='font-apercu text-2xl font-extrabold uppercase'>Posts</a>
-            </span>
-          </Link>
+          <span
+            className={`block hover:bg-light-indigo ${buttonShadowClass} ${buttonClass}`}
+          >
+            <Link href='/blogs' className='font-apercu text-2xl font-extrabold uppercase'>
+              Posts
+            </Link>
+          </span>
         </li>
         <li className='relative z-0 hover:cursor-pointer my-8 md:my-auto'>
-          <Link href='/articles'>
-            <span
-              className={`block hover:bg-bright-green ${buttonShadowClass} ${buttonClass}`}
+          <span
+            className={`block hover:bg-bright-green ${buttonShadowClass} ${buttonClass}`}
+          >
+            <Link
+              href='/articles'
+              className='font-apercu text-2xl font-extrabold uppercase'
             >
-              <a className='font-apercu text-2xl font-extrabold uppercase'>Articles</a>
-            </span>
-          </Link>
+              Articles
+            </Link>
+          </span>
         </li>
         <li className='md:hidden xl:block relative z-0 hover:cursor-pointer my-8 md:my-auto'>
-          <Link href='/'>
-            <span
-              className={`block hover:bg-darken-sky ${buttonShadowClass} ${buttonClass}`}
-            >
-              <a className='font-apercu text-2xl font-extrabold uppercase'>Projects</a>
-            </span>
-          </Link>
+          <span
+            className={`block hover:bg-darken-sky ${buttonShadowClass} ${buttonClass}`}
+          >
+            <Link href='/' className='font-apercu text-2xl font-extrabold uppercase'>
+              Projects
+            </Link>
+          </span>
         </li>
         <li className='md:hidden xl:block relative z-0 hover:cursor-pointer my-8 md:my-auto'>
-          <Link href='https://theerut-top-resume.vercel.app/'>
-            <span className={`block hover:bg-white ${buttonShadowClass} ${buttonClass}`}>
-              <a className='font-apercu text-2xl font-extrabold uppercase'>Resume</a>
-            </span>
-          </Link>
+          <span className={`block hover:bg-white ${buttonShadowClass} ${buttonClass}`}>
+            <Link
+              href='https://theerut-top-resume.vercel.app/'
+              className='font-apercu text-2xl font-extrabold uppercase'
+            >
+              Resume
+            </Link>
+          </span>
         </li>
       </ul>
       {/* <Link href='/'>
