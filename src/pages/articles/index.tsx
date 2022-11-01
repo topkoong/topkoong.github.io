@@ -27,7 +27,7 @@ const Articles: NextPage = ({ articles }: any) => {
         <ul className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-3 lg:gap-4'>
           {articles.map((article: any, idx: number) => (
             <li key={article.title}>
-              <Link href={`/${article.slug}`}>
+              <Link href={`/articles/${article.slug}`}>
                 <article
                   className={`my-8 p-8 border-2 border-black ${handleArticleBackgroundColor(
                     idx,

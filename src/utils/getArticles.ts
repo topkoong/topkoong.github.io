@@ -3,8 +3,6 @@ import matter from 'gray-matter';
 import path from 'path';
 
 const getArticles = () => {
-  // eslint-disable-next-line no-console
-  console.log('process.cwd(): ', process.cwd());
   const files = fs.readdirSync(path.join(process.cwd(), 'src/articles'));
   const allArticlesData = files.map((fileName) => {
     const slug = fileName.replace('.mdx', '');

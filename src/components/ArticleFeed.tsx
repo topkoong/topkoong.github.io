@@ -16,7 +16,7 @@ const ArticleFeed = ({ articles }: any) => {
       <ul>
         {articles.map((article: any, idx: number) => (
           <li key={article.title}>
-            <Link href={article.slug}>
+            <Link href={`/articles/${article.slug}`}>
               <article className='my-6'>
                 <header>
                   <h3 className='text-xl font-bold font-apercu'>{article.title}</h3>
