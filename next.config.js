@@ -7,10 +7,14 @@ const withMDX = require('@next/mdx')({
 
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   // images: {
   //   loader: 'akamai',
-  //   path: '',
+  //   path: '/',
   // },
+  images: {
+    unoptimized: true,
+  },
 };
 
 // module.exports = nextConfig;
