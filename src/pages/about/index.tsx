@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import Image from 'next/image';
 
 const About: NextPage = () => {
   return (
@@ -18,7 +19,15 @@ const About: NextPage = () => {
           </header>
           <div className='flex flex-col items-center md:items-start md:flex-row'>
             <aside className='py-8 md:py-24 space-x-8 w-fit'>
-              <div className='animate-spin-slow w-36 h-36 md:w-96 md:h-96 bg-bright-yellow rounded-full transition-transform' />
+              <div className='animate-spin-slow w-36 h-36 md:w-96 md:h-96 bg-bright-yellow rounded-full transition-transform'>
+                <Image
+                  className='m-auto'
+                  src='/images/toppy-logo.png'
+                  alt='logo'
+                  width={300}
+                  height={300}
+                />
+              </div>
             </aside>
             <div className='md:px-8'>
               <p className='font-apercu text-lg md:text-xl lg:text-3xl my-8 md:my-16'>
