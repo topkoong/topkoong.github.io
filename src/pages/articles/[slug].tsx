@@ -1,18 +1,25 @@
 import getArticle from '@utils/getArticle';
 import getArticles from '@utils/getArticles';
+import moment from 'moment';
 import { MDXRemote } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
 
 function ArticleContent({ data, content }: any) {
   return (
-    <section className='h-full bg-bright-green p-8 md:p-16'>
+    <section className='bg-bright-green p-8 md:p-16'>
       <header>
         <h1 className='capitalize text-4xl md:text-6xl lg:text-7xl font-apercu'>
           {data.title}
         </h1>
       </header>
-      <small className='text-sm font-apercu'>{data.date}</small>
-      <MDXRemote {...content} />
+      <div className='my-8'>
+        <small className='text-sm font-apercu'>
+          Published: {moment(data.date).format('MMMM d, YYYY')}
+        </small>
+      </div>
+      <article className='prose marker:text-black md:prose-lg lg:prose-xl'>
+        <MDXRemote {...content} />
+      </article>
     </section>
   );
 }

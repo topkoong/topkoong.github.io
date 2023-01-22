@@ -1,4 +1,5 @@
 import getArticles from '@utils/getArticles';
+import moment from 'moment';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -37,7 +38,9 @@ const Articles: NextPage = ({ articles }: any) => {
                     <h3 className='text-xl font-bold font-apercu'>{article.title}</h3>
                   </header>
                   <summary>{article.description}</summary>
-                  <small className='text-sm font-apercu'>{article.date}</small>
+                  <small className='text-sm font-apercu'>
+                    {moment(article.date).format('MMMM d, YYYY')}
+                  </small>
                 </article>
               </Link>
             </li>
