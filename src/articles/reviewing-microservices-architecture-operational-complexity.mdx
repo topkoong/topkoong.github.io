@@ -10,50 +10,50 @@ thumbnail: /img/some-thumbnail.png
 
 #### Spring Cloud Config
 
-##### It handles the management of the application configuration data through a centralized service
+- It handles the management of the application configuration data through a centralized service
 
-##### This ensures that no matter how many microservice instances you bring up, they will always have the same configuration.
+- This ensures that no matter how many microservice instances you bring up, they will always have the same configuration.
 
-##### It provides server-side and client-side support for externalized configuration in a distributed system.
+- It provides server-side and client-side support for externalized configuration in a distributed system.
 
 #### Spring Cloud Service Discovery
 
-##### A service registry is useful because it enables client-side load-balancing and decouples service providers from consumers without the need for DNS.
+- A service registry is useful because it enables client-side load-balancing and decouples service providers from consumers without the need for DNS.
 
-##### You can abstract away the physical location (IP and/or server name) of where your servers are deployed from the clients consuming the service.
+- You can abstract away the physical location (IP and/or server name) of where your servers are deployed from the clients consuming the service.
 
-##### It also handles the registration and deregistration of service instances as these are started and shut down.
+- It also handles the registration and deregistration of service instances as these are started and shut down.
 
-- **Service Registration** - How a service registers with the service discovery agent
+  - **Service Registration** - How a service registers with the service discovery agent
 
-- **Client lookup of service address** - How a service client looks up service information
+  - **Client lookup of service address** - How a service client looks up service information
 
-- **Information sharing** - How nodes share service information
+  - **Information sharing** - How nodes share service information
 
-- **Health monitoring** - How services communicate their health back to the service discovery agent
+  - **Health monitoring** - How services communicate their health back to the service discovery agent
 
 #### Spring Cloud LoadBalancer and Resilience4j
 
-##### Spring Cloud LoadBalancer library - It allows us to create applications that communicate with other applications in a load-balanced fashion. Using any algorithm we want, we can easily implement load balancing when making remote service calls
+- Spring Cloud LoadBalancer library - It allows us to create applications that communicate with other applications in a load-balanced fashion. Using any algorithm we want, we can easily implement load balancing when making remote service calls
 
-##### Resilience4j - It is a fault tolerance library which offers the following patterns for increasing fault tolerance due to network problems or failure of any of our multiple services
+- Resilience4j - It is a fault tolerance library which offers the following patterns for increasing fault tolerance due to network problems or failure of any of our multiple services
 
-- **Circuit breaker** - Stops making requests when an invoked service is failing
+  - **Circuit breaker** - Stops making requests when an invoked service is failing
 
-- **Retry** - Retries service when it temporarily fails
+  - **Retry** - Retries service when it temporarily fails
 
-- **Bulkhead** - Limits the number of outgoing concurrent service requests to avoid overload
+  - **Bulkhead** - Limits the number of outgoing concurrent service requests to avoid overload
 
-- **Rate limit** - Limits the number of calls that a service receives at a time
+  - **Rate limit** - Limits the number of calls that a service receives at a time
 
-- **Fallback** - Sets alternative paths for failing requests
+  - **Fallback** - Sets alternative paths for failing requests
 
 #### Spring Cloud Gateway
 
-##### Mapping the routes for all the services in your application to a single URL
+- Mapping the routes for all the services in your application to a single URL
 
-##### Building filters that can inspect and act on the requests and responses coming through the gateway
+- Building filters that can inspect and act on the requests and responses coming through the gateway
 
-##### Building prediccates, which are objects that allow us to check if the requests fulfill a set of given conditions before executing or processing a requests
+- Building prediccates, which are objects that allow us to check if the requests fulfill a set of given conditions before executing or processing a requests
 
-##### It is a reverse proxy. A reverse proxy is an intermediate server that sits between the client trying to reach a resource and the resource itself. The client has no idea it's even communicating with a server. The reverse proxy takes care of capturing the client's request andthen calls the remote resource on the client's behalf.
+- It is a reverse proxy. A reverse proxy is an intermediate server that sits between the client trying to reach a resource and the resource itself. The client has no idea it's even communicating with a server. The reverse proxy takes care of capturing the client's request andthen calls the remote resource on the client's behalf.
