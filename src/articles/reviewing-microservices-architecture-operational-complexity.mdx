@@ -52,8 +52,18 @@ thumbnail: /img/some-thumbnail.png
 
 - Mapping the routes for all the services in your application to a single URL
 
-- Building filters that can inspect and act on the requests and responses coming through the gateway
+- Building filters that can inspect and act on the requests and responses coming through the gateway. These filters allow us to inject policy enforcement points in our code and to perform a wide number of actions on all of our service calls in a consistent fashion. In other words, these filters allow us to modify the incoming and outgoing HTTP requests and responses.
 
-- Building prediccates, which are objects that allow us to check if the requests fulfill a set of given conditions before executing or processing a requests
+- Building predicates, which are objects that allow us to check if the requests fulfill a set of given conditions before executing or processing a requests
 
-- It is a reverse proxy. A reverse proxy is an intermediate server that sits between the client trying to reach a resource and the resource itself. The client has no idea it's even communicating with a server. The reverse proxy takes care of capturing the client's request andthen calls the remote resource on the client's behalf.
+- It is a reverse proxy. A reverse proxy is an intermediate server that sits between the client trying to reach a resource and the resource itself. The client has no idea it's even communicating with a server. The reverse proxy takes care of capturing the client's request andthen calls the remote resource on the client's behalf. Spring Cloud Gateway takes a microservice call from a client and forwards it to the upstream.
+
+- It integrates with Netflix's Eureka Server and can automatically map services registered with Eureka to a route.
+
+  - **Static routing** - A service gateway places all service calls behind a single URL and API route. This simplifies development as we only have to know about one service endpoint for all of our services.
+
+  - **Dynamic routing** - A service gateway can inspect incoming service requests and, based on the data from the incoming service, perform intelligent routing for the service caller.
+
+  - **Authentication and Authorization** - Because all service calls route through a service gateway, the service gateway is a natural place to check whether the callers of a service have authenticated themselves.
+
+  - **Metric collection and logging** - A service gateway can be used to collect metrics and log information as a service call passes through it.
