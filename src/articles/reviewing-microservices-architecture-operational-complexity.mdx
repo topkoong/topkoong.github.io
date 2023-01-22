@@ -14,7 +14,11 @@ thumbnail: /img/some-thumbnail.png
 
 ##### This ensures that no matter how many microservice instances you bring up, they will always have the same configuration.
 
+##### It provides server-side and client-side support for externalized configuration in a distributed system.
+
 #### Spring Cloud Service Discovery
+
+##### A service registry is useful because it enables client-side load-balancing and decouples service providers from consumers without the need for DNS.
 
 ##### You can abstract away the physical location (IP and/or server name) of where your servers are deployed from the clients consuming the service.
 
@@ -29,6 +33,8 @@ thumbnail: /img/some-thumbnail.png
 - **Health monitoring** - How services communicate their health back to the service discovery agent
 
 #### Spring Cloud LoadBalancer and Resilience4j
+
+##### Spring Cloud LoadBalancer library - It allows us to create applications that communicate with other applications in a load-balanced fashion. Using any algorithm we want, we can easily implement load balancing when making remote service calls
 
 ##### Resilience4j - It is a fault tolerance library which offers the following patterns for increasing fault tolerance due to network problems or failure of any of our multiple services
 
