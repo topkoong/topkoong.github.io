@@ -1,28 +1,76 @@
 {
-  "name": "exploring-new-design",
+  "name": "exploring-new-designs",
+  "author": "Theerut Top",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://topkoong.github.io",
+  "keywords": [
+    "nextjs",
+    "typescript",
+    "ghactions",
+    "eslint",
+    "prettier",
+    "husky",
+    "tailwindcss"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/topkoong/topkoong.github.io.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/topkoong/topkoong.github.io/issues"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "export": "next export",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky install",
+    "lint:fix": "yarn lint ./src --quiet --fix --ignore-path ./.gitignore",
+    "lint:format": "prettier  --loglevel warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" ",
+    "lint:check": "yarn lint:format && yarn lint:fix"
   },
   "dependencies": {
-    "next": "12.1.6",
-    "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "@mdx-js/loader": "^2.1.5",
+    "@next/mdx": "^13.0.0",
+    "gray-matter": "^4.0.3",
+    "moment": "^2.29.4",
+    "next": "^13.0.0",
+    "next-mdx-remote": "^4.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "17.0.36",
-    "@types/react": "18.0.9",
-    "@types/react-dom": "18.0.5",
-    "autoprefixer": "^10.4.7",
-    "eslint": "8.16.0",
-    "eslint-config-next": "12.1.6",
-    "postcss": "^8.4.14",
-    "tailwindcss": "^3.0.24",
-    "typescript": "4.7.2"
+    "@tailwindcss/typography": "^0.5.9",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "autoprefixer": "latest",
+    "eslint": "latest",
+    "eslint-config-airbnb": "latest",
+    "eslint-config-next": "latest",
+    "eslint-config-prettier": "latest",
+    "eslint-import-resolver-typescript": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-jsx-a11y": "latest",
+    "eslint-plugin-prettier": "latest",
+    "eslint-plugin-promise": "latest",
+    "eslint-plugin-simple-import-sort": "latest",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.0.3",
+    "postcss": "^8.4.16",
+    "prettier": "^2.7.1",
+    "tailwindcss": "^3.2.1",
+    "typescript": "latest"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css,md,json}": [
+      "prettier --loglevel warn --write"
+    ],
+    "*.{ts,tsx}": "eslint --fix --quiet --fix --ignore-path ./.gitignore"
   }
 }
