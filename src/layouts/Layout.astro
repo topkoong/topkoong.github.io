@@ -1,22 +1,239 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+// Base layout component that provides common structure and styling
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+// Define props interface for TypeScript support
+interface Props {
+  title: string; // Required page title
+  description?: string; // Optional meta description
+  image?: string; // Optional social media image
+  url?: string; // Optional canonical URL
+  type?: string; // Optional page type (article, website, etc.)
+  publishedTime?: string; // Optional published time for articles
+  modifiedTime?: string; // Optional modified time for articles
+  author?: string; // Optional author name
+  keywords?: string; // Optional keywords
+}
+
+// Destructure props with defaults
+const {
+  title,
+  description = 'Theeruttop (Toppy) - Software Engineer sharing insights on full-stack development, automation, and scaling knowledge through practical tutorials and thoughts.',
+  image = '/social-preview',
+  url = Astro.url.href,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  author = 'Theeruttop (Toppy)',
+  keywords = 'software engineer, full-stack development, automation, tutorials, blog, programming, web development',
+} = Astro.props;
+
+// Generate image URL safely
+const imageUrl = image.startsWith('http')
+  ? image
+  : new URL(image, Astro.site || Astro.url.origin).href;
+
+// Generate structured data
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': type === 'article' ? 'Article' : 'WebSite',
+  name: title,
+  description: description,
+  url: url,
+  author: {
+    '@type': 'Person',
+    name: author,
+    url: 'https://topkoong.github.io',
+  },
+  publisher: {
+    '@type': 'Person',
+    name: author,
+    url: 'https://topkoong.github.io',
+  },
+  ...(type === 'article' &&
+    publishedTime && {
+      datePublished: publishedTime,
+      dateModified: modifiedTime || publishedTime,
+    }),
+  ...(type === 'WebSite' && {
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://topkoong.github.io/blog?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
+  }),
+};
+---
+
+<!doctype html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <meta name='generator' content={Astro.generator} />
+
+    <!-- Google Fonts for better typography -->
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link
+      href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap'
+      rel='stylesheet'
+    />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name='title' content={title} />
+    <meta name='description' content={description} />
+    <meta name='keywords' content={keywords} />
+    <meta name='author' content={author} />
+    <meta name='robots' content='index, follow' />
+    <meta name='language' content='English' />
+    <meta name='revisit-after' content='7 days' />
+
+    <!-- Canonical URL -->
+    <link rel='canonical' href={url} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property='og:type' content={type} />
+    <meta property='og:url' content={url} />
+    <meta property='og:title' content={title} />
+    <meta property='og:description' content={description} />
+    <meta property='og:image' content={imageUrl} />
+    <meta property='og:site_name' content="Toppy's Digital Playground" />
+    <meta property='og:locale' content='en_US' />
+
+    <!-- Twitter -->
+    <meta property='twitter:card' content='summary_large_image' />
+    <meta property='twitter:url' content={url} />
+    <meta property='twitter:title' content={title} />
+    <meta property='twitter:description' content={description} />
+    <meta property='twitter:image' content={imageUrl} />
+    <meta property='twitter:creator' content='@topkoong' />
+
+    <!-- Additional Meta Tags -->
+    <meta name='theme-color' content='#8b5cf6' />
+    <meta name='msapplication-TileColor' content='#8b5cf6' />
+    <meta name='apple-mobile-web-app-capable' content='yes' />
+    <meta
+      name='apple-mobile-web-app-status-bar-style'
+      content='black-translucent'
+    />
+
+    <!-- Structured Data -->
+    <script
+      type='application/ld+json'
+      set:html={JSON.stringify(structuredData)}
+    />
+
+    <!-- Initialize theme before page loads to prevent flash -->
+    <script is:inline>
+      // This script runs immediately and prevents flash of wrong theme
+      const getTheme = () => {
+        if (
+          typeof localStorage !== 'undefined' &&
+          localStorage.getItem('theme')
+        ) {
+          return localStorage.getItem('theme');
+        }
+        return 'dark'; // Force dark mode as default
+      };
+
+      // Get and apply theme immediately
+      const theme = getTheme();
+
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+
+      // Set dark mode as default for new users
+      if (
+        typeof localStorage !== 'undefined' &&
+        !localStorage.getItem('theme')
+      ) {
+        localStorage.setItem('theme', 'dark');
+      }
+    </script>
+  </head>
+  <body
+    class='min-h-screen flex flex-col bg-white text-gray-900 dark:bg-black dark:text-white transition-colors duration-200'
+  >
+    <Navbar />
+    <main class='flex-1'>
+      <div class='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+        <slot />
+      </div>
+    </main>
+    <Footer />
+  </body>
+
+  <style is:global>
+    /* Base styles with transitions */
+    html {
+      transition: background-color 0.2s ease-in-out;
+      background-color: white;
+    }
+
+    html.dark {
+      background-color: black;
+    }
+
+    /* Prose styles with dark mode support */
+    .prose {
+      max-width: 80ch;
+    }
+
+    /* Light mode styles */
+    .prose h1,
+    .prose h2,
+    .prose h3,
+    .prose h4,
+    .prose h5,
+    .prose h6 {
+      @apply text-gray-900 dark:text-white;
+      margin-top: 2em;
+      margin-bottom: 1em;
+    }
+
+    .prose p {
+      @apply text-gray-700 dark:text-gray-300;
+    }
+
+    .prose a {
+      @apply text-blue-600 dark:text-blue-400;
+      text-decoration: underline;
+    }
+
+    .prose a:hover {
+      @apply text-blue-800 dark:text-blue-300;
+    }
+
+    /* Inline code styling */
+    .prose code {
+      background-color: transparent !important;
+      padding: 0.2em 0.4em;
+      border-radius: 0.25em;
+    }
+
+    .dark .prose code {
+      /* Override only inline code, not code blocks */
+      background-color: transparent !important;
+    }
+
+    /* Code blocks - DO NOT style here, let BlogPost.astro handle it */
+    .prose pre {
+      padding: 1em;
+      border-radius: 0.5em;
+      overflow-x: auto;
+    }
+
+    /* Image handling */
+    .prose img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</html>

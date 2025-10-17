@@ -1,0 +1,33 @@
+---
+// src/components/Navbar.astro
+import ThemeToggle from './ThemeToggle.astro';
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+];
+---
+
+<nav
+  class='border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200 relative z-50'
+>
+  <div class='max-w-5xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <div class='flex justify-between items-center h-16'>
+      {/* Changed from justify-center to justify-between */}
+      {/* Navigation links */}
+      <div class='flex space-x-4 sm:space-x-8'>
+        {
+          navItems.map((item) => (
+            <a
+              href={item.href}
+              class='text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors'
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+      {/* Theme toggle */}
+      <ThemeToggle />
+    </div>
+  </div>
+</nav>

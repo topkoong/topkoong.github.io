@@ -1,0 +1,749 @@
+---
+// Layout specifically for blog post markdown files
+import Layout from './Layout.astro';
+// Get frontmatter from markdown file
+const { frontmatter } = Astro.props;
+
+// Format dates for SEO
+const publishedTime = new Date(frontmatter.date).toISOString();
+const modifiedTime = frontmatter.modified
+  ? new Date(frontmatter.modified).toISOString()
+  : publishedTime;
+
+// Generate article-specific keywords
+const articleKeywords = frontmatter.tags ? frontmatter.tags.join(', ') : '';
+const allKeywords = `software engineer, full-stack development, automation, tutorials, blog, programming, web development${articleKeywords ? ', ' + articleKeywords : ''}`;
+---
+
+<Layout
+  title={frontmatter.title}
+  description={frontmatter.description}
+  type='article'
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  keywords={allKeywords}
+>
+  <article class='max-w-5xl mx-auto'>
+    <header class='mb-12'>
+      <div class='animate-fade-in-up'>
+        <h1
+          class='text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight'
+        >
+          {frontmatter.title}
+        </h1>
+        <div
+          class='flex items-center space-x-4 text-gray-600 dark:text-gray-400'
+        >
+          <time class='text-lg' datetime={publishedTime}>
+            {
+              new Date(frontmatter.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })
+            }
+          </time>
+          <div class='w-2 h-2 bg-purple-500 rounded-full'></div>
+          <span class='text-lg'>Theeruttop (Toppy)</span>
+        </div>
+        {
+          frontmatter.tags && (
+            <div class='mt-6 flex flex-wrap gap-2'>
+              {frontmatter.tags.map((tag: string) => (
+                <span class='px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium'>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </header>
+    {/* Apply Tailwind Typography to markdown content */}
+    <div
+      class='prose prose-gray dark:prose-invert max-w-none
+      prose-headings:text-gray-900 dark:prose-headings:text-white
+      prose-p:text-gray-700 dark:prose-p:text-gray-300
+      prose-a:text-blue-600 dark:prose-a:text-blue-400
+      prose-strong:text-gray-900 dark:prose-strong:text-white
+      prose-blockquote:border-gray-200 dark:prose-blockquote:border-gray-700
+      prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400
+      prose-ul:text-gray-700 dark:prose-ul:text-gray-300
+      prose-ol:text-gray-700 dark:prose-ol:text-gray-300
+      prose-li:text-gray-700 dark:prose-li:text-gray-300
+      prose-hr:border-gray-200 dark:prose-hr:border-gray-700
+      prose-table:border-gray-200 dark:prose-table:border-gray-700
+      prose-th:border-gray-200 dark:prose-th:border-gray-700
+      prose-td:border-gray-200 dark:prose-td:border-gray-700'
+    >
+      <slot />
+      {/* Rendered markdown content goes here */}
+    </div>
+  </article>
+</Layout>
+
+<script>
+  // Initialize Mermaid when the page loads
+  // Initialize Mermaid when the page loads
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      const mermaid = await import('mermaid');
+
+      // Function to configure and initialize Mermaid
+      const initializeMermaid = () => {
+        const isDarkMode = document.documentElement.classList.contains('dark');
+
+        mermaid.default.initialize({
+          startOnLoad: false,
+          theme: isDarkMode ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'system-ui, -apple-system, sans-serif',
+          fontSize: 16,
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true,
+            curve: 'basis',
+            nodeSpacing: 50,
+            rankSpacing: 50,
+          },
+          themeVariables: isDarkMode
+            ? {
+                // Dark mode theme variables
+                darkMode: true,
+                background: '#1f2937',
+                primaryColor: '#374151',
+                primaryTextColor: '#ffffff',
+                primaryBorderColor: '#9ca3af',
+                lineColor: '#d1d5db',
+                secondaryColor: '#1f2937',
+                tertiaryColor: '#111827',
+                mainBkg: '#374151',
+                secondBkg: '#1f2937',
+                textColor: '#ffffff',
+                border1: '#9ca3af',
+                border2: '#6b7280',
+                arrowheadColor: '#d1d5db',
+                fontFamily: 'system-ui, -apple-system, sans-serif',
+                fontSize: '16px',
+                labelTextColor: '#ffffff',
+                nodeTextColor: '#ffffff',
+                clusterBkg: '#374151',
+                clusterBorder: '#9ca3af',
+                defaultLinkColor: '#d1d5db',
+                edgeLabelBackground: '#1f2937',
+              }
+            : {
+                // Light mode theme variables
+                darkMode: false,
+                primaryColor: '#e0f2fe',
+                primaryTextColor: '#000000',
+                primaryBorderColor: '#0277bd',
+                lineColor: '#424242',
+                secondaryColor: '#fce4ec',
+                tertiaryColor: '#e0f7fa',
+                background: '#ffffff',
+                mainBkg: '#e0f2fe',
+                secondBkg: '#fce4ec',
+                textColor: '#000000',
+                fontSize: '16px',
+                fontFamily: 'system-ui, -apple-system, sans-serif',
+              },
+        });
+      };
+
+      // Initial setup
+      initializeMermaid();
+
+      // Wait for DOM to be ready
+      setTimeout(() => {
+        const mermaidContainers = document.querySelectorAll('.mermaid');
+
+        mermaidContainers.forEach((container, index) => {
+          if (container.textContent && container.textContent.trim()) {
+            // CRITICAL FIX: Ensure each container has a unique ID
+            if (!container.id) {
+              container.id = `mermaid-diagram-${Date.now()}-${index}`;
+            }
+
+            try {
+              // Render only this specific container
+              mermaid.default.run({
+                nodes: [container as HTMLElement],
+              });
+
+              // Force dark backgrounds and white text after render
+              setTimeout(() => {
+                if (document.documentElement.classList.contains('dark')) {
+                  // Map of light colors to dark colors
+                  const colorMap: Record<string, string> = {
+                    '#e0f2fe': '#1e3a8a',
+                    '#fce4ec': '#881337',
+                    '#e3f2fd': '#1e40af',
+                    '#e0f7fa': '#115e59',
+                    '#ffebee': '#991b1b',
+                    '#fff3e0': '#92400e',
+                    '#e8f5e8': '#14532d',
+                    '#f3e5f5': '#581c87',
+                  };
+
+                  // Change node background colors
+                  container
+                    .querySelectorAll(
+                      '.node rect, .node circle, .node ellipse, .node polygon'
+                    )
+                    .forEach((el) => {
+                      const htmlEl = el as HTMLElement;
+                      const currentFill = htmlEl
+                        .getAttribute('style')
+                        ?.match(/fill:\s*(#[a-fA-F0-9]{6})/)?.[1]
+                        ?.toLowerCase();
+                      if (currentFill && colorMap[currentFill]) {
+                        htmlEl.style.fill = colorMap[currentFill];
+                      }
+                    });
+
+                  // Force white text in foreignObject elements
+                  container
+                    .querySelectorAll(
+                      'foreignObject div, foreignObject span, foreignObject p'
+                    )
+                    .forEach((el) => {
+                      const htmlEl = el as HTMLElement;
+                      htmlEl.style.color = '#ffffff';
+                      htmlEl.style.fontWeight = '600';
+                      htmlEl.style.textShadow = 'none';
+                      htmlEl.style.webkitFontSmoothing = 'antialiased';
+                    });
+
+                  // Fix foreignObject width to prevent text cutoff
+                  container.querySelectorAll('foreignObject').forEach((fo) => {
+                    const currentWidth = parseFloat(
+                      fo.getAttribute('width') || '0'
+                    );
+                    if (currentWidth) {
+                      fo.setAttribute('width', (currentWidth * 1.2).toString());
+                    }
+                  });
+                }
+              }, 100);
+            } catch (error) {
+              console.error('Error rendering Mermaid diagram:', error);
+            }
+          }
+        });
+      }, 100);
+
+      // Listen for theme changes
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (
+            mutation.type === 'attributes' &&
+            mutation.attributeName === 'class'
+          ) {
+            initializeMermaid();
+
+            setTimeout(() => {
+              // Remove all existing SVGs
+              document.querySelectorAll('.mermaid svg').forEach((svg) => {
+                svg.remove();
+              });
+
+              // Reset all containers
+              const mermaidContainers = document.querySelectorAll('.mermaid');
+              mermaidContainers.forEach((container, index) => {
+                // Reset processed state
+                if (container.getAttribute('data-processed')) {
+                  container.removeAttribute('data-processed');
+                }
+
+                // Ensure unique ID
+                if (!container.id) {
+                  container.id = `mermaid-diagram-${Date.now()}-${index}`;
+                }
+
+                try {
+                  // Re-render this specific container
+                  mermaid.default.run({
+                    nodes: [container as HTMLElement],
+                  });
+
+                  // Force dark backgrounds and white text after re-render
+                  setTimeout(() => {
+                    if (document.documentElement.classList.contains('dark')) {
+                      const colorMap: Record<string, string> = {
+                        '#e0f2fe': '#1e3a8a',
+                        '#fce4ec': '#881337',
+                        '#e3f2fd': '#1e40af',
+                        '#e0f7fa': '#115e59',
+                        '#ffebee': '#991b1b',
+                        '#fff3e0': '#92400e',
+                        '#e8f5e8': '#14532d',
+                        '#f3e5f5': '#581c87',
+                      };
+
+                      container
+                        .querySelectorAll(
+                          '.node rect, .node circle, .node ellipse, .node polygon'
+                        )
+                        .forEach((el) => {
+                          const htmlEl = el as HTMLElement;
+                          const currentFill = htmlEl
+                            .getAttribute('style')
+                            ?.match(/fill:\s*(#[a-fA-F0-9]{6})/)?.[1]
+                            ?.toLowerCase();
+                          if (currentFill && colorMap[currentFill]) {
+                            htmlEl.style.fill = colorMap[currentFill];
+                          }
+                        });
+
+                      container
+                        .querySelectorAll(
+                          'foreignObject div, foreignObject span, foreignObject p'
+                        )
+                        .forEach((el) => {
+                          const htmlEl = el as HTMLElement;
+                          htmlEl.style.color = '#ffffff';
+                          htmlEl.style.fontWeight = '600';
+                          htmlEl.style.textShadow = 'none';
+                          htmlEl.style.webkitFontSmoothing = 'antialiased';
+                        });
+                    }
+                  }, 100);
+                } catch (error) {
+                  console.error('Error re-rendering Mermaid diagram:', error);
+                }
+              });
+            }, 50);
+          }
+        });
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
+    } catch (error) {
+      console.error('Failed to load Mermaid:', error);
+    }
+  });
+</script>
+
+<style>
+  /* ===== ANIMATIONS ===== */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  /* ===== MERMAID FLOWCHART STYLING ===== */
+
+  .mermaid {
+    border-radius: 0.75rem;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border: 2px solid #e5e7eb;
+  }
+
+  /* ADD SOLUTION 1 HERE - RIGHT AFTER THE EXISTING .mermaid RULE */
+  /* Allow mermaid to break out of prose constraints */
+  .prose .mermaid {
+    max-width: none !important;
+    width: 100vw !important;
+    position: relative !important;
+    left: 50% !important;
+    right: 50% !important;
+    margin-left: -50vw !important;
+    margin-right: -50vw !important;
+    padding: 2rem 1rem !important;
+  }
+
+  /* Contain the SVG within reasonable bounds */
+  .prose .mermaid svg {
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+  }
+
+  .mermaid svg {
+    max-width: 100%;
+    height: auto;
+    min-height: 300px;
+  }
+
+  /* ===== LIGHT MODE ===== */
+
+  .mermaid .label,
+  .mermaid .nodeLabel,
+  .mermaid .edgeLabel,
+  .mermaid text,
+  .mermaid tspan {
+    font-weight: 600 !important;
+    fill: #000000 !important;
+  }
+
+  .mermaid .edgePath path {
+    stroke: #424242 !important;
+    stroke-width: 2px !important;
+  }
+
+  .mermaid marker path {
+    fill: #424242 !important;
+  }
+
+  /* ===== DARK MODE ===== */
+
+  .dark .mermaid {
+    background-color: #1f2937 !important;
+    border: 2px solid #4b5563 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Dark mode node styling - FORCE DARK BACKGROUNDS */
+  .dark .mermaid .node rect,
+  .dark .mermaid .node circle,
+  .dark .mermaid .node ellipse,
+  .dark .mermaid .node polygon {
+    filter: none !important;
+    stroke: #9ca3af !important;
+    stroke-width: 2px !important;
+  }
+
+  /* Override all node fill colors to use dark versions */
+  .dark .mermaid .node rect[style*='fill:#e0f2fe'],
+  .dark .mermaid rect[style*='fill:#e0f2fe'] {
+    fill: #1e3a8a !important; /* Dark blue */
+  }
+
+  .dark .mermaid .node rect[style*='fill:#fce4ec'],
+  .dark .mermaid rect[style*='fill:#fce4ec'] {
+    fill: #881337 !important; /* Dark pink/rose */
+  }
+
+  .dark .mermaid .node rect[style*='fill:#e3f2fd'],
+  .dark .mermaid rect[style*='fill:#e3f2fd'] {
+    fill: #1e40af !important; /* Dark blue */
+  }
+
+  .dark .mermaid .node rect[style*='fill:#e0f7fa'],
+  .dark .mermaid rect[style*='fill:#e0f7fa'] {
+    fill: #115e59 !important; /* Dark teal */
+  }
+
+  .dark .mermaid .node rect[style*='fill:#ffebee'],
+  .dark .mermaid rect[style*='fill:#ffebee'] {
+    fill: #991b1b !important; /* Dark red */
+  }
+
+  .dark .mermaid .node rect[style*='fill:#fff3e0'],
+  .dark .mermaid rect[style*='fill:#fff3e0'] {
+    fill: #92400e !important; /* Dark orange */
+  }
+
+  .dark .mermaid .node rect[style*='fill:#e8f5e8'],
+  .dark .mermaid rect[style*='fill:#e8f5e8'] {
+    fill: #14532d !important; /* Dark green */
+  }
+
+  .dark .mermaid .node rect[style*='fill:#f3e5f5'],
+  .dark .mermaid rect[style*='fill:#f3e5f5'] {
+    fill: #581c87 !important; /* Dark purple */
+  }
+
+  /* CRITICAL: White text for dark mode with high specificity */
+  .dark .mermaid text,
+  .dark .mermaid tspan,
+  .dark .mermaid .label,
+  .dark .mermaid .nodeLabel,
+  .dark .mermaid .edgeLabel {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+  }
+
+  /* Force white text on all SVG text elements */
+  .dark .mermaid svg text,
+  .dark .mermaid svg tspan {
+    fill: #ffffff !important;
+  }
+
+  /* CRITICAL: Target foreignObject HTML content specifically */
+  .dark .mermaid foreignObject {
+    color: #ffffff !important;
+  }
+
+  .dark .mermaid foreignObject div,
+  .dark .mermaid foreignObject span,
+  .dark .mermaid foreignObject p,
+  .dark .mermaid foreignObject .nodeLabel {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+  }
+
+  /* Ultra-specific targeting for the exact structure - NO TEXT SHADOW */
+  .dark .mermaid foreignObject div[style*='display: table-cell'],
+  .dark .mermaid foreignObject span.nodeLabel,
+  .dark .mermaid foreignObject span.nodeLabel p {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: none !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+
+  /* Edge (line) styling for dark mode */
+  .dark .mermaid .edgePath path {
+    stroke: #d1d5db !important;
+    stroke-width: 2.5px !important;
+  }
+
+  .dark .mermaid marker path {
+    fill: #d1d5db !important;
+  }
+
+  /* Dashed lines styling */
+  .dark .mermaid .edgePath.LS-E path,
+  .dark .mermaid .edgePath[style*='stroke-dasharray'] path {
+    stroke: #fbbf24 !important;
+    stroke-width: 2.5px !important;
+  }
+
+  .dark .mermaid .edgePath.LS-E marker path,
+  .dark .mermaid .edgePath[style*='stroke-dasharray'] marker path {
+    fill: #fbbf24 !important;
+  }
+  /* ===== ENHANCED SYNTAX HIGHLIGHTING (Let Shiki handle the colors) ===== */
+
+  /* Light mode - inline code (no background) */
+  /* .prose code:not(pre code) {
+    background-color: transparent !important;
+    color: #e11d48 !important;
+    padding: 0.125rem 0.375rem !important;
+    border-radius: 0.25rem !important;
+    font-size: 0.875em !important;
+    font-weight: 500 !important;
+    border: 1px solid #e2e8f0 !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace !important;
+  } */
+
+  /* Dark mode - inline code (no background) */
+  /* .dark .prose code:not(pre code) {
+    background-color: transparent !important;
+    color: #fbbf24 !important;
+    border: 1px solid #334155 !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace !important;
+  } */
+
+  /* AGGRESSIVE OVERRIDE - Remove ALL backgrounds from inline code */
+  /* .prose code,
+  .prose code:not(pre code),
+  .prose code[style*='background'],
+  .prose code[style*='background-color'],
+  .prose code[style*='rgb(243 244 246'],
+  .prose code[style*='rgb(243, 244, 246'],
+  .prose code[style*='--tw-bg-opacity'],
+  .prose code[style*='var(--tw-bg-opacity'],
+  .prose code[style*='var(--tw-bg-opacity, 1)'],
+  .prose code[style*='var(--tw-bg-opacity,1)'],
+  .prose code[style*='var(--tw-bg-opacity, 1)'] {
+    --tw-bg-opacity: 0 !important;
+    background-color: transparent !important;
+    background: transparent !important;
+    background-image: none !important;
+  } */
+
+  /* Dark mode overrides */
+  /* .dark .prose code,
+  .dark .prose code:not(pre code),
+  .dark .prose code[style*='background'],
+  .dark .prose code[style*='background-color'],
+  .dark .prose code[style*='--tw-bg-opacity'],
+  .dark .prose code[style*='var(--tw-bg-opacity'] {
+    --tw-bg-opacity: 0 !important;
+    background-color: transparent !important;
+    background: transparent !important;
+    background-image: none !important;
+  } */
+
+  /* ULTRA-SPECIFIC OVERRIDES for Tailwind prose */
+  /* .prose code[class*='bg-'],
+  .prose code[class*='bg-gray'],
+  .prose code[class*='bg-slate'],
+  .prose code[class*='bg-zinc'],
+  .prose code[class*='bg-neutral'],
+  .prose code[class*='bg-stone'] {
+    background-color: transparent !important;
+    background: transparent !important;
+    --tw-bg-opacity: 0 !important;
+  } */
+
+  /* .dark .prose code[class*='bg-'],
+  .dark .prose code[class*='bg-gray'],
+  .dark .prose code[class*='bg-slate'],
+  .dark .prose code[class*='bg-zinc'],
+  .dark .prose code[class*='bg-neutral'],
+  .dark .prose code[class*='bg-stone'] {
+    background-color: transparent !important;
+    background: transparent !important;
+    --tw-bg-opacity: 0 !important;
+  } */
+
+  /* ===== SIMPLE BACKGROUND CONTROL FOR CODE BLOCKS ===== */
+
+  /* Light mode - clean white background */
+  /* .prose pre {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 1.5rem !important;
+    border-radius: 0.75rem !important;
+    overflow-x: auto !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace !important;
+    font-size: 0.875rem !important;
+    line-height: 1.6 !important;
+  } */
+
+  /* Dark mode - dark background */
+  /* .dark .prose pre {
+    background-color: #282a36 !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+  } */
+
+  /* Remove any line backgrounds */
+  /* .prose pre .line,
+  .prose pre span.line {
+    background-color: transparent !important;
+  } */
+
+  /* Ensure code elements are transparent */
+  /* .prose pre code {
+    background-color: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    font-size: inherit !important;
+    font-weight: 400 !important;
+  } */
+
+  /* Code block language labels */
+  /* .prose pre::before {
+    content: attr(data-language);
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  } */
+
+  /* .dark .prose pre::before {
+    color: #9ca3af;
+  } */
+
+  /* Copy button styling */
+  /* .prose pre {
+    position: relative;
+  } */
+
+  /* .prose pre:hover::after {
+    content: 'Copy';
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  } */
+
+  /* .dark .prose pre:hover::after {
+    color: #9ca3af;
+  } */
+
+  /* ===== RESPONSIVE DESIGN ===== */
+
+  @media (max-width: 768px) {
+    .mermaid {
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .mermaid svg {
+      min-height: 200px;
+    }
+
+    .dark .mermaid .label,
+    .dark .mermaid .nodeLabel,
+    .dark .mermaid .edgeLabel {
+      font-size: 14px !important;
+    }
+  }
+
+  /* ===== TYPOGRAPHY ===== */
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    font-weight: 600;
+    line-height: 1.25;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .prose h1 {
+    font-size: 2.25em;
+  }
+
+  .prose h2 {
+    font-size: 1.875em;
+  }
+
+  .prose h3 {
+    font-size: 1.5em;
+    color: #111827;
+  }
+
+  .dark .prose h3 {
+    color: #f9fafb;
+  }
+
+  .prose h3 + p {
+    margin-top: 1em;
+  }
+
+  .prose h3 + .mermaid {
+    margin-top: 1.5em;
+  }
+
+  .prose {
+    font-family:
+      'Noto Sans Thai',
+      'Sarabun',
+      'Kanit',
+      system-ui,
+      -apple-system,
+      sans-serif;
+  }
+</style>

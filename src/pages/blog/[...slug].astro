@@ -1,0 +1,56 @@
+---
+// Dynamic route handler for blog posts
+import type { GetStaticPaths } from 'astro';
+// Define interfaces for blog post data
+interface Frontmatter {
+  title: string;
+  date: string;
+  description: string;
+  published?: boolean; // Optional boolean to control post visibility
+}
+
+interface MDPost {
+  frontmatter: Frontmatter;
+  Content: any;
+  file: string;
+  url: string;
+}
+// Generate static paths for all markdown files
+export const getStaticPaths = (async () => {
+  // Get all markdown files in posts directory
+  const posts = await Promise.all(
+    Object.entries(import.meta.glob<MDPost>('./posts/*.md')).map(
+      async ([path, resolver]) => {
+        const post = await resolver();
+        return {
+          path,
+          post,
+        };
+      }
+    )
+  );
+
+  // Filter only published posts (default to true if published field is not specified)
+  const publishedPosts = posts.filter(
+    ({ post }) => post.frontmatter.published !== false
+  );
+
+  // Create paths for each published post
+  return publishedPosts.map(({ path, post }) => ({
+    params: {
+      slug: path.replace('./posts/', '').replace('.md', ''),
+    },
+    props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  post: MDPost;
+}
+
+const { post } = Astro.props;
+const { Content } = post;
+---
+
+<Content />
+{/* Render the markdown content */}

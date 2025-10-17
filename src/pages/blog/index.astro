@@ -1,0 +1,629 @@
+---
+// Blog listing page that shows all posts
+import Layout from '../../layouts/Layout.astro';
+
+interface Frontmatter {
+  title: string;
+  date: string;
+  description: string;
+  published?: boolean; // Optional boolean to control post visibility
+}
+// Get and process all blog posts
+const posts = await Promise.all(
+  Object.entries(
+    import.meta.glob<{ frontmatter: Frontmatter }>('./posts/*.md')
+  ).map(async ([path, resolver]) => {
+    const post = await resolver();
+    return {
+      ...post,
+      slug: path.replace('./posts/', '').replace('.md', ''),
+    };
+  })
+);
+
+// Filter only published posts (default to true if published field is not specified)
+const publishedPosts = posts.filter(
+  (post) => post.frontmatter.published !== false
+);
+
+// Sort posts by date, newest first
+const sortedPosts = publishedPosts.sort(
+  (a, b) =>
+    new Date(b.frontmatter.date).getTime() -
+    new Date(a.frontmatter.date).getTime()
+);
+---
+
+<Layout 
+  title='Blog Posts' 
+  description='Explore insights, tutorials, and thoughts from my journey as a software engineer. Learn about full-stack development, automation, and scaling knowledge.'
+  keywords='blog posts, software engineering, tutorials, full-stack development, automation, programming, web development, Theeruttop, Toppy'
+>
+  <!-- Full Page Background -->
+  <div class='min-h-screen relative'>
+    <!-- Background gradient for entire page -->
+    <div class='fixed inset-0 bg-gradient-to-br from-purple-50/30 via-blue-50/20 to-pink-50/30 dark:from-purple-900/10 dark:via-blue-900/5 dark:to-pink-900/10 z-0'></div>
+    
+    <!-- Floating Particles for entire page -->
+    <div class='fixed inset-0 particles-container overflow-hidden pointer-events-none z-10'>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+    </div>
+
+    <!-- Content with relative positioning -->
+    <div class='relative z-20 max-w-5xl mx-auto'>
+    <!-- Hero Section -->
+    <section class='py-20 text-center relative overflow-hidden mb-20'>
+      <!-- Background gradient -->
+      <div class='absolute inset-0 bg-gradient-to-br from-purple-50/50 via-blue-50/30 to-pink-50/50 dark:from-purple-900/20 dark:via-blue-900/10 dark:to-pink-900/20 rounded-3xl'></div>
+      
+      <!-- Floating Particles -->
+      <div class='particles-container absolute inset-0 overflow-hidden pointer-events-none'>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+        <div class='particle'></div>
+      </div>
+      
+      <div class='relative space-y-8'>
+        <!-- Main heading with typewriter effect -->
+        <div class='animate-fade-in-up'>
+          <h1 class='text-7xl font-bold tracking-tight mb-8 leading-tight'>
+            <span class='bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent typewriter-text'>
+              Blog Posts
+            </span>
+          </h1>
+        </div>
+
+        <!-- Subtitle with clean animation -->
+        <div class='animate-fade-in-up' style='animation-delay: 300ms'>
+          <p class='text-3xl text-gray-600 dark:text-gray-400 font-light leading-relaxed max-w-4xl mx-auto'>
+            Thoughts, tutorials, and insights from my journey as a software engineer
+          </p>
+        </div>
+
+        <!-- Stats section -->
+        <div class='animate-fade-in-up' style='animation-delay: 600ms'>
+          <div class='flex justify-center items-center space-x-8 mt-12'>
+            <div class='stat-item animate-bounce-in' style='animation-delay: 1.5s'>
+              <div class='text-3xl font-bold text-purple-600 dark:text-purple-400'>{sortedPosts.length}</div>
+              <div class='text-sm text-gray-600 dark:text-gray-400'>Articles</div>
+            </div>
+            <div class='w-px h-12 bg-gray-300 dark:bg-gray-600'></div>
+            <div class='stat-item animate-bounce-in' style='animation-delay: 1.7s'>
+              <div class='text-3xl font-bold text-blue-600 dark:text-blue-400'>100%</div>
+              <div class='text-sm text-gray-600 dark:text-gray-400'>Practical</div>
+            </div>
+            <div class='w-px h-12 bg-gray-300 dark:bg-gray-600'></div>
+            <div class='stat-item animate-bounce-in' style='animation-delay: 1.9s'>
+              <div class='text-3xl font-bold text-pink-600 dark:text-pink-400'>Free</div>
+              <div class='text-sm text-gray-600 dark:text-gray-400'>Knowledge</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Posts Grid -->
+    <section class='animate-fade-in-up' style='animation-delay: 800ms'>
+      <div class='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
+        {
+          sortedPosts.map((post, index) => (
+            <article 
+              class='blog-card group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2'
+              style={`animation-delay: ${2 + index * 0.1}s`}
+            >
+              <a href={`/blog/${post.slug}`} class='block h-full'>
+                <!-- Gradient overlay -->
+                <div class='absolute inset-0 bg-gradient-to-br from-purple-500/5 via-blue-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
+                
+                <!-- Floating elements -->
+                <div class='absolute top-4 right-4 w-3 h-3 bg-purple-500 rounded-full opacity-20 group-hover:opacity-60 transition-opacity duration-300'></div>
+                <div class='absolute bottom-4 left-4 w-2 h-2 bg-blue-500 rounded-full opacity-20 group-hover:opacity-60 transition-opacity duration-300'></div>
+                
+                <div class='relative p-8 h-full flex flex-col'>
+                  <!-- Date with animation -->
+                  <div class='flex items-center justify-between mb-6'>
+                    <time class='text-sm font-medium text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/30 px-3 py-1 rounded-full'>
+                      {new Date(post.frontmatter.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </time>
+                    <div class='w-2 h-2 bg-purple-500 rounded-full opacity-60 animate-pulse'></div>
+                  </div>
+                  
+                  <!-- Title with hover effect -->
+                  <h2 class='text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 line-clamp-2 leading-tight'>
+                    {post.frontmatter.title}
+                  </h2>
+                  
+                  <!-- Description -->
+                  <p class='text-gray-600 dark:text-gray-300 flex-grow line-clamp-3 mb-6 leading-relaxed'>
+                    {post.frontmatter.description}
+                  </p>
+                  
+                  <!-- Read more with enhanced animation -->
+                  <div class='flex items-center text-purple-600 dark:text-purple-400 font-medium group-hover:translate-x-2 transition-transform duration-300 mt-auto'>
+                    <span class='group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors'>Read more</span>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      class='h-4 w-4 ml-2 group-hover:scale-110 transition-transform duration-300'
+                      viewBox='0 0 20 20'
+                      fill='currentColor'
+                    >
+                      <path
+                        fill-rule='evenodd'
+                        d='M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z'
+                        clip-rule='evenodd'
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Empty state -->
+    {sortedPosts.length === 0 && (
+      <div class='text-center py-20 animate-fade-in-up' style='animation-delay: 1s'>
+        <div class='text-8xl mb-6 animate-bounce-in' style='animation-delay: 1.5s'>📝</div>
+        <h3 class='text-3xl font-bold text-gray-900 dark:text-white mb-4 animate-reveal-text' style='animation-delay: 1.7s'>No posts yet</h3>
+        <p class='text-xl text-gray-600 dark:text-gray-400 animate-reveal-text' style='animation-delay: 1.9s'>Check back soon for new content!</p>
+      </div>
+    )}
+  </div>
+
+  <!-- Enhanced Framer Motion Script -->
+  <script>
+    // Add stagger animation to blog posts with enhanced effects
+    document.addEventListener('DOMContentLoaded', () => {
+      const articles = document.querySelectorAll('.blog-card');
+      
+      articles.forEach((article, index) => {
+        article.style.opacity = '0';
+        article.style.transform = 'translateY(30px) scale(0.95)';
+        
+        setTimeout(() => {
+          article.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+          article.style.opacity = '1';
+          article.style.transform = 'translateY(0) scale(1)';
+        }, index * 100 + 2000);
+      });
+
+      // Add intersection observer for scroll animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      });
+
+      // Observe all animated elements
+      document.querySelectorAll('.animate-fade-in-up, .animate-word-by-word, .animate-bounce-in').forEach((el) => {
+        observer.observe(el);
+      });
+    });
+  </script>
+
+  <style>
+    /* ===== BASE ANIMATIONS ===== */
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate-fade-in-up {
+      animation: fade-in-up 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* ===== TYPEWRITER EFFECT ===== */
+    @keyframes typewriter {
+      from {
+        width: 0;
+      }
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes blink-caret {
+      from, to {
+        border-color: transparent;
+      }
+      50% {
+        border-color: #8b5cf6;
+      }
+    }
+
+    .typewriter-text {
+      overflow: hidden;
+      border-right: 3px solid #8b5cf6;
+      white-space: nowrap;
+      animation: typewriter 2s steps(15, end), blink-caret 0.75s step-end infinite;
+      animation-delay: 0.5s;
+      animation-fill-mode: both;
+    }
+
+    /* ===== WORD BY WORD ANIMATION ===== */
+    @keyframes word-by-word {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .animate-word-by-word {
+      display: inline-block;
+      animation: word-by-word 0.6s ease-out forwards;
+      opacity: 0;
+      margin-right: 0.5em;
+    }
+
+    /* ===== BOUNCE IN ANIMATION ===== */
+    @keyframes bounce-in {
+      0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-20px);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.1) translateY(0);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .animate-bounce-in {
+      animation: bounce-in 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* ===== REVEAL TEXT ANIMATION ===== */
+    @keyframes reveal-text {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+        filter: blur(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    .animate-reveal-text {
+      animation: reveal-text 1s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* ===== STAT ITEMS ===== */
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-5px) scale(1.05);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .dark .stat-item {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dark .stat-item:hover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    /* ===== BLOG CARD ENHANCEMENTS ===== */
+    .blog-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blog-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .blog-card:hover::before {
+      left: 100%;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(139, 92, 246, 0.15);
+    }
+
+    /* ===== LINE CLAMP UTILITIES ===== */
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 768px) {
+      .typewriter-text {
+        font-size: 2.5rem;
+      }
+      
+      .animate-word-by-word {
+        font-size: 1.25rem;
+      }
+      
+      .stat-item {
+        padding: 0.75rem;
+      }
+      
+      .blog-card {
+        padding: 1.5rem;
+      }
+    }
+
+    /* ===== PERFORMANCE OPTIMIZATIONS ===== */
+    .animate-fade-in-up,
+    .animate-word-by-word,
+    .animate-bounce-in,
+    .animate-reveal-text,
+    .blog-card {
+      will-change: transform, opacity;
+    }
+
+    /* ===== FLOATING PARTICLES ===== */
+    .particles-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: linear-gradient(45deg, #8b5cf6, #3b82f6, #ec4899);
+      border-radius: 50%;
+      opacity: 0;
+      animation: float 15s infinite linear;
+    }
+
+    .particle:nth-child(1) {
+      left: 10%;
+      animation-delay: 2s;
+      animation-duration: 20s;
+    }
+
+    .particle:nth-child(2) {
+      left: 20%;
+      animation-delay: 4s;
+      animation-duration: 18s;
+    }
+
+    .particle:nth-child(3) {
+      left: 30%;
+      animation-delay: 6s;
+      animation-duration: 22s;
+    }
+
+    .particle:nth-child(4) {
+      left: 40%;
+      animation-delay: 6s;
+      animation-duration: 16s;
+    }
+
+    .particle:nth-child(5) {
+      left: 50%;
+      animation-delay: 8s;
+      animation-duration: 24s;
+    }
+
+    .particle:nth-child(6) {
+      left: 60%;
+      animation-delay: 10s;
+      animation-duration: 19s;
+    }
+
+    .particle:nth-child(7) {
+      left: 70%;
+      animation-delay: 12s;
+      animation-duration: 21s;
+    }
+
+    .particle:nth-child(8) {
+      left: 80%;
+      animation-delay: 14s;
+      animation-duration: 17s;
+    }
+
+    .particle:nth-child(9) {
+      left: 90%;
+      animation-delay: 16s;
+      animation-duration: 23s;
+    }
+
+    .particle:nth-child(10) {
+      left: 15%;
+      animation-delay: 1s;
+      animation-duration: 25s;
+    }
+
+    .particle:nth-child(11) {
+      left: 25%;
+      animation-delay: 3s;
+      animation-duration: 15s;
+    }
+
+    .particle:nth-child(12) {
+      left: 35%;
+      animation-delay: 5s;
+      animation-duration: 20s;
+    }
+
+    .particle:nth-child(13) {
+      left: 45%;
+      animation-delay: 7s;
+      animation-duration: 18s;
+    }
+
+    .particle:nth-child(14) {
+      left: 55%;
+      animation-delay: 9s;
+      animation-duration: 22s;
+    }
+
+    .particle:nth-child(15) {
+      left: 65%;
+      animation-delay: 11s;
+      animation-duration: 16s;
+    }
+
+    .particle:nth-child(16) {
+      left: 75%;
+      animation-delay: 13s;
+      animation-duration: 24s;
+    }
+
+    .particle:nth-child(17) {
+      left: 85%;
+      animation-delay: 15s;
+      animation-duration: 19s;
+    }
+
+    .particle:nth-child(18) {
+      left: 95%;
+      animation-delay: 17s;
+      animation-duration: 21s;
+    }
+
+    .particle:nth-child(19) {
+      left: 5%;
+      animation-delay: 19s;
+      animation-duration: 17s;
+    }
+
+    .particle:nth-child(20) {
+      left: 12%;
+      animation-delay: 21s;
+      animation-duration: 23s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      5% {
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.6;
+      }
+      95% {
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* ===== SMOOTH SCROLLING ===== */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</Layout>

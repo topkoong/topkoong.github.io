@@ -1,11 +1,665 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import BlogCard from '../components/BlogCard.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Define types for our markdown content
+interface Frontmatter {
+  title: string;
+  date: string;
+  description: string;
+  published?: boolean; // Optional boolean to control post visibility
+}
+
+// Type for the resolved markdown module
+interface MarkdownModule {
+  frontmatter: Frontmatter;
+  Content: any;
+}
+
+// Get all markdown files
+const posts = await Promise.all(
+  Object.entries(
+    import.meta.glob<{ frontmatter: Frontmatter }>('./blog/posts/*.md')
+  ).map(async ([path, resolver]) => {
+    const post = await resolver();
+    return {
+      ...post,
+      slug: path.replace('./blog/posts/', '').replace('.md', ''),
+    };
+  })
+);
+
+// Filter only published posts (default to true if published field is not specified)
+const publishedPosts = posts.filter(
+  (post) => post.frontmatter.published !== false
+);
+
+// Sort posts by date and get the latest 3
+const sortedPosts = publishedPosts
+  .sort(
+    (a, b) =>
+      new Date(b.frontmatter.date).getTime() -
+      new Date(a.frontmatter.date).getTime()
+  )
+  .slice(0, 3);
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="Toppy's Digital Playground"
+  description='Software Engineer sharing insights on full-stack development, automation, and scaling knowledge through practical tutorials and thoughts.'
+  keywords='software engineer, full-stack development, automation, tutorials, blog, programming, web development, Theeruttop, Toppy'
+>
+  <!-- Full Page Background -->
+  <div class='min-h-screen relative'>
+    <!-- Background gradient for entire page -->
+    <div
+      class='fixed inset-0 bg-gradient-to-br from-purple-50/30 via-blue-50/20 to-pink-50/30 dark:from-purple-900/10 dark:via-blue-900/5 dark:to-pink-900/10 z-0'
+    >
+    </div>
+
+    <!-- Floating Particles for entire page -->
+    <div
+      class='fixed inset-0 particles-container overflow-hidden pointer-events-none z-1'
+    >
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+      <div class='particle'></div>
+    </div>
+
+    <!-- Content with relative positioning -->
+    <div class='relative z-30 max-w-4xl mx-auto'>
+      {/* Hero Section */}
+      <section class='py-20 text-left relative overflow-hidden'>
+        <div class='relative space-y-12'>
+          <!-- Main heading with typewriter effect -->
+          <div class='animate-fade-in-up'>
+            <h1 class='text-7xl font-bold tracking-tight mb-8 leading-tight'>
+              <span class='block'>
+                <span
+                  class='bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent typewriter-text'
+                >
+                  Hey, I'm Top.
+                </span>
+              </span>
+              <span
+                class='block text-5xl mt-4 text-gray-700 dark:text-gray-300 animate-slide-in-right'
+                style='animation-delay: 1.5s'
+              >
+                (Theerut)
+              </span>
+            </h1>
+          </div>
+
+          <!-- Subtitle with clean animation -->
+          <div class='animate-fade-in-up' style='animation-delay: 300ms'>
+            <p
+              class='text-2xl text-gray-800 dark:text-gray-200 font-normal leading-relaxed max-w-4xl tracking-wide'
+            >
+              Software Engineer. Building the Full Stack, Mastering Automation,
+              and Scaling Knowledge.
+            </p>
+          </div>
+
+          <!-- Description with moving text animation -->
+          <div class='animate-fade-in-up' style='animation-delay: 600ms'>
+            <div
+              class='text-gray-700 dark:text-gray-300 space-y-8 leading-relaxed text-xl max-w-3xl px-8 py-6'
+            >
+              <p class='animate-moving-text' style='animation-delay: 1.5s'>
+                Welcome to my digital space. I'm a developer who enjoys
+                navigating both the <span class='highlight-text'
+                  >Frontend experience</span
+                > and the complexity of
+                <span class='highlight-text'>Backend services</span>. This site
+                serves as my public notebook where I dump random thoughts and
+                sometimes share stuff that might actually help you.
+              </p>
+              <p class='animate-moving-text' style='animation-delay: 2s'>
+                My mantra is simple:
+              </p>
+              <div class='animate-moving-text' style='animation-delay: 2.2s'>
+                <blockquote
+                  class='text-xl font-medium text-gray-800 dark:text-gray-200 italic text-center py-8 px-6 border-l-2 border-gray-300 dark:border-gray-600 bg-gray-50/30 dark:bg-gray-800/20 rounded-lg my-8 max-w-2xl mx-auto'
+                >
+                  "Why do things manually when you can automate them?"
+                </blockquote>
+              </div>
+              <p class='animate-moving-text' style='animation-delay: 2.4s'>
+                I'm dedicated to writing efficient scripts and code that
+                eliminate repetitive work, and I share the practical tools and
+                techniques I use to make development easier.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Blog Section */}
+      <section class='py-16 border-t border-gray-200 dark:border-gray-800'>
+        <div class='animate-fade-in-up' style='animation-delay: 400ms'>
+          <div class='flex justify-between items-baseline mb-12'>
+            <h2 class='text-4xl font-bold text-gray-900 dark:text-white'>
+              Recent Posts
+            </h2>
+            <a
+              href='/blog'
+              class='group flex items-center text-lg text-gray-600 dark:text-gray-400
+            hover:text-purple-600 dark:hover:text-purple-400 transition-colors'
+            >
+              More stuff
+              <svg
+                class='w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  stroke-width='2'
+                  d='M17 8l4 4m0 0l-4 4m4-4H3'></path>
+              </svg>
+            </a>
+          </div>
+
+          <div class='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
+            {
+              sortedPosts.map((post, index) => (
+                <div
+                  class='animate-fade-in-up'
+                  style={`animation-delay: ${600 + index * 100}ms`}
+                >
+                  <BlogCard
+                    title={post.frontmatter.title}
+                    description={post.frontmatter.description}
+                    date={new Date(post.frontmatter.date).toLocaleDateString()}
+                    slug={post.slug}
+                  />
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      {/* Social Links */}
+      <section class='py-16 border-t border-gray-200 dark:border-gray-800'>
+        <div class='animate-fade-in-up' style='animation-delay: 800ms'>
+          <div class='text-center'>
+            <h3 class='text-2xl font-bold text-gray-900 dark:text-white mb-8'>
+              Let's Connect
+            </h3>
+            <div class='flex justify-center space-x-8'>
+              <a
+                href='https://github.com/topkoong'
+                target='_blank'
+                rel='noopener noreferrer'
+                class='group flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-purple-100 dark:hover:bg-purple-900 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-300 hover:scale-110'
+              >
+                <span class='sr-only'>GitHub</span>
+                <svg class='h-6 w-6' fill='currentColor' viewBox='0 0 24 24'>
+                  <path
+                    d='M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z'
+                  ></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <style>
+    /* ===== BASE ANIMATIONS ===== */
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in-up {
+      animation: fade-in-up 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* ===== TYPEWRITER EFFECT ===== */
+    @keyframes typewriter {
+      from {
+        width: 0;
+      }
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes blink-caret {
+      from,
+      to {
+        border-color: transparent;
+      }
+      50% {
+        border-color: #8b5cf6;
+      }
+    }
+
+    .typewriter-text {
+      overflow: hidden;
+      border-right: 3px solid #8b5cf6;
+      white-space: nowrap;
+      animation:
+        typewriter 2s steps(20, end),
+        blink-caret 0.75s step-end infinite;
+      animation-delay: 0.5s;
+      animation-fill-mode: both;
+    }
+
+    /* ===== SLIDE IN ANIMATIONS ===== */
+    @keyframes slide-in-right {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .animate-slide-in-right {
+      animation: slide-in-right 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* ===== WORD BY WORD ANIMATION ===== */
+    @keyframes word-by-word {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .animate-word-by-word {
+      display: inline-block;
+      animation: word-by-word 0.6s ease-out forwards;
+      opacity: 0;
+      margin-right: 0.5em;
+    }
+
+    /* ===== MOVING TEXT ANIMATION ===== */
+    @keyframes moving-text {
+      0% {
+        opacity: 0;
+        transform: translateX(-30px) translateY(20px);
+        filter: blur(3px);
+      }
+      50% {
+        opacity: 0.8;
+        transform: translateX(0) translateY(0);
+        filter: blur(0);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    .animate-moving-text {
+      animation: moving-text 1.2s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* ===== HIGHLIGHT TEXT EFFECTS ===== */
+    @keyframes highlight-text {
+      0% {
+        background: linear-gradient(90deg, transparent, transparent);
+        background-size: 0% 100%;
+      }
+      50% {
+        background: linear-gradient(
+          90deg,
+          rgba(139, 92, 246, 0.2),
+          rgba(59, 130, 246, 0.2)
+        );
+        background-size: 100% 100%;
+      }
+      100% {
+        background: linear-gradient(
+          90deg,
+          rgba(139, 92, 246, 0.1),
+          rgba(59, 130, 246, 0.1)
+        );
+        background-size: 100% 100%;
+      }
+    }
+
+    .highlight-text {
+      background: linear-gradient(
+        90deg,
+        rgba(139, 92, 246, 0.1),
+        rgba(59, 130, 246, 0.1)
+      );
+      background-size: 100% 100%;
+      padding: 0.2em 0.4em;
+      border-radius: 0.3em;
+      font-weight: 600;
+      animation: highlight-text 2s ease-out forwards;
+    }
+
+    /* ===== MANTRA HIGHLIGHT ===== */
+    @keyframes highlight-mantra {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+        background: transparent;
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+        background: linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.1),
+          rgba(236, 72, 153, 0.1)
+        );
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        background: linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.05),
+          rgba(236, 72, 153, 0.05)
+        );
+      }
+    }
+
+    .animate-highlight-mantra {
+      display: inline-block;
+      padding: 0.5em 1em;
+      border-radius: 0.5em;
+      border: 2px solid rgba(139, 92, 246, 0.3);
+      animation: highlight-mantra 1.5s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* ===== BOUNCE IN ANIMATION ===== */
+    @keyframes bounce-in {
+      0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-20px);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.1) translateY(0);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .animate-bounce-in {
+      animation: bounce-in 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 768px) {
+      .typewriter-text {
+        font-size: 2.5rem;
+      }
+
+      .animate-slide-in-right {
+        font-size: 1.5rem;
+      }
+
+      .animate-word-by-word {
+        font-size: 1.25rem;
+      }
+
+      .skill-badge {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+    }
+
+    /* ===== SUBTLE MOTION EFFECTS ===== */
+    .animate-moving-text:hover {
+      transform: translateY(-2px);
+      transition: transform 0.3s ease;
+    }
+
+    blockquote:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .highlight-text {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .highlight-text:hover {
+      color: #8b5cf6;
+      transform: scale(1.02);
+    }
+
+    /* ===== PERFORMANCE OPTIMIZATIONS ===== */
+    .animate-fade-in-up,
+    .animate-slide-in-right,
+    .animate-word-by-word,
+    .animate-moving-text,
+    .animate-highlight-mantra,
+    .animate-bounce-in {
+      will-change: transform, opacity;
+    }
+
+    /* ===== FLOATING PARTICLES ===== */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: linear-gradient(45deg, #8b5cf6, #3b82f6, #ec4899);
+      border-radius: 50%;
+      opacity: 0;
+      animation: float 15s infinite linear;
+    }
+
+    .particle:nth-child(1) {
+      left: 10%;
+      animation-delay: 2s;
+      animation-duration: 20s;
+    }
+
+    .particle:nth-child(2) {
+      left: 20%;
+      animation-delay: 4s;
+      animation-duration: 18s;
+    }
+
+    .particle:nth-child(3) {
+      left: 30%;
+      animation-delay: 6s;
+      animation-duration: 22s;
+    }
+
+    .particle:nth-child(4) {
+      left: 40%;
+      animation-delay: 6s;
+      animation-duration: 16s;
+    }
+
+    .particle:nth-child(5) {
+      left: 50%;
+      animation-delay: 8s;
+      animation-duration: 24s;
+    }
+
+    .particle:nth-child(6) {
+      left: 60%;
+      animation-delay: 10s;
+      animation-duration: 19s;
+    }
+
+    .particle:nth-child(7) {
+      left: 70%;
+      animation-delay: 12s;
+      animation-duration: 21s;
+    }
+
+    .particle:nth-child(8) {
+      left: 80%;
+      animation-delay: 14s;
+      animation-duration: 17s;
+    }
+
+    .particle:nth-child(9) {
+      left: 90%;
+      animation-delay: 16s;
+      animation-duration: 23s;
+    }
+
+    .particle:nth-child(10) {
+      left: 15%;
+      animation-delay: 1s;
+      animation-duration: 25s;
+    }
+
+    .particle:nth-child(11) {
+      left: 25%;
+      animation-delay: 3s;
+      animation-duration: 15s;
+    }
+
+    .particle:nth-child(12) {
+      left: 35%;
+      animation-delay: 5s;
+      animation-duration: 20s;
+    }
+
+    .particle:nth-child(13) {
+      left: 45%;
+      animation-delay: 7s;
+      animation-duration: 18s;
+    }
+
+    .particle:nth-child(14) {
+      left: 55%;
+      animation-delay: 9s;
+      animation-duration: 22s;
+    }
+
+    .particle:nth-child(15) {
+      left: 65%;
+      animation-delay: 11s;
+      animation-duration: 16s;
+    }
+
+    .particle:nth-child(16) {
+      left: 75%;
+      animation-delay: 13s;
+      animation-duration: 24s;
+    }
+
+    .particle:nth-child(17) {
+      left: 85%;
+      animation-delay: 15s;
+      animation-duration: 19s;
+    }
+
+    .particle:nth-child(18) {
+      left: 95%;
+      animation-delay: 17s;
+      animation-duration: 21s;
+    }
+
+    .particle:nth-child(19) {
+      left: 5%;
+      animation-delay: 19s;
+      animation-duration: 17s;
+    }
+
+    .particle:nth-child(20) {
+      left: 12%;
+      animation-delay: 21s;
+      animation-duration: 23s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      5% {
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.6;
+      }
+      90% {
+        opacity: 0.6;
+      }
+      95% {
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* ===== SMOOTH SCROLLING ===== */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
 </Layout>
