@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.14.5"><!-- Google Fonts for better typography --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><!-- Primary Meta Tags --><title>Secret Management กับ Vault แบบเจาะลึก: Production-Grade Security 🔐</title><meta name="title" content="Secret Management กับ Vault แบบเจาะลึก: Production-Grade Security 🔐"><meta name="description" content="การจัดการ Secrets ทั้ง Text-based และ File-based ใน Microservices ด้วย HashiCorp Vault และ Kubernetes Auth Method เพื่อให้เข้าถึงข้อมูลได้อย่างปลอดภัยและจำกัดสิทธิ์ (Least Privilege)."><meta name="keywords" content="software engineer, full-stack development, automation, tutorials, blog, programming, web development"><meta name="author" content="Theeruttop (Toppy)"><meta name="robots" content="index, follow"><meta name="language" content="English"><meta name="revisit-after" content="7 days"><!-- Canonical URL --><link rel="canonical" href="https://topkoong.github.io/blog/vault-security-guide/"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://topkoong.github.io/blog/vault-security-guide/"><meta property="og:title" content="Secret Management กับ Vault แบบเจาะลึก: Production-Grade Security 🔐"><meta property="og:description" content="การจัดการ Secrets ทั้ง Text-based และ File-based ใน Microservices ด้วย HashiCorp Vault และ Kubernetes Auth Method เพื่อให้เข้าถึงข้อมูลได้อย่างปลอดภัยและจำกัดสิทธิ์ (Least Privilege)."><meta property="og:image" content="https://topkoong.github.io/social-preview"><meta property="og:site_name" content="Toppy's Digital Playground"><meta property="og:locale" content="en_US"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://topkoong.github.io/blog/vault-security-guide/"><meta property="twitter:title" content="Secret Management กับ Vault แบบเจาะลึก: Production-Grade Security 🔐"><meta property="twitter:description" content="การจัดการ Secrets ทั้ง Text-based และ File-based ใน Microservices ด้วย HashiCorp Vault และ Kubernetes Auth Method เพื่อให้เข้าถึงข้อมูลได้อย่างปลอดภัยและจำกัดสิทธิ์ (Least Privilege)."><meta property="twitter:image" content="https://topkoong.github.io/social-preview"><meta property="twitter:creator" content="@topkoong"><!-- Additional Meta Tags --><meta name="theme-color" content="#8b5cf6"><meta name="msapplication-TileColor" content="#8b5cf6"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><!-- Structured Data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"Secret Management กับ Vault แบบเจาะลึก: Production-Grade Security 🔐","description":"การจัดการ Secrets ทั้ง Text-based และ File-based ใน Microservices ด้วย HashiCorp Vault และ Kubernetes Auth Method เพื่อให้เข้าถึงข้อมูลได้อย่างปลอดภัยและจำกัดสิทธิ์ (Least Privilege).","url":"https://topkoong.github.io/blog/vault-security-guide/","author":{"@type":"Person","name":"Theeruttop (Toppy)","url":"https://topkoong.github.io"},"publisher":{"@type":"Person","name":"Theeruttop (Toppy)","url":"https://topkoong.github.io"},"datePublished":"2024-05-30T00:00:00.000Z","dateModified":"2024-05-30T00:00:00.000Z"}</script><!-- Initialize theme before page loads to prevent flash --><script>
+      // This script runs immediately and prevents flash of wrong theme
+      const getTheme = () => {
+        if (
+          typeof localStorage !== 'undefined' &&
+          localStorage.getItem('theme')
+        ) {
+          return localStorage.getItem('theme');
+        }
+        return 'dark'; // Force dark mode as default
+      };
+
+      // Get and apply theme immediately
+      const theme = getTheme();
+
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+
+      // Set dark mode as default for new users
+      if (
+        typeof localStorage !== 'undefined' &&
+        !localStorage.getItem('theme')
+      ) {
+        localStorage.setItem('theme', 'dark');
+      }
+    </script><link rel="stylesheet" href="/_astro/_slug_.BMt7hexD.css">
+<link rel="stylesheet" href="/_astro/2023-year-in-review_md.CratWVIC.css">
+<style>html{transition:background-color .2s ease-in-out;background-color:#fff}html.dark{background-color:#000}.prose{max-width:80ch}.prose h1,.prose h2,.prose h3,.prose h4,.prose h5,.prose h6{--tw-text-opacity: 1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.prose h1:is(.dark *),.prose h2:is(.dark *),.prose h3:is(.dark *),.prose h4:is(.dark *),.prose h5:is(.dark *),.prose h6:is(.dark *){--tw-text-opacity: 1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.prose h1,.prose h2,.prose h3,.prose h4,.prose h5,.prose h6{margin-top:2em;margin-bottom:1em}.prose p{--tw-text-opacity: 1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.prose p:is(.dark *){--tw-text-opacity: 1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.prose a{--tw-text-opacity: 1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.prose a:is(.dark *){--tw-text-opacity: 1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.prose a{text-decoration:underline}.prose a:hover{--tw-text-opacity: 1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.prose a:hover:is(.dark *){--tw-text-opacity: 1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}.prose code{background-color:transparent!important;padding:.2em .4em;border-radius:.25em}.dark .prose code{background-color:transparent!important}.prose pre{padding:1em;border-radius:.5em;overflow-x:auto}.prose img{max-width:100%;height:auto}
+</style></head> <body class="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-black dark:text-white transition-colors duration-200"> <nav class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200 relative z-50"> <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"> <div class="flex justify-between items-center h-16">   <div class="flex space-x-4 sm:space-x-8"> <a href="/" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"> Home </a><a href="/blog" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"> Blog </a> </div>  <button id="theme-toggle" class="rounded-lg p-2 text-gray-400 hover:text-white transition-colors" aria-label="Toggle theme">  <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg>  <svg id="moon-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function d(){const n=document.getElementById("theme-toggle"),e=document.getElementById("sun-icon"),t=document.getElementById("moon-icon");if(!n||!e||!t){console.log("Theme toggle elements not found");return}(localStorage.getItem("theme")||"dark")==="light"?(document.documentElement.classList.remove("dark"),e.classList.remove("hidden"),t.classList.add("hidden")):(document.documentElement.classList.add("dark"),e.classList.add("hidden"),t.classList.remove("hidden")),n.addEventListener("click",function(){document.documentElement.classList.contains("dark")?(document.documentElement.classList.remove("dark"),e.classList.remove("hidden"),t.classList.add("hidden"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),e.classList.add("hidden"),t.classList.remove("hidden"),localStorage.setItem("theme","dark"))})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",d):d();</script> </div> </div> </nav> <main class="flex-1"> <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">  <article class="max-w-5xl mx-auto" data-astro-cid-bvzihdzo> <header class="mb-12" data-astro-cid-bvzihdzo> <div class="animate-fade-in-up" data-astro-cid-bvzihdzo> <h1 class="text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight" data-astro-cid-bvzihdzo> Secret Management กับ Vault แบบเจาะลึก: Production-Grade Security 🔐 </h1> <div class="flex items-center space-x-4 text-gray-600 dark:text-gray-400" data-astro-cid-bvzihdzo> <time class="text-lg" datetime="2024-05-30T00:00:00.000Z" data-astro-cid-bvzihdzo> May 30, 2024 </time> <div class="w-2 h-2 bg-purple-500 rounded-full" data-astro-cid-bvzihdzo></div> <span class="text-lg" data-astro-cid-bvzihdzo>Theeruttop (Toppy)</span> </div>  </div> </header>  <div class="prose prose-gray dark:prose-invert max-w-none
+      prose-headings:text-gray-900 dark:prose-headings:text-white
+      prose-p:text-gray-700 dark:prose-p:text-gray-300
+      prose-a:text-blue-600 dark:prose-a:text-blue-400
+      prose-strong:text-gray-900 dark:prose-strong:text-white
+      prose-blockquote:border-gray-200 dark:prose-blockquote:border-gray-700
+      prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400
+      prose-ul:text-gray-700 dark:prose-ul:text-gray-300
+      prose-ol:text-gray-700 dark:prose-ol:text-gray-300
+      prose-li:text-gray-700 dark:prose-li:text-gray-300
+      prose-hr:border-gray-200 dark:prose-hr:border-gray-700
+      prose-table:border-gray-200 dark:prose-table:border-gray-700
+      prose-th:border-gray-200 dark:prose-th:border-gray-700
+      prose-td:border-gray-200 dark:prose-td:border-gray-700" data-astro-cid-bvzihdzo> <h1 id="secret-management-deep-dive-production-grade-implementation">Secret Management Deep Dive: Production-Grade Implementation</h1>
+<h2 id="-การวิเคราะห์และเตรียมการ">📋 การวิเคราะห์และเตรียมการ</h2>
+<p>ขั้นตอนแรกที่สำคัญคือการวิเคราะห์ความต้องการของทุกทีม เพื่อออกแบบระบบให้รองรับการใช้งานได้อย่างเหมาะสมและปลอดภัย</p>
+<h3 id="การสำรวจความต้องการ">การสำรวจความต้องการ</h3>
+<blockquote>
+<p>การจัดกลุ่ม secrets ตาม service และประเภทการใช้งาน ช่วยให้วางแผนสิทธิ์และการเข้าถึงได้ง่ายขึ้น</p>
+</blockquote>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code class="language-undefined"><span class="line"><span>Team A/</span></span>
+<span class="line"><span>├── Payment Service/          # ต้องการความปลอดภัยสูงเพราะเกี่ยวกับเงิน</span></span>
+<span class="line"><span>│   ├── Database Credentials  # เก็บ username/password สำหรับ database</span></span>
+<span class="line"><span>│   ├── Payment Gateway Keys  # API keys สำหรับเชื่อมต่อ payment gateway</span></span>
+<span class="line"><span>│   └── Encryption Keys      # Keys สำหรับเข้ารหัสข้อมูลบัตรเครดิต (Text-based/File-based)</span></span>
+<span class="line"><span>└── Notification Service/     # ต้องการความปลอดภัยปานกลาง</span></span>
+<span class="line"><span>├── Email Service Creds  # SMTP credentials</span></span>
+<span class="line"><span>└── Line Notify Token    # Token สำหรับส่งแจ้งเตือน</span></span></code></pre>
+<h3 id="โครงสร้าง-vault-path-สำหรับ-multiple-environments">โครงสร้าง Vault Path สำหรับ Multiple Environments</h3>
+<p>การออกแบบ <strong>Vault Path Structure</strong> ที่ดีเป็นก้าวแรกของการทำ <strong>Least Privilege</strong> และการป้องกันการใช้ <strong>Secrets</strong> ผิด <strong>Environment</strong> ซึ่งในบริบทขององค์กรที่มีหลาย <strong>Environment</strong> โครงสร้างแบบ <strong>Hierarchical</strong> จะมีความชัดเจนที่สุด</p>
+<blockquote>
+<p>เราใช้ <strong>Vault KV Secret Engine V2</strong> เพื่อจัดการ Secret Versioning และแยก Environment อย่างชัดเจน:</p>
+</blockquote>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code class="language-undefined"><span class="line"><span>secret/</span></span>
+<span class="line"><span>├── dit/                    # Development Integration Test (DIT)</span></span>
+<span class="line"><span>│   ├── team-a/</span></span>
+<span class="line"><span>│   │   ├── payment-service/</span></span>
+<span class="line"><span>│   │   └── notification-service/</span></span>
+<span class="line"><span>│   └── team-b/</span></span>
+<span class="line"><span>├── sit/                    # System Integration Test (SIT/SIT2/SIT3)</span></span>
+<span class="line"><span>│   ├── team-a/</span></span>
+<span class="line"><span>│   │   ├── payment-service/</span></span>
+<span class="line"><span>│   │   └── notification-service/</span></span>
+<span class="line"><span>│   └── team-b/</span></span>
+<span class="line"><span>├── uat/                    # User Acceptance Test (UAT/UAT2)</span></span>
+<span class="line"><span>│   ├── team-a/</span></span>
+<span class="line"><span>│   │   ├── payment-service/</span></span>
+<span class="line"><span>│   │   └── notification-service/</span></span>
+<span class="line"><span>│   └── team-b/</span></span>
+<span class="line"><span>└── prod/                   # Production (PROD) - ต้องการการดูแลเป็นพิเศษ</span></span>
+<span class="line"><span>├── team-a/</span></span>
+<span class="line"><span>│   ├── payment-service/</span></span>
+<span class="line"><span>│   └── notification-service/</span></span>
+<span class="line"><span>└── team-b/</span></span></code></pre>
+<hr>
+<h2 id="-การตั้งค่า-kubernetes-authentication">🔑 การตั้งค่า Kubernetes Authentication</h2>
+<h1 id="ขั้นตอนการเชื่อม-kubernetes-กับ-vault">ขั้นตอนการเชื่อม Kubernetes กับ Vault</h1>
+<p><strong>Kubernetes Authentication Method</strong> คือกลไกที่อนุญาตให้ <strong>Service Accounts</strong> ภายใน Cluster ยืนยันตัวตนกับ Vault โดยไม่ต้องใช้ <strong>Hardcoded Credentials</strong></p>
+<h3 id="1-สร้าง-service-account">1. สร้าง Service Account</h3>
+<blockquote>
+<p>Service Account คือตัวแทนของ service ที่จะใช้ขอ <strong>Lease Token</strong></p>
+</blockquote>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># service-account.yaml</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">apiVersion</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> v1</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">kind</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> ServiceAccount</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">metadata</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  name</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> payment-service-sa</span><span style="color:#6272A4;--shiki-dark:#6272A4"> # ชื่อต้องตรงกับที่ระบุใน deployment</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  namespace</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> team-a</span><span style="color:#6272A4;--shiki-dark:#6272A4"> # แยก namespace ตามทีม</span></span></code></pre>
+<h3 id="2-กำหนด-vault-policy-least-privilege">2. กำหนด Vault Policy (Least Privilege)</h3>
+<blockquote>
+<p>Policy คือกฎการเข้าถึง Secret Path โดยใช้ Wildcard (<code>+</code>) สำหรับ Environment</p>
+</blockquote>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="hcl"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># payment-service-policy.hcl</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># อนุญาตให้ "read" Secrets ทั้งหมดใน path ของ payment-service ทุก Environment</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">path</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> "secret/data/+/team-a/payment-service/*" {</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> capabilities </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> [</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">read</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">]     </span><span style="color:#6272A4;--shiki-dark:#6272A4"># ให้สิทธิ์แค่อ่านอย่างเดียวเท่านั้น</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ตัวอย่าง path สำหรับ PGP Private Key (File-based secret)</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">path</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> "secret/data/+/team-a/payment-service/pgp-private-key" {</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> capabilities </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> [</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">read</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">]</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+<h3 id="3-vault-role-configuration">3. Vault Role Configuration</h3>
+<blockquote>
+<p>Role เป็นตัวเชื่อม Service Account กับ Policy เพื่อกำหนดสิทธิ์การเข้าถึง</p>
+</blockquote>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># Map service account กับ policy ผ่าน role</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">vault</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> write</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> auth/kubernetes/role/payment-service</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    bound_service_account_names=payment-service-sa</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4"> # ชื่อ Service Account</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    bound_service_account_namespaces</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">team-a</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">       # Namespace ที่อนุญาตให้ใช้ Role นี้</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    policies</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">payment-service-policy</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">               # Policy ที่ใช้กำหนดสิทธิ์</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    ttl</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">1h</span><span style="color:#6272A4;--shiki-dark:#6272A4">                                          # Lease Token จะหมดอายุใน 1 ชั่วโมง</span></span></code></pre>
+<hr>
+<h2 id="-flow-การทำงานละเอียด-authentication-workflow">🔄 Flow การทำงานละเอียด: Authentication Workflow</h2>
+<p>นี่คือขั้นตอนการทำงานที่ละเอียดของ <strong>Spring Boot Microservice</strong> ในการขอ <strong>Secret</strong> จาก Vault ผ่าน <strong>Kubernetes Authentication</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">ขั้นตอน</th><th align="left">Component</th><th align="left">Action</th><th align="left">คำอธิบาย (Comments)</th></tr></thead><tbody><tr><td align="left"><strong>1. Pod Mount Token</strong></td><td align="left"><strong>Kubernetes</strong></td><td align="left"><code>Volume Mount</code></td><td align="left"><strong>Kubernetes</strong> จะ <strong>Mount JWT Token</strong> (Service Account Token) ไปยัง Path มาตรฐาน <code>/var/run/secrets/kubernetes.io/serviceaccount/token</code> ภายใน Pod ของ <strong>Spring Boot Service</strong> โดยอัตโนมัติ</td></tr><tr><td align="left"><strong>2. Authentication Request</strong></td><td align="left"><strong>Spring Boot</strong></td><td align="left"><code>POST /v1/auth/kubernetes/login</code></td><td align="left"><strong>Spring Boot</strong> ใช้ <strong>JWT Token</strong> ที่ได้จาก <strong>Mount Path</strong> ในการ <strong>Login</strong> ไปที่ <strong>Vault</strong> พร้อมระบุ <strong>Role</strong> (<code>payment-service</code>)</td></tr><tr><td align="left"><strong>3. Token Review</strong></td><td align="left"><strong>Vault</strong> $\leftrightarrow$ <strong>K8s API</strong></td><td align="left"><code>TokenReview API</code></td><td align="left"><strong>Vault</strong> ติดต่อ <strong>Kubernetes API Server</strong> เพื่อ <strong>Verify</strong> ว่า <strong>JWT Token</strong> ที่ส่งมานั้น <strong>Valid</strong> จริง และ <strong>ตรวจสอบความถูกต้อง</strong> ของ <code>Service Account</code> และ <code>Namespace</code> ที่ระบุใน <strong>Role</strong></td></tr><tr><td align="left"><strong>4. Policy Check &#x26; Token Issue</strong></td><td align="left"><strong>Vault</strong></td><td align="left"><code>Client Token Generation</code></td><td align="left">เมื่อยืนยันถูกต้อง <strong>Vault</strong> จะออก <strong>Lease Token</strong> ที่มี <strong>Policy</strong> (<code>payment-service-policy</code>) ผูกอยู่ และกำหนด <strong>TTL</strong> (เช่น 1h) ให้</td></tr><tr><td align="left"><strong>5. Secret Access</strong></td><td align="left"><strong>Spring Boot</strong></td><td align="left"><code>GET /v1/secret/data/sit/team-a/payment-service/db-credential</code></td><td align="left"><strong>Spring Boot</strong> ใช้ <strong>Lease Token</strong> ที่ได้มาใน <strong>Header: X-Vault-Token</strong> เพื่อ <strong>Request</strong> ขอ <strong>Secret</strong> จาก Path ที่ได้รับอนุญาต</td></tr></tbody></table>
+<h3 id="visual-flow-diagram">Visual Flow Diagram</h3>
+<blockquote>
+<p><strong>แผนผังแสดงขั้นตอนการขอ Token และการตรวจสอบสิทธิ์</strong></p>
+</blockquote>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code class="language-undefined"><span class="line"><span>[Service-A (Spring Boot)] &#x3C;--- 1. Service Account Token (JWT) ---> [Kubernetes]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>[Service-A (Spring Boot)] ---> 2. Login Request (JWT + Role) ---> [Vault]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>[Vault] &#x3C;--- 3. Token Review ---> [Kubernetes API Server]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>[Vault] &#x3C;--- 4. (Valid) ---> [Kubernetes API Server]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>[Vault] ---> 5. Lease Token ---> [Service-A (Spring Boot)]</span></span></code></pre>
+<h3 id="spring-boot-configuration">Spring Boot Configuration</h3>
+<blockquote>
+<p>การตั้งค่า Spring Boot เพื่อเชื่อมต่อกับ Vault โดยระบุ <strong>Role</strong> ที่ผูกกับ <strong>Service Account</strong></p>
+</blockquote>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code class="language-undefined"><span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">spring</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  cloud</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">    vault</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">      kubernetes</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">        role</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> payment-service</span><span style="color:#6272A4;--shiki-dark:#6272A4"> # ต้องตรงกับ role ที่สร้างไว้ใน Vault</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">        service-account-token-file</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> /var/run/secrets/kubernetes.io/serviceaccount/token</span><span style="color:#6272A4;--shiki-dark:#6272A4"> # Path มาตรฐานที่ K8s Mount JWT Token เข้ามา</span></span></code></pre>
+<h3 id="code-snippets-ที่เพิ่มความชัดเจน">Code Snippets ที่เพิ่มความชัดเจน</h3>
+<ol>
+<li>
+<p><strong>Spring Boot Pod Configuration (Kubernetes YAML)</strong></p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ใน Deployment/StatefulSet ของ Spring Boot Microservice</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">spec</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  serviceAccountName</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> payment-service-sa</span><span style="color:#6272A4;--shiki-dark:#6272A4"> # Service Account Name ที่สร้างไว้</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  containers</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    -</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> name</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> payment-ms</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">      # Kubernetes จะ Mount JWT Token มาที่ Path นี้อัตโนมัติ</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">      volumeMounts</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">        -</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> name</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> service-account-token</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">          mountPath</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> /var/run/secrets/kubernetes.io/serviceaccount</span></span></code></pre>
+</li>
+<li>
+<p><strong>Authentication Request ไปที่ Vault</strong></p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">// ภายใน Vault Client Library (Client-side)</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">// ใช้ JWT Token ที่ Mount มาจาก K8s ในการ Authenticate</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">POST </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">/</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">v1</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">/</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">auth</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">/</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">kubernetes</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">/</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">login</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">{</span></span>
+<span class="line"><span style="color:#E9F284;--shiki-dark:#E9F284">  "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">role</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">payment-service</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,              </span><span style="color:#6272A4;--shiki-dark:#6272A4">// Role ที่ผูกกับ Policy และ Service Account ใน Vault</span></span>
+<span class="line"><span style="color:#E9F284;--shiki-dark:#E9F284">  "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">jwt</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">&#x3C;service-account-token></span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#6272A4;--shiki-dark:#6272A4">        // JWT Token ที่อ่านจาก /var/run/secrets/.../token</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+</li>
+<li>
+<p><strong>Vault Response (Success)</strong></p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code class="language-undefined"><span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">{</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">  "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">auth</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">    "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">client_token</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">&#x3C;lease-token-with-policy></span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">, </span><span style="color:#6272A4;--shiki-dark:#6272A4">// Token ที่มีอายุจำกัด (e.g., 1h)</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">    "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">policies</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> [</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">payment-service-policy</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">], </span><span style="color:#6272A4;--shiki-dark:#6272A4">// Policy ที่อนุญาตให้ 'read' Path ที่จำเป็นเท่านั้น</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">    "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">lease_duration</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> 3600</span><span style="color:#6272A4;--shiki-dark:#6272A4"> // TTL = 3600 วินาที (1 ชั่วโมง)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">  }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+</li>
+</ol>
+<hr>
+<h2 id="-secret-mapping-example-และ-file-security">📝 Secret Mapping Example และ File Security</h2>
+<p>Vault รองรับการจัดเก็บ <strong>Secret</strong> ได้หลากหลายประเภท โดยเฉพาะ <strong>Text-based</strong> และ <strong>File-based</strong></p>
+<h3 id="1-text-based-secrets-eg-api-keys-passwords">1. Text-based Secrets (e.g., API Keys, Passwords)</h3>
+<blockquote>
+<p>ตัวอย่างการเก็บ Credentials และ API Keys</p>
+</blockquote>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code class="language-undefined"><span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">secret/sit/team-a/payment-service/db-cred</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  username</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> '</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">user_sit_payment</span><span style="color:#E9F284;--shiki-dark:#E9F284">'</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  password</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> '</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">super_secure_password_sit</span><span style="color:#E9F284;--shiki-dark:#E9F284">'</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  host</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> '</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">db-sit.internal</span><span style="color:#E9F284;--shiki-dark:#E9F284">'</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  port</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> '</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">5432</span><span style="color:#E9F284;--shiki-dark:#E9F284">'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">secret/sit/team-a/payment-service/api-keys</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  gateway_key</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> '</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">KEY-SIT-XYZ-123</span><span style="color:#E9F284;--shiki-dark:#E9F284">'</span><span style="color:#6272A4;--shiki-dark:#6272A4"> # Key สำหรับ authentication</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  gateway_secret</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> '</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">SECRET-SIT-ABC-456</span><span style="color:#E9F284;--shiki-dark:#E9F284">'</span><span style="color:#6272A4;--shiki-dark:#6272A4"> # Secret สำหรับเซ็น request</span></span></code></pre>
+<h3 id="2-file-based-secrets-eg-certificates-private-keys">2. File-based Secrets (e.g., Certificates, Private Keys)</h3>
+<blockquote>
+<p>ตัวอย่างการเก็บ PGP Private Key ที่ใช้ในการรับส่งไฟล์อย่างปลอดภัย</p>
+</blockquote>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code class="language-undefined"><span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">secret/sit/team-a/payment-service/pgp-private-key</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">  pgp_private_key</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> |</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    -----BEGIN PGP PRIVATE KEY BLOCK-----</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    Version: GnuPG v1.4.10 (GNU/Linux)</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    lQeGBF2424YBCACz4PzX/n... (Content of Private Key file)</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    ...</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    =yR4s</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    -----END PGP PRIVATE KEY BLOCK-----</span></span></code></pre>
+<p><strong>การใช้งาน:</strong> แอปพลิเคชันจะดึงเนื้อหา <strong>Text</strong> นี้ไป <strong>Write</strong> เป็นไฟล์ชั่วคราว (Temporary File) ใน <strong>In-Memory Volume</strong> ภายใน Pod เพื่อใช้งานในการ <strong>Decryption</strong> โดยไม่เก็บไฟล์ไว้บน Disk ถาวร</p>
+<hr>
+<h2 id="-best-practices">💡 Best Practices</h2>
+<h3 id="การจัดการ-secrets">การจัดการ Secrets</h3>
+<p><strong>1. Naming Convention</strong></p>
+<blockquote>
+<p>การตั้งชื่อที่เป็นระบบช่วยให้จัดการง่าย</p>
+</blockquote>
+<p><code>&#x3C;env>/&#x3C;team>/&#x3C;service>/&#x3C;secret-name></code></p>
+<p><strong>2. Version Control</strong></p>
+<blockquote>
+<p>แนวทางในการจัดการเวอร์ชันของไฟล์ Configuration เพื่อความปลอดภัย</p>
+</blockquote>
+<ul>
+<li>เก็บ <strong>Template</strong> ของ Configuration (ใช้ Placeholder) แทน</li>
+<li><strong>ห้าม</strong> เก็บ <strong>Actual Secrets</strong> ใน <strong>Source Code Repository</strong> เด็ดขาด</li>
+<li>ใช้ Placeholder หรือ Environment Variable แทนค่าจริงในการกำหนดค่า</li>
+</ul>
+<p><strong>3. Rotation Policy</strong></p>
+<blockquote>
+<p>การกำหนดนโยบายหมุนเวียน Secrets ตามรอบเวลา หรือเมื่อมีเหตุการณ์ด้านความปลอดภัย</p>
+</blockquote>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ตัวอย่างการหมุนเวียน Database Credentials</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">vault</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> write</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> /secret/data/dit/team-a/payment-service/db-cred</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">  data=@new-credentials.json</span></span></code></pre>
+<hr>
+<h2 id="️-security-guidelines">🛡️ Security Guidelines</h2>
+<h3 id="access-control">Access Control</h3>
+<p><strong>1. Least Privilege</strong></p>
+<blockquote>
+<p>หลักการให้สิทธิ์น้อยที่สุดที่จำเป็น (<strong>Must-Have Principle</strong>)</p>
+</blockquote>
+<ul>
+<li>ให้สิทธิ์เฉพาะ <strong>Capabilities</strong> ที่จำเป็น (เช่น <code>read</code> เท่านั้น)</li>
+<li>แยก <strong>Policy</strong> ตาม <strong>Service</strong> และ <strong>Environment</strong></li>
+<li>กำหนด <strong>TTL (Time-To-Live)</strong> ที่เหมาะสม เพื่อจำกัดความเสียหายหาก Token รั่วไหล</li>
+</ul>
+<h3 id="2-audit">2. Audit</h3>
+<blockquote>
+<p><strong>การตรวจสอบกิจกรรมและการใช้งานระบบ</strong></p>
+</blockquote>
+<ul>
+<li><strong>Vault Audit Logs</strong> จะบันทึกทุกคำขอเข้า/ออก รวมถึงการยืนยันตัวตน (<strong>Authentication</strong>) และการเข้าถึงข้อมูลลับ (<strong>Secret Access</strong>)</li>
+</ul>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="hcl"><code class="language-undefined"><span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">path</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> "audit/" {</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">  capabilities </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> [</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">read</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">]  </span><span style="color:#6272A4;--shiki-dark:#6272A4"># เปิดให้อ่าน audit log ได้</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+<h3 id="monitoring">Monitoring</h3>
+<p><strong>1. Metrics ที่สำคัญ</strong></p>
+<blockquote>
+<p>ตัวชี้วัดหลักที่ต้องติดตามเพื่อตรวจสอบความปลอดภัยและเสถียรภาพของระบบ Vault</p>
+</blockquote>
+<ul>
+<li><strong>Token usage</strong> (อัตราการใช้งาน Lease Token และการต่ออายุ)</li>
+<li><strong>Authentication failures</strong> (ความล้มเหลวในการล็อกอินที่ไม่สำเร็จหรือผิดปกติ)</li>
+<li><strong>Secret access patterns</strong> (รูปแบบการเข้าถึง Secrets ที่เกินขอบเขตหรือน่าสงสัย)</li>
+</ul>
+<p><strong>2. Alert Rules</strong></p>
+<blockquote>
+<p>กฎการแจ้งเตือนที่สำคัญซึ่งควรตั้งค่าเพื่อรับมือกับเหตุการณ์ด้านความปลอดภัย</p>
+</blockquote>
+<ul>
+<li>เมื่อมีการ <strong>Access ผิดปกติ</strong> (เช่น พบ Access Denied จำนวนมาก)</li>
+<li>เมื่อ <strong>Secret ใกล้หมดอายุ</strong> หรือ <strong>Token Renewal</strong> ล้มเหลว</li>
+<li>เมื่อมีการ <strong>Rotate Key/Secret</strong></li>
+</ul>
+<hr>
+<h2 id="-performance-tips">⚡ Performance Tips</h2>
+<blockquote>
+<p>เทคนิคการทำให้ระบบทำงานได้เร็วและเสถียร</p>
+</blockquote>
+<ul>
+<li>ใช้ <strong>Client-side Cache</strong> อย่างเหมาะสม (ลดการเรียก Vault บ่อยๆ)</li>
+<li>จัดการ <strong>Connection Pool</strong> ของ Vault Client (รองรับการใช้งานพร้อมกัน)</li>
+<li>ตั้ง <strong>Timeout</strong> ที่เหมาะสม (ป้องกันระบบค้างเมื่อ Vault มีปัญหา)</li>
+<li><strong>Monitor Lease Token Lifecycle</strong> (ดูแลอายุและการต่ออายุ Token อย่างมีประสิทธิภาพ)</li>
+</ul>  </div> </article>  </div> </main> <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200"> <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"> <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> <!-- About Section --> <div> <h3 class="text-lg font-semibold mb-4">About</h3> <p class="text-gray-900 dark:text-white">
+Just a laid-back software engineer who loves automating boring stuff,
+          diving into data, and poking around APIs to make cool things happen.
+          Living the Windows/Linux/Mac life because one OS is never enough. Made
+          by Toppy with ☕️ and occasional bursts of energy.
+</p> </div> <!-- Links Section --> <div> <h3 class="text-lg font-semibold mb-4">Links</h3> <ul class="space-y-2"> <!-- <li>
+            <a
+              href='/about'
+              class='text-gray-300 hover:text-white transition-colors'
+            >
+              About
+            </a>
+          </li> --> <li> <a href="/blog" class="text-gray-900 dark:text-white dark:hover:text-white transition-colors">
+Blog
+</a> </li> </ul> </div> <!-- Social Section --> <div> <h3 class="text-lg font-semibold mb-4">Connect</h3> <div class="flex space-x-4"> <a href="https://github.com/yourusername" class="text-gray-900 dark:text-white"> <span class="sr-only">GitHub</span> <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="https://twitter.com/yourusername" class="text-gray-900 dark:text-white"> <span class="sr-only">Twitter</span> <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"> <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path> </svg> </a> </div> </div> </div> <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400"> <p>&copy; 2025 Your Name. All rights reserved.</p> </div> </div> </footer>  </body></html> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.CW24_qGB.js"></script>  

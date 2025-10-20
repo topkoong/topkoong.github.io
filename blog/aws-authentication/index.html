@@ -1,0 +1,395 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.14.5"><!-- Google Fonts for better typography --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><!-- Primary Meta Tags --><title>ระบบ Authentication กับ AWS: Custom Digital Signature (Asymmetric Key) 🔐</title><meta name="title" content="ระบบ Authentication กับ AWS: Custom Digital Signature (Asymmetric Key) 🔐"><meta name="description" content="เจาะลึกการทำ Custom Authentication ที่ปลอดภัยระหว่าง Microservice กับ AWS API Gateway โดยใช้ SSH Key Pairs และ Custom Authorizer Lambda"><meta name="keywords" content="software engineer, full-stack development, automation, tutorials, blog, programming, web development"><meta name="author" content="Theeruttop (Toppy)"><meta name="robots" content="index, follow"><meta name="language" content="English"><meta name="revisit-after" content="7 days"><!-- Canonical URL --><link rel="canonical" href="https://topkoong.github.io/blog/aws-authentication/"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://topkoong.github.io/blog/aws-authentication/"><meta property="og:title" content="ระบบ Authentication กับ AWS: Custom Digital Signature (Asymmetric Key) 🔐"><meta property="og:description" content="เจาะลึกการทำ Custom Authentication ที่ปลอดภัยระหว่าง Microservice กับ AWS API Gateway โดยใช้ SSH Key Pairs และ Custom Authorizer Lambda"><meta property="og:image" content="https://topkoong.github.io/social-preview"><meta property="og:site_name" content="Toppy's Digital Playground"><meta property="og:locale" content="en_US"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://topkoong.github.io/blog/aws-authentication/"><meta property="twitter:title" content="ระบบ Authentication กับ AWS: Custom Digital Signature (Asymmetric Key) 🔐"><meta property="twitter:description" content="เจาะลึกการทำ Custom Authentication ที่ปลอดภัยระหว่าง Microservice กับ AWS API Gateway โดยใช้ SSH Key Pairs และ Custom Authorizer Lambda"><meta property="twitter:image" content="https://topkoong.github.io/social-preview"><meta property="twitter:creator" content="@topkoong"><!-- Additional Meta Tags --><meta name="theme-color" content="#8b5cf6"><meta name="msapplication-TileColor" content="#8b5cf6"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><!-- Structured Data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"ระบบ Authentication กับ AWS: Custom Digital Signature (Asymmetric Key) 🔐","description":"เจาะลึกการทำ Custom Authentication ที่ปลอดภัยระหว่าง Microservice กับ AWS API Gateway โดยใช้ SSH Key Pairs และ Custom Authorizer Lambda","url":"https://topkoong.github.io/blog/aws-authentication/","author":{"@type":"Person","name":"Theeruttop (Toppy)","url":"https://topkoong.github.io"},"publisher":{"@type":"Person","name":"Theeruttop (Toppy)","url":"https://topkoong.github.io"},"datePublished":"2024-05-30T00:00:00.000Z","dateModified":"2024-05-30T00:00:00.000Z"}</script><!-- Initialize theme before page loads to prevent flash --><script>
+      // This script runs immediately and prevents flash of wrong theme
+      const getTheme = () => {
+        if (
+          typeof localStorage !== 'undefined' &&
+          localStorage.getItem('theme')
+        ) {
+          return localStorage.getItem('theme');
+        }
+        return 'dark'; // Force dark mode as default
+      };
+
+      // Get and apply theme immediately
+      const theme = getTheme();
+
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+
+      // Set dark mode as default for new users
+      if (
+        typeof localStorage !== 'undefined' &&
+        !localStorage.getItem('theme')
+      ) {
+        localStorage.setItem('theme', 'dark');
+      }
+    </script><link rel="stylesheet" href="/_astro/_slug_.BMt7hexD.css">
+<link rel="stylesheet" href="/_astro/2023-year-in-review_md.CratWVIC.css">
+<style>html{transition:background-color .2s ease-in-out;background-color:#fff}html.dark{background-color:#000}.prose{max-width:80ch}.prose h1,.prose h2,.prose h3,.prose h4,.prose h5,.prose h6{--tw-text-opacity: 1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.prose h1:is(.dark *),.prose h2:is(.dark *),.prose h3:is(.dark *),.prose h4:is(.dark *),.prose h5:is(.dark *),.prose h6:is(.dark *){--tw-text-opacity: 1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.prose h1,.prose h2,.prose h3,.prose h4,.prose h5,.prose h6{margin-top:2em;margin-bottom:1em}.prose p{--tw-text-opacity: 1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.prose p:is(.dark *){--tw-text-opacity: 1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.prose a{--tw-text-opacity: 1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.prose a:is(.dark *){--tw-text-opacity: 1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.prose a{text-decoration:underline}.prose a:hover{--tw-text-opacity: 1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.prose a:hover:is(.dark *){--tw-text-opacity: 1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}.prose code{background-color:transparent!important;padding:.2em .4em;border-radius:.25em}.dark .prose code{background-color:transparent!important}.prose pre{padding:1em;border-radius:.5em;overflow-x:auto}.prose img{max-width:100%;height:auto}
+</style></head> <body class="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-black dark:text-white transition-colors duration-200"> <nav class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200 relative z-50"> <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"> <div class="flex justify-between items-center h-16">   <div class="flex space-x-4 sm:space-x-8"> <a href="/" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"> Home </a><a href="/blog" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"> Blog </a> </div>  <button id="theme-toggle" class="rounded-lg p-2 text-gray-400 hover:text-white transition-colors" aria-label="Toggle theme">  <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg>  <svg id="moon-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function d(){const n=document.getElementById("theme-toggle"),e=document.getElementById("sun-icon"),t=document.getElementById("moon-icon");if(!n||!e||!t){console.log("Theme toggle elements not found");return}(localStorage.getItem("theme")||"dark")==="light"?(document.documentElement.classList.remove("dark"),e.classList.remove("hidden"),t.classList.add("hidden")):(document.documentElement.classList.add("dark"),e.classList.add("hidden"),t.classList.remove("hidden")),n.addEventListener("click",function(){document.documentElement.classList.contains("dark")?(document.documentElement.classList.remove("dark"),e.classList.remove("hidden"),t.classList.add("hidden"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),e.classList.add("hidden"),t.classList.remove("hidden"),localStorage.setItem("theme","dark"))})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",d):d();</script> </div> </div> </nav> <main class="flex-1"> <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">  <article class="max-w-5xl mx-auto" data-astro-cid-bvzihdzo> <header class="mb-12" data-astro-cid-bvzihdzo> <div class="animate-fade-in-up" data-astro-cid-bvzihdzo> <h1 class="text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight" data-astro-cid-bvzihdzo> ระบบ Authentication กับ AWS: Custom Digital Signature (Asymmetric Key) 🔐 </h1> <div class="flex items-center space-x-4 text-gray-600 dark:text-gray-400" data-astro-cid-bvzihdzo> <time class="text-lg" datetime="2024-05-30T00:00:00.000Z" data-astro-cid-bvzihdzo> May 30, 2024 </time> <div class="w-2 h-2 bg-purple-500 rounded-full" data-astro-cid-bvzihdzo></div> <span class="text-lg" data-astro-cid-bvzihdzo>Theeruttop (Toppy)</span> </div>  </div> </header>  <div class="prose prose-gray dark:prose-invert max-w-none
+      prose-headings:text-gray-900 dark:prose-headings:text-white
+      prose-p:text-gray-700 dark:prose-p:text-gray-300
+      prose-a:text-blue-600 dark:prose-a:text-blue-400
+      prose-strong:text-gray-900 dark:prose-strong:text-white
+      prose-blockquote:border-gray-200 dark:prose-blockquote:border-gray-700
+      prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400
+      prose-ul:text-gray-700 dark:prose-ul:text-gray-300
+      prose-ol:text-gray-700 dark:prose-ol:text-gray-300
+      prose-li:text-gray-700 dark:prose-li:text-gray-300
+      prose-hr:border-gray-200 dark:prose-hr:border-gray-700
+      prose-table:border-gray-200 dark:prose-table:border-gray-700
+      prose-th:border-gray-200 dark:prose-th:border-gray-700
+      prose-td:border-gray-200 dark:prose-td:border-gray-700" data-astro-cid-bvzihdzo> <h1 id="ระบบ-authentication-กับ-aws-custom-digital-signature">ระบบ Authentication กับ AWS: Custom Digital Signature</h1>
+<h2 id="ทำไมต้องใช้-ssh-key-pairs-asymmetric-key-กับ-aws">ทำไมต้องใช้ SSH Key Pairs (Asymmetric Key) กับ AWS? 🤔</h2>
+<p>ในการพัฒนา <strong>Microservices</strong> ที่ต้องเชื่อมต่อกับ AWS services การใช้ Credentials แบบเดิมๆ (<strong>Symmetric Key</strong> เช่น Access Key/Secret Key) มีข้อจำกัดร้ายแรงในด้านการพิสูจน์ตัวตน:</p>
+<ul>
+<li><strong>เสี่ยงต่อการรั่วไหล:</strong> Secret Key ต้องถูกแชร์ทั้งฝั่ง Microservice และ AWS ซึ่งเพิ่มจุดอ่อนในการรั่วไหล</li>
+<li><strong>ขาดการพิสูจน์ตัวตนที่แข็งแกร่ง:</strong> แม้แต่ AWS SigV4 ก็ยังคงเป็น Symmetric Key ซึ่งไม่สามารถยืนยันความเป็นเจ้าของ Private Key ได้</li>
+<li><strong>ความยืดหยุ่น:</strong> Custom Asymmetric Authentication นี้ช่วยให้เรากำหนดและควบคุมกลไกการตรวจสอบได้เองผ่าน <strong>API Gateway</strong></li>
+</ul>
+<p>ระบบนี้จึงใช้ <strong>Asymmetric Key (SSH/RSA)</strong> โดย <strong>Microservice</strong> ใช้ <strong>Private Key</strong> ในการ <strong>เซ็นลายเซ็นดิจิทัล</strong> และ <strong>AWS API Gateway (ผ่าน Lambda)</strong> ใช้ <strong>Public Key</strong> ในการ <strong>ตรวจสอบ</strong></p>
+<h2 id="-flow-การทำงานแบบละเอียด-custom-asymmetric-authentication">🔄 Flow การทำงานแบบละเอียด (Custom Asymmetric Authentication)</h2>
+<p>ระบบนี้ใช้ <strong>Custom Asymmetric Cryptography</strong> โดย <strong>Microservice (MS)</strong> ใช้ <strong>Private Key (SSH/RSA)</strong> ในการ <strong>เซ็น (Sign)</strong> Request และ <strong>AWS API Gateway</strong> ใช้ <strong>Public Key</strong> ในการ <strong>ตรวจสอบ (Verify)</strong> ลายเซ็น (ผ่าน Custom Authorizer Lambda)</p>
+<div class="mermaid">
+flowchart TD
+    MS[Microservice App] -->|1. ขอ Private Key| Vault[HashiCorp Vault]
+    Vault -->|2. ส่ง Private Key SSH/RSA| MS
+    MS -->|3. สร้าง Canonical Request| CR[Canonical Request]
+    CR -->|4. Sign ด้วย Private Key| SR[Signed Request]
+    SR -->|5. ส่ง Request + Signature| APIGW[AWS API Gateway]
+    APIGW -->|6. เรียก Custom Authorizer| Lambda[Lambda Authorizer]
+    Lambda -->|7. ดึง Public Key| S3[S3 or Secrets Manager]
+    S3 -->|8. ส่ง Public Key| Lambda
+    Lambda -->|9. Verify Signature ด้วย Public Key| VR[Verification Result]
+    VR -->|10. Allow/Deny| APIGW
+    APIGW -->|11. Response or Error| MS
+
+    style MS fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style Vault fill:#998c1a,stroke:#f7e00a,stroke-width:2px
+    style CR fill:#e0f7fa,stroke:#00695c,stroke-width:2px
+    style SR fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style APIGW fill:#ffebee,stroke:#c2185b,stroke-width:2px
+    style Lambda fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style S3 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style VR fill:#0b801b,stroke:#1b5e20,stroke-width:3px
+</div>
+<h2 id="-flow-การทำงาน-อธิบายตาม-custom-flow">📝 Flow การทำงาน (อธิบายตาม Custom Flow)</h2>
+<h3 id="phase-1-key-acquisition">Phase 1: Key Acquisition</h3>
+<p><strong>Microservice</strong> ใช้ Service Account Token เพื่อยืนยันตัวตนกับ <strong>Vault</strong> และดึง <strong>Private Key (SSH/RSA)</strong> ที่เข้ารหัสมาใช้งาน</p>
+<h3 id="phase-2-request-signing">Phase 2: Request Signing</h3>
+<p><strong>Microservice เตรียม Request:</strong></p>
+<ul>
+<li>เตรียมข้อมูลที่จะส่ง และจัดให้อยู่ในรูปแบบ <strong>Canonical Request</strong></li>
+<li><strong>เซ็น (Sign)</strong> Request ด้วย <strong>Private Key</strong> ที่ได้มาจาก Vault</li>
+<li>แนบ <strong>Digital Signature</strong> ไปกับ Request (เช่น ใน Header <code>X-Signature</code>)</li>
+</ul>
+<h3 id="phase-3-aws-verification">Phase 3: AWS Verification</h3>
+<p><strong>AWS ตรวจสอบ Request:</strong></p>
+<ul>
+<li><strong>API Gateway</strong> รับ Request และส่งต่อไปยัง <strong>Custom Authorizer Lambda</strong></li>
+<li><strong>Lambda</strong> ดึง <strong>Public Key</strong> ที่ใช้คู่กันจากแหล่งจัดเก็บที่ปลอดภัย (เช่น S3 หรือ Secrets Manager)</li>
+<li><strong>Lambda</strong> ใช้ Public Key เพื่อ <strong>ตรวจสอบ (Verify)</strong> ลายเซ็นดิจิทัลกับ Request Data เดิม</li>
+<li>หากลายเซ็นถูกต้อง Lambda จะส่ง Policy เป็น <strong>Allow</strong> กลับไปยัง API Gateway เพื่อให้ Request ดำเนินการต่อไปยัง Service ปลายทาง</li>
+</ul>
+<h2 id="-การทำงานของระบบ-authentication">🔑 การทำงานของระบบ Authentication</h2>
+<p>ระบบนี้สร้าง <strong>Chain of Trust</strong> โดยใช้ Private Key เป็นหลักฐานในการพิสูจน์ตัวตนของ Microservice</p>
+<h2 id="-การ-implement-แต่ละขั้นตอน">🛠 การ Implement แต่ละขั้นตอน</h2>
+<h3 id="1-การสร้างและจัดการ-key-pairs">1. การสร้างและจัดการ Key Pairs</h3>
+<p><strong>ทำไมต้องแยก Key Pairs ต่อ Service?</strong></p>
+<p>การแยก Key Pairs สำหรับแต่ละ Microservice ช่วยให้สามารถกำหนด <strong>Principle of Least Privilege (POLP)</strong> ได้อย่างแม่นยำ และช่วยจำกัดความเสียหาย (<strong>Blast Radius</strong>) หาก Key ใด Key หนึ่งรั่วไหล</p>
+<ul>
+<li><strong>มาตรฐาน:</strong> ควรใช้ RSA Key Length อย่างน้อย <strong>4096-bit</strong> เพื่อความปลอดภัย</li>
+<li><strong>การจัดเก็บ:</strong> <strong>Private Key</strong> ต้องถูกจัดเก็บใน <strong>HashiCorp Vault</strong> เท่านั้น ส่วน <strong>Public Key</strong> ถูกเก็บใน <strong>S3</strong> หรือ <strong>Secrets Manager</strong> เพื่อให้ Lambda ดึงไปใช้งาน</li>
+</ul>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== สร้าง Key Pair สำหรับแต่ละ Service (ตัวอย่าง) =====</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">ssh-keygen</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> -t</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> rsa</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> -b</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> 4096</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> -C</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">payment-service@company.com</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> -f</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> ~/.ssh/payment-service</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">ssh-keygen</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> -t</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> rsa</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> -b</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> 4096</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> -C</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">notification-service@company.com</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> -f</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> ~/.ssh/notification-service</span></span></code></pre>
+<p>มีหลายจุดที่ format ไม่ถูกต้อง ให้ฉันแก้ให้:</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="markdown"><code class="language-undefined"><span class="line"><span style="color:#BD93F9;--shiki-light-font-weight:bold;--shiki-dark:#BD93F9;--shiki-dark-font-weight:bold">### 2. การจัดการ Public Keys บน AWS (สำหรับการตรวจสอบโดย Lambda)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">Public Key จะถูกจัดเก็บไว้ใน S3 หรือ Secrets Manager โดยที่ Lambda Authorizer มีสิทธิ์ในการอ่านเท่านั้น</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BD93F9;--shiki-light-font-weight:bold;--shiki-dark:#BD93F9;--shiki-dark-font-weight:bold">#### ขั้นตอนการเตรียม Public Key และการ Upload (Initial Setup)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">ก่อนที่ Lambda Authorizer จะสามารถดึง Public Key ไปใช้งานได้ Public Key ที่สร้างขึ้นจะต้องถูกนำไปวางไว้ใน AWS Service ที่กำหนด (S3 หรือ Secrets Manager) ก่อน</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FFB86C;--shiki-light-font-weight:bold;--shiki-dark:#FFB86C;--shiki-dark-font-weight:bold">**ขั้นตอน:**</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">1. </span><span style="color:#FFB86C;--shiki-light-font-weight:bold;--shiki-dark:#FFB86C;--shiki-dark-font-weight:bold">**สร้าง Key Pair:**</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> ใช้คำสั่ง </span><span style="color:#50FA7B;--shiki-dark:#50FA7B">`ssh-keygen`</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> เพื่อสร้าง Private Key (เก็บใน Vault) และ Public Key (ไฟล์ </span><span style="color:#50FA7B;--shiki-dark:#50FA7B">`.pub`</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">2. </span><span style="color:#FFB86C;--shiki-light-font-weight:bold;--shiki-dark:#FFB86C;--shiki-dark-font-weight:bold">**Upload Public Key:**</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> ต้องนำไฟล์ Public Key ที่เป็นไฟล์ </span><span style="color:#50FA7B;--shiki-dark:#50FA7B">`.pub`</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> ไป Upload หรือ Import เข้าไปใน S3 Bucket หรือ Secrets Manager โดยอาจทำผ่านหน้า AWS Console หรือ AWS CLI</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BD93F9;--shiki-light-font-weight:bold;--shiki-dark:#BD93F9;--shiki-dark-font-weight:bold">#### วิธีที่ 1: จัดเก็บ Public Key ใน S3</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">1. สร้างไฟล์ </span><span style="color:#50FA7B;--shiki-dark:#50FA7B">`.pub`</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (Public Key)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">2. อัปโหลดไฟล์ </span><span style="color:#50FA7B;--shiki-dark:#50FA7B">`.pub`</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> ไปยัง S3 Bucket ที่กำหนด (</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">`service-public-keys/payment-service.pub`</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">```bash</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># Upload Public Key ไปยัง S3</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">aws</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> s3</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> cp</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> ~/.ssh/payment-service.pub</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> s3://service-public-keys/payment-service.pub</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">```</span></span></code></pre>
+<h4 id="วิธีที่-2-จัดเก็บ-public-key-ใน-aws-secrets-manager">วิธีที่ 2: จัดเก็บ Public Key ใน AWS Secrets Manager</h4>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== อัปโหลด Public Key ผ่าน CLI ไปยัง Secrets Manager =====</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># (Public Key จะถูกเข้ารหัสใน Secrets Manager)</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">aws</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> secretsmanager</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> create-secret</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">  --name</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> payment-service-public-key</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">  --secret-string</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> file://~/.ssh/payment-service.pub</span></span></code></pre>
+<h4 id="การกำหนดสิทธิ์-iam-policy-สำหรับ-lambda-authorizer">การกำหนดสิทธิ์ (IAM Policy สำหรับ Lambda Authorizer)</h4>
+<p>Lambda ที่ทำหน้าที่ Authorizer จะต้องมีสิทธิ์ในการ <strong>อ่าน</strong> Public Key จากแหล่งจัดเก็บเท่านั้น และมีสิทธิ์ในการสร้าง <strong>IAM Policy (Allow/Deny)</strong> เพื่อคืนค่ากลับไปยัง API Gateway</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="json"><code class="language-undefined"><span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">{</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">  "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">Version</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">2012-10-17</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">  "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">Statement</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> [</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    {</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">      "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">Effect</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">Allow</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">      "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">Action</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">s3:GetObject</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">      "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">Resource</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">arn:aws:s3:::service-public-keys/*</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    },</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    {</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">      "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">Effect</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">Allow</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">      "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">Action</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">secretsmanager:GetSecretValue</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,</span></span>
+<span class="line"><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">      "</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">Resource</span><span style="color:#8BE9FE;--shiki-dark:#8BE9FE">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">arn:aws:secretsmanager:*:*:secret:*</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">  ]</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+<h3 id="3-กระบวนการ-sign-request-และ-verification">3. กระบวนการ Sign Request และ Verification</h3>
+<h4 id="31-spring-boot-ms-การดึง-private-key-จาก-vault-และการ-sign-request-เพื่อเรียก-api-gateway">3.1 Spring Boot MS: การดึง Private Key จาก Vault และการ Sign Request (เพื่อเรียก API Gateway)</h4>
+<p>Microservice ที่ใช้ Spring Boot จะใช้ HashiCorp Vault Client เพื่อดึง Private Key มาใช้ในการเซ็น Request ก่อนส่งไปยัง API Gateway</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code class="language-undefined"><span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> java.security.</span><span style="color:#BD93F9;--shiki-light-font-style:italic;--shiki-dark:#BD93F9;--shiki-dark-font-style:italic">*</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> java.util.Base64;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">// สมมติว่านี่คือ Service Layer ใน Spring Boot Application</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">// @Service</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">public</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> class</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> PaymentService</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    // (Conceptual) PrivateKey จะถูกโหลดมาจาก HashiCorp Vault</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    // ผ่าน Spring Cloud Vault หรือ Vault Client เมื่อ application start</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    private</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> PrivateKey</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> privateKey;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    // Constructor and Vault key loading logic</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    // ในชีวิตจริง ต้องมีโค้ดที่ทำการโหลด PrivateKey จาก Vault</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    public</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> String</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> createSignedRequest</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> requestData</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">throws</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> Exception</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // ขั้นตอนที่ 1: การเซ็น (Signing)</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">        Signature</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> signature </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> Signature.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getInstance</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">SHA256withRSA</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // Private Key ถูกดึงและโหลดเข้าสู่หน่วยความจำของ MS (จาก Vault)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        signature.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">initSign</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#BD93F9;--shiki-light-font-style:italic;--shiki-dark:#BD93F9;--shiki-dark-font-style:italic">this</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.privateKey);</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        signature.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">update</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(requestData.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getBytes</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">UTF-8</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">));</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // แปลงลายเซ็นเป็น Base64 สำหรับแนบไปกับ Header X-Signature</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">        String</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> signedRequest </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> Base64.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getEncoder</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">().</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">encodeToString</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(signature.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">sign</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">());</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // ส่ง Request Data (Canonical) และ Signature ไปยัง API Gateway</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // headers.add("X-Signature", signedRequest);</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">        return</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> signedRequest;</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+<h4 id="32-lambda-authorizer-การดึง-public-key-จาก-s3secrets-manager-และการ-verify-สำหรับ-api-gateway">3.2 Lambda Authorizer: การดึง Public Key จาก S3/Secrets Manager และการ Verify (สำหรับ API Gateway)</h4>
+<p>Lambda Authorizer จะใช้ AWS SDK (เช่น S3Client หรือ SecretsManagerClient) เพื่อดึง Public Key ที่สอดคล้องกับ Microservice ที่เรียกมาใช้ในการตรวจสอบลายเซ็น โดยใช้ IAM Role ของ Lambda ในการเข้าถึง S3 หรือ Secrets Manager โดยตรง</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code class="language-undefined"><span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> software.amazon.awssdk.services.s3.S3Client;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> software.amazon.awssdk.services.s3.model.GetObjectRequest;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> java.io.InputStream;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> java.security.</span><span style="color:#BD93F9;--shiki-light-font-style:italic;--shiki-dark:#BD93F9;--shiki-dark-font-style:italic">*</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> java.util.Base64;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> java.security.spec.X509EncodedKeySpec;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">public</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> class</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> CustomAuthorizer</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    private</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> final</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> S3Client</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> s3Client;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    public</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> CustomAuthorizer</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">() {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // การเชื่อมต่อ S3/Secrets Manager โดยใช้ IAM Role ของ Lambda</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-light-font-style:italic;--shiki-dark:#BD93F9;--shiki-dark-font-style:italic">        this</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.s3Client </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> S3Client.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">builder</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">().</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">build</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">();</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    private</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> PublicKey</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> getPublicKeyFromS3</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> keyId</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">throws</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> Exception</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // ตัวอย่างการดึง Public Key จาก S3 Bucket</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">        GetObjectRequest</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> getObjectRequest </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> GetObjectRequest.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">builder</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">()</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                .</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">bucket</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">service-public-keys</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                .</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">key</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(keyId </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">+</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">.pub</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) </span><span style="color:#6272A4;--shiki-dark:#6272A4">// เช่น "payment-service.pub"</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                .</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">build</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // โหลด Public Key (ไฟล์ .pub) จาก S3</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">        try</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">InputStream</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> is </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> s3Client.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getObject</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(getObjectRequest)) {</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">            String</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> keyString </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#FF79C6;--shiki-light-font-weight:bold;--shiki-dark:#FF79C6;--shiki-dark-font-weight:bold"> new</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> String</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(is.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">readAllBytes</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">());</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // ลบ header/footer ของ SSH Public Key ออก</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">            String</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> publicKeyPEM </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> keyString</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                .</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">replace</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">-----BEGIN PUBLIC KEY-----</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">, </span><span style="color:#E9F284;--shiki-dark:#E9F284">""</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                .</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">replace</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">-----END PUBLIC KEY-----</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">, </span><span style="color:#E9F284;--shiki-dark:#E9F284">""</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                .</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">replaceAll</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">\\</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">s</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">, </span><span style="color:#E9F284;--shiki-dark:#E9F284">""</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">            byte</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">[] keyBytes </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> Base64.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getDecoder</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">().</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">decode</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(publicKeyPEM);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // สร้าง PublicKey Object</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">            X509EncodedKeySpec</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> keySpec </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#FF79C6;--shiki-light-font-weight:bold;--shiki-dark:#FF79C6;--shiki-dark-font-weight:bold"> new</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> X509EncodedKeySpec</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(keyBytes);</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">            KeyFactory</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> keyFactory </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> KeyFactory.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getInstance</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">RSA</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">            return</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> keyFactory.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">generatePublic</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(keySpec);</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    public</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> boolean</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> verifySignature</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> requestData</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">, </span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> base64Signature</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">                                   String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> serviceKeyId</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">throws</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> Exception</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // 1. ดึง Public Key จาก S3/Secrets Manager</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">        PublicKey</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> publicKey </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> getPublicKeyFromS3</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(serviceKeyId);</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">        byte</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">[] decodedSignature </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> Base64.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getDecoder</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">().</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">decode</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(base64Signature);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // 2. การตรวจสอบ (Verification)</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">        Signature</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> verifier </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> Signature.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getInstance</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">SHA256withRSA</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        verifier.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">initVerify</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(publicKey);</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        verifier.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">update</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(requestData.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getBytes</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">UTF-8</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">));</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">        boolean</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> isValid </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> verifier.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">verify</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(decodedSignature);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // Logic to return IAM Policy based on isValid</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">        return</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> isValid;</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+<h4 id="33-spring-boot-ms-การใช้-digital-signature-เข้าถึง-s3-bucket-โดยตรง-เพื่ออ่าน-interface-file">3.3 Spring Boot MS: การใช้ Digital Signature เข้าถึง S3 Bucket โดยตรง (เพื่ออ่าน Interface File)</h4>
+<p>สำหรับสถานการณ์นี้ Microservice จะใช้ Private Key ที่ได้มาจาก Vault เพื่อเซ็น Request ในการเรียก GetObject ของ S3 โดยตรง (เลียนแบบ SigV4 ด้วย Private Key)</p>
+<p><strong>หมายเหตุ:</strong> ในการใช้งานจริง การเซ็น Request ด้วย Asymmetric Key เพื่อเรียก AWS API โดยตรง ต้องใช้ Custom Request Signer ที่จัดการการเซ็นแบบ Asymmetric Key และการแมปกับ IAM Principal</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code class="language-undefined"><span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> software.amazon.awssdk.services.s3.S3Client;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> software.amazon.awssdk.services.s3.model.GetObjectRequest;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> java.security.</span><span style="color:#BD93F9;--shiki-light-font-style:italic;--shiki-dark:#BD93F9;--shiki-dark-font-style:italic">*</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">import</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> java.util.Base64;</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">// import org.springframework.stereotype.Service;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">// @Service</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">public</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> class</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> S3InterfaceFileProcessor</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    private</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> final</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> S3Client</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> s3Client;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    private</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> final</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> PrivateKey</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> signingPrivateKey; </span><span style="color:#6272A4;--shiki-dark:#6272A4">// Private Key จาก Vault</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    public</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> S3InterfaceFileProcessor</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">PrivateKey</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> signingPrivateKey</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // Initialization</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-light-font-style:italic;--shiki-dark:#BD93F9;--shiki-dark-font-style:italic">        this</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.s3Client </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> S3Client.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">builder</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">().</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">build</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(); </span><span style="color:#6272A4;--shiki-dark:#6272A4">// S3 Client Standard</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-light-font-style:italic;--shiki-dark:#BD93F9;--shiki-dark-font-style:italic">        this</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.signingPrivateKey </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> signingPrivateKey;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // **สำคัญ:** ในการใช้งานจริง ต้องมีการผสานรวม Custom Signer เข้ากับ S3Client</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // เพื่อให้ทุก Request ที่ออกจาก S3 Client ถูกเซ็นด้วย signingPrivateKey</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    public</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> String</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> readInterfaceFile</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> bucketName</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">, </span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> key</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">throws</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> Exception</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // 1. สร้าง Canonical Request สำหรับ S3 GetObject</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">        GetObjectRequest</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> getObjectRequest </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> GetObjectRequest.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">builder</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">()</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                .</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">bucket</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(bucketName)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                .</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">key</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(key)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                .</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">build</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // 2. (Conceptual) Custom Signer จะเข้าสู่กระบวนการเซ็น Request</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // โดยใช้ signingPrivateKey และแนบ Signature ไปกับ Header</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // ... customRequestSigner.sign(getObjectRequest, signingPrivateKey); ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // 3. เรียก S3 API</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">        try</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // S3Client จะส่ง Request ที่มี Signature ที่เซ็นด้วย Private Key</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">            return</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> s3Client.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getObjectAsBytes</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(getObjectRequest).</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">asUtf8String</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">();</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        } </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">catch</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">Exception</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> e</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // AWS จะทำการตรวจสอบลายเซ็นด้วย Public Key ที่ผูกกับ IAM Role/User</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // หากลายเซ็นถูกต้อง จะอนุญาตให้เข้าถึงไฟล์</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">            throw</span><span style="color:#FF79C6;--shiki-light-font-weight:bold;--shiki-dark:#FF79C6;--shiki-dark-font-weight:bold"> new</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> RuntimeException</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">Error reading file from S3: </span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> +</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> e.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getMessage</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">());</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+<h2 id="สรุปรูปแบบการทำ-digital-signature-sign--verify">สรุปรูปแบบการทำ Digital Signature (Sign &#x26; Verify)</h2>
+<h3 id="1-รูปแบบ-authentication-สำหรับ-api-gateway-microservice-️-lambda-authorizer">1. รูปแบบ: Authentication สำหรับ API Gateway (Microservice ➡️ Lambda Authorizer)</h3>
+<p>นี่คือวัตถุประสงค์หลักของเอกสารนี้ เป็นการใช้ Digital Signature เพื่อพิสูจน์ตัวตนของ Microservice ก่อนเข้าถึง API Endpoint</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">หัวข้อ</th><th align="left">Microservice (Signer)</th><th align="left">AWS (Verifier)</th></tr></thead><tbody><tr><td align="left"><strong>วัตถุประสงค์</strong></td><td align="left">ยืนยันตัวตนของ Microservice</td><td align="left">อนุญาต/ปฏิเสธ การเรียก API</td></tr><tr><td align="left"><strong>Key ที่ใช้</strong></td><td align="left">Private Key (จาก Vault)</td><td align="left">Public Key (จาก S3/Secrets Manager)</td></tr><tr><td align="left"><strong>โค้ด</strong></td><td align="left"><code>xxxService.java</code> (เซ็น Request)</td><td align="left"><code>CustomAuthorizer.java</code> (ดึง Key จาก S3 และตรวจสอบ)</td></tr></tbody></table>
+<h3 id="2-รูปแบบ-authorization-สำหรับ-s3-โดยตรง-microservice-️-s3aws-api">2. รูปแบบ: Authorization สำหรับ S3 โดยตรง (Microservice ➡️ S3/AWS API)</h3>
+<p>ซึ่งเป็นการใช้ Private Key ในการสร้างลายเซ็นเพื่อ เข้าถึง AWS Service โดยตรง (เช่น S3, DynamoDB) ซึ่งต้องมีการปรับใช้หลักการคล้าย AWS SigV4 แต่ใช้ Asymmetric Key แทน Symmetric Key</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">หัวข้อ</th><th align="left">Microservice (Signer)</th><th align="left">AWS (Verifier)</th></tr></thead><tbody><tr><td align="left"><strong>วัตถุประสงค์</strong></td><td align="left">เข้าถึง Resource ใน S3/AWS</td><td align="left">ตรวจสอบสิทธิ์การเข้าถึง Resource นั้นๆ</td></tr><tr><td align="left"><strong>Key ที่ใช้</strong></td><td align="left">Private Key (จาก Vault)</td><td align="left">Public Key (Public Key ที่ผูกกับ IAM Principal)</td></tr><tr><td align="left"><strong>โค้ด</strong></td><td align="left"><code>S3InterfaceFileProcessor.java</code> (เซ็น Request ก่อนเรียก S3)</td><td align="left">IAM/AWS Service (ตรวจสอบลายเซ็นตาม Protocol)</td></tr></tbody></table>
+<h3 id="สรุป-2-บทบาทของ-digital-signature-ในระบบ-microservice">สรุป: 2 บทบาทของ Digital Signature ในระบบ Microservice</h3>
+<p>ดังนั้น หากมองในเชิงการประยุกต์ใช้ในระบบ Microservice ของเรา จึงมี 2 บทบาทที่แตกต่างกัน:</p>
+<ol>
+<li><strong>การควบคุมการเข้าถึง (Access Control)</strong> - ผ่าน API Gateway โดยใช้ Lambda Authorizer</li>
+<li><strong>การเข้าถึง AWS Resource โดยตรง (Resource Access)</strong> - ผ่าน AWS SDK ที่มี Custom Signing Logic</li>
+</ol>
+<p><strong>หมายเหตุ:</strong> รูปแบบที่ 2 (Authorization สำหรับ S3 โดยตรง) ต้องการการปรับแต่งเพิ่มเติมและไม่ใช่ standard AWS authentication pattern แนะนำให้ใช้รูปแบบที่ 1 ผ่าน API Gateway สำหรับความปลอดภัยและความสะดวกในการจัดการ</p>
+<h2 id="-best-practices--lessons-learned">💡 Best Practices &#x26; Lessons Learned</h2>
+<h3 id="การจัดการ-keys">การจัดการ Keys</h3>
+<ul>
+<li>หมุนเวียน Keys (Rotation) ทุก 90 วัน</li>
+<li>เก็บ Private Keys ใน Vault เท่านั้น</li>
+<li>Public Key ถูกเก็บแยกใน S3/Secrets Manager</li>
+</ul>
+<h3 id="การจัดการ-permissions">การจัดการ Permissions</h3>
+<ul>
+<li>ใช้ Principle of Least Privilege อย่างเข้มงวด</li>
+<li>Lambda Authorizer มีสิทธิ์แค่อ่าน Public Key และสร้าง IAM Policy เท่านั้น</li>
+</ul>
+<h3 id="monitoring--alerts">Monitoring &#x26; Alerts</h3>
+<ul>
+<li>Log ทุก Authentication Attempts (Success/Fail) ใน CloudWatch</li>
+<li>Alert เมื่อ Authorizer คืนค่า Deny ซ้ำๆ</li>
+<li>ทำ Audit Trail ของการเข้าถึง Keys</li>
+</ul>
+<h3 id="performance-optimization">Performance Optimization</h3>
+<p><strong>💡 Tips:</strong> การใช้ Custom Authorizer ทำให้เกิด Latency (ความหน่วง) เพิ่มขึ้นเล็กน้อยในการเรียก Lambda ดังนั้นควรตั้งค่า <strong>Caching</strong> ใน API Gateway สำหรับผลลัพธ์ของ Authorizer เพื่อลดการเรียก Lambda ซ้ำๆ สำหรับ Request ที่มี Signature เดิม</p>
+<h3 id="security-note">Security Note</h3>
+<p><strong>Note:</strong> การใช้ Public Key ในการตรวจสอบลายเซ็นนี้ทำให้มั่นใจได้ว่า Private Key ไม่เคยถูกเปิดเผยในระบบเลยแม้แต่น้อย (Non-Repudiation)</p>  </div> </article>  </div> </main> <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200"> <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"> <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> <!-- About Section --> <div> <h3 class="text-lg font-semibold mb-4">About</h3> <p class="text-gray-900 dark:text-white">
+Just a laid-back software engineer who loves automating boring stuff,
+          diving into data, and poking around APIs to make cool things happen.
+          Living the Windows/Linux/Mac life because one OS is never enough. Made
+          by Toppy with ☕️ and occasional bursts of energy.
+</p> </div> <!-- Links Section --> <div> <h3 class="text-lg font-semibold mb-4">Links</h3> <ul class="space-y-2"> <!-- <li>
+            <a
+              href='/about'
+              class='text-gray-300 hover:text-white transition-colors'
+            >
+              About
+            </a>
+          </li> --> <li> <a href="/blog" class="text-gray-900 dark:text-white dark:hover:text-white transition-colors">
+Blog
+</a> </li> </ul> </div> <!-- Social Section --> <div> <h3 class="text-lg font-semibold mb-4">Connect</h3> <div class="flex space-x-4"> <a href="https://github.com/yourusername" class="text-gray-900 dark:text-white"> <span class="sr-only">GitHub</span> <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="https://twitter.com/yourusername" class="text-gray-900 dark:text-white"> <span class="sr-only">Twitter</span> <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"> <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path> </svg> </a> </div> </div> </div> <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400"> <p>&copy; 2025 Your Name. All rights reserved.</p> </div> </div> </footer>  </body></html> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.CW24_qGB.js"></script>  

@@ -1,0 +1,618 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.14.5"><!-- Google Fonts for better typography --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><!-- Primary Meta Tags --><title>การรับส่งไฟล์แบบปลอดภัยด้วย PGP Encryption 🔒</title><meta name="title" content="การรับส่งไฟล์แบบปลอดภัยด้วย PGP Encryption 🔒"><meta name="description" content="เจาะลึกระบบเข้ารหัสไฟล์ด้วย PGP พร้อมตัวอย่างการใช้งานจริงและการผสานรวมกับ Microservice Architecture"><meta name="keywords" content="software engineer, full-stack development, automation, tutorials, blog, programming, web development"><meta name="author" content="Theeruttop (Toppy)"><meta name="robots" content="index, follow"><meta name="language" content="English"><meta name="revisit-after" content="7 days"><!-- Canonical URL --><link rel="canonical" href="https://topkoong.github.io/blog/posts/file-security/"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://topkoong.github.io/blog/posts/file-security/"><meta property="og:title" content="การรับส่งไฟล์แบบปลอดภัยด้วย PGP Encryption 🔒"><meta property="og:description" content="เจาะลึกระบบเข้ารหัสไฟล์ด้วย PGP พร้อมตัวอย่างการใช้งานจริงและการผสานรวมกับ Microservice Architecture"><meta property="og:image" content="https://topkoong.github.io/social-preview"><meta property="og:site_name" content="Toppy's Digital Playground"><meta property="og:locale" content="en_US"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://topkoong.github.io/blog/posts/file-security/"><meta property="twitter:title" content="การรับส่งไฟล์แบบปลอดภัยด้วย PGP Encryption 🔒"><meta property="twitter:description" content="เจาะลึกระบบเข้ารหัสไฟล์ด้วย PGP พร้อมตัวอย่างการใช้งานจริงและการผสานรวมกับ Microservice Architecture"><meta property="twitter:image" content="https://topkoong.github.io/social-preview"><meta property="twitter:creator" content="@topkoong"><!-- Additional Meta Tags --><meta name="theme-color" content="#8b5cf6"><meta name="msapplication-TileColor" content="#8b5cf6"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><!-- Structured Data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"การรับส่งไฟล์แบบปลอดภัยด้วย PGP Encryption 🔒","description":"เจาะลึกระบบเข้ารหัสไฟล์ด้วย PGP พร้อมตัวอย่างการใช้งานจริงและการผสานรวมกับ Microservice Architecture","url":"https://topkoong.github.io/blog/posts/file-security/","author":{"@type":"Person","name":"Theeruttop (Toppy)","url":"https://topkoong.github.io"},"publisher":{"@type":"Person","name":"Theeruttop (Toppy)","url":"https://topkoong.github.io"},"datePublished":"2024-12-30T00:00:00.000Z","dateModified":"2024-12-30T00:00:00.000Z"}</script><!-- Initialize theme before page loads to prevent flash --><script>
+      // This script runs immediately and prevents flash of wrong theme
+      const getTheme = () => {
+        if (
+          typeof localStorage !== 'undefined' &&
+          localStorage.getItem('theme')
+        ) {
+          return localStorage.getItem('theme');
+        }
+        return 'dark'; // Force dark mode as default
+      };
+
+      // Get and apply theme immediately
+      const theme = getTheme();
+
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+
+      // Set dark mode as default for new users
+      if (
+        typeof localStorage !== 'undefined' &&
+        !localStorage.getItem('theme')
+      ) {
+        localStorage.setItem('theme', 'dark');
+      }
+    </script><link rel="stylesheet" href="/_astro/_slug_.BMt7hexD.css">
+<link rel="stylesheet" href="/_astro/2023-year-in-review_md.CratWVIC.css">
+<style>html{transition:background-color .2s ease-in-out;background-color:#fff}html.dark{background-color:#000}.prose{max-width:80ch}.prose h1,.prose h2,.prose h3,.prose h4,.prose h5,.prose h6{--tw-text-opacity: 1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.prose h1:is(.dark *),.prose h2:is(.dark *),.prose h3:is(.dark *),.prose h4:is(.dark *),.prose h5:is(.dark *),.prose h6:is(.dark *){--tw-text-opacity: 1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.prose h1,.prose h2,.prose h3,.prose h4,.prose h5,.prose h6{margin-top:2em;margin-bottom:1em}.prose p{--tw-text-opacity: 1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.prose p:is(.dark *){--tw-text-opacity: 1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.prose a{--tw-text-opacity: 1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.prose a:is(.dark *){--tw-text-opacity: 1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.prose a{text-decoration:underline}.prose a:hover{--tw-text-opacity: 1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.prose a:hover:is(.dark *){--tw-text-opacity: 1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}.prose code{background-color:transparent!important;padding:.2em .4em;border-radius:.25em}.dark .prose code{background-color:transparent!important}.prose pre{padding:1em;border-radius:.5em;overflow-x:auto}.prose img{max-width:100%;height:auto}
+</style></head> <body class="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-black dark:text-white transition-colors duration-200"> <nav class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200 relative z-50"> <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"> <div class="flex justify-between items-center h-16">   <div class="flex space-x-4 sm:space-x-8"> <a href="/" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"> Home </a><a href="/blog" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"> Blog </a> </div>  <button id="theme-toggle" class="rounded-lg p-2 text-gray-400 hover:text-white transition-colors" aria-label="Toggle theme">  <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg>  <svg id="moon-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function d(){const n=document.getElementById("theme-toggle"),e=document.getElementById("sun-icon"),t=document.getElementById("moon-icon");if(!n||!e||!t){console.log("Theme toggle elements not found");return}(localStorage.getItem("theme")||"dark")==="light"?(document.documentElement.classList.remove("dark"),e.classList.remove("hidden"),t.classList.add("hidden")):(document.documentElement.classList.add("dark"),e.classList.add("hidden"),t.classList.remove("hidden")),n.addEventListener("click",function(){document.documentElement.classList.contains("dark")?(document.documentElement.classList.remove("dark"),e.classList.remove("hidden"),t.classList.add("hidden"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),e.classList.add("hidden"),t.classList.remove("hidden"),localStorage.setItem("theme","dark"))})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",d):d();</script> </div> </div> </nav> <main class="flex-1"> <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">  <article class="max-w-5xl mx-auto" data-astro-cid-bvzihdzo> <header class="mb-12" data-astro-cid-bvzihdzo> <div class="animate-fade-in-up" data-astro-cid-bvzihdzo> <h1 class="text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight" data-astro-cid-bvzihdzo> การรับส่งไฟล์แบบปลอดภัยด้วย PGP Encryption 🔒 </h1> <div class="flex items-center space-x-4 text-gray-600 dark:text-gray-400" data-astro-cid-bvzihdzo> <time class="text-lg" datetime="2024-12-30T00:00:00.000Z" data-astro-cid-bvzihdzo> December 30, 2024 </time> <div class="w-2 h-2 bg-purple-500 rounded-full" data-astro-cid-bvzihdzo></div> <span class="text-lg" data-astro-cid-bvzihdzo>Theeruttop (Toppy)</span> </div>  </div> </header>  <div class="prose prose-gray dark:prose-invert max-w-none
+      prose-headings:text-gray-900 dark:prose-headings:text-white
+      prose-p:text-gray-700 dark:prose-p:text-gray-300
+      prose-a:text-blue-600 dark:prose-a:text-blue-400
+      prose-strong:text-gray-900 dark:prose-strong:text-white
+      prose-blockquote:border-gray-200 dark:prose-blockquote:border-gray-700
+      prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400
+      prose-ul:text-gray-700 dark:prose-ul:text-gray-300
+      prose-ol:text-gray-700 dark:prose-ol:text-gray-300
+      prose-li:text-gray-700 dark:prose-li:text-gray-300
+      prose-hr:border-gray-200 dark:prose-hr:border-gray-700
+      prose-table:border-gray-200 dark:prose-table:border-gray-700
+      prose-th:border-gray-200 dark:prose-th:border-gray-700
+      prose-td:border-gray-200 dark:prose-td:border-gray-700" data-astro-cid-bvzihdzo> <h1 id="ระบบรับส่งไฟล์แบบปลอดภัยด้วย-pgp">ระบบรับส่งไฟล์แบบปลอดภัยด้วย PGP</h1>
+<h2 id="-บทนำ">📖 บทนำ</h2>
+<p><strong>การรักษาความลับและความสมบูรณ์ของข้อมูล (Data Confidentiality and Integrity)</strong> ในการแลกเปลี่ยน <strong>Interface File</strong> ระหว่างระบบภายในและภายนอกองค์กรเป็นสิ่งสำคัญสูงสุด โดยเฉพาะอย่างยิ่งสำหรับข้อมูลที่มีความอ่อนไหว เช่น ข้อมูลทางการเงินหรือข้อมูลส่วนบุคคล</p>
+<p><strong>PGP (Pretty Good Privacy)</strong> จึงถูกนำมาใช้เป็นมาตรฐานการเข้ารหัสแบบ <strong>Asymmetric Encryption</strong> ที่เชื่อถือได้ เพื่อรับประกันความปลอดภัยของข้อมูลในขณะส่งผ่านเครือข่าย</p>
+<h2 id="-หลักการทำงานของ-asymmetric-encryption">🔐 หลักการทำงานของ Asymmetric Encryption</h2>
+<h3 id="พื้นฐานการเข้ารหัสแบบ-asymmetric"><strong>พื้นฐานการเข้ารหัสแบบ Asymmetric</strong></h3>
+<div class="mermaid">
+flowchart TD
+    A[Public Key] -->|เข้ารหัส| B[Encrypted Data]
+    B -->|ส่งผ่าน Network| C[Recipient]
+    C -->|ถอดรหัสด้วย Private Key| D[Original Data]
+    E[Private Key + Passphrase] -.->|จัดเก็บและใช้ใน Vault| C
+
+    style A fill:#e0f2fe,stroke:#0277bd,stroke-width:2px
+    style B fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style C fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style D fill:#e0f7fa,stroke:#00695c,stroke-width:2px
+    style E fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+</div>
+<h3 id="หลักการสำคัญ">หลักการสำคัญ:</h3>
+<ul>
+<li><strong>Public Key</strong> = ใช้สำหรับ <strong>เข้ารหัส</strong> ข้อมูล (Encryption), สามารถเผยแพร่ได้อย่างอิสระ</li>
+<li><strong>Private Key</strong> = ใช้สำหรับ <strong>ถอดรหัส</strong> ข้อมูล (Decryption), ต้องถูกเก็บเป็นความลับสูงสุดและไม่ส่งผ่านเครือข่าย</li>
+<li><strong>Passphrase</strong> = รหัสป้องกัน Private Key, ต้องจัดเก็บแยกจากตัว Private Key (<strong>Separation of Concern</strong>) เพื่อเพิ่มชั้นการป้องกัน (<strong>Defense-in-Depth</strong>)</li>
+</ul>
+<h2 id="️-การใช้งานพื้นฐาน">🛠️ การใช้งานพื้นฐาน</h2>
+<h3 id="1-การสร้าง-key-pair">1. การสร้าง Key Pair</h3>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== การสร้าง Key Pair ด้วย GPG (Gnu Privacy Guard) =====</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --gen-key</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">                   # คำสั่งสร้าง key pair</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    --pin-entry-mode</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> loopback</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">   # ไม่ต้องการ GUI prompt</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    --passphrase</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">your-secure-passphrase</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">#</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> รหัสป้องกัน</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> private</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> key</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    --batch</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">                     # ใช้ batch mode สำหรับ automation</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    --yes</span><span style="color:#6272A4;--shiki-dark:#6272A4">                          # ตอบ yes อัตโนมัติ</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== การ Export Public Key (สำหรับส่งให้ Partner) =====</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --armor</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">                     # แปลงเป็น text format</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    --export</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> your@email.com</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">     # ระบุ Key ID (Email)</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    ></span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> public_key.asc</span><span style="color:#6272A4;--shiki-dark:#6272A4">               # บันทึกเป็นไฟล์</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== การ Export Private Key (สำหรับจัดเก็บใน Vault) =====</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --armor</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">                     # แปลงเป็น text format</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    --export-secret-key</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">         # export private key</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    your@email.com</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">              # ระบุ Key ID (Email)</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    ></span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> private_key.asc</span><span style="color:#6272A4;--shiki-dark:#6272A4">              # บันทึกเป็นไฟล์</span></span></code></pre>
+<h3 id="2-การเข้ารหัสและถอดรหัส"><strong>2. การเข้ารหัสและถอดรหัส</strong></h3>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== การเข้ารหัสไฟล์ (ใช้ Public Key ของผู้รับ) =====</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --encrypt</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    --recipient</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">partner@email.com</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4"> # ระบุ Key ID ของผู้รับปลายทาง</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    --armor</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">                         # สร้างไฟล์ Encrypted Output เป็น Text Format (.asc)</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    --output</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> encrypted_file.asc</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">     # ระบุชื่อไฟล์ Output</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    input_file.txt</span><span style="color:#6272A4;--shiki-dark:#6272A4">                     # ไฟล์ที่ต้องการเข้ารหัส</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== การถอดรหัสไฟล์ (ใช้ Private Key ของตัวเอง) =====</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --decrypt</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    --output</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> decrypted_file.txt</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \ </span><span style="color:#6272A4;--shiki-dark:#6272A4">     # ระบุชื่อไฟล์ Output ที่ถอดรหัสแล้ว</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">    encrypted_file.asc</span><span style="color:#6272A4;--shiki-dark:#6272A4">                 # ไฟล์ Encrypted Input</span></span></code></pre>
+<h2 id="-สถานการณ์การใช้งานจริง">🔄 สถานการณ์การใช้งานจริง</h2>
+<h3 id="สถานการณ์ที่-1-partner-ส่ง-interface-file-ให้เรา"><strong>สถานการณ์ที่ 1: Partner ส่ง Interface File ให้เรา</strong></h3>
+<div class="mermaid">
+flowchart TD
+    A[เรา] -->|1 สร้าง Key Pair| B[Our Keys]
+    B -->|2 ส่ง Public Key| C[Partner]
+    C -->|3 Partner Import Key| D[Partner Ready]
+    D -->|4 เข้ารหัสไฟล์ ใช้ Public Key ของเรา| E[Encrypted File]
+    E -->|5 ส่งไฟล์ผ่าน Secure Channel| F[เรา]
+    F -->|6 ถอดรหัส ใช้ Private Key ของเรา| G[Decrypted File]
+
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style C fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style D fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style E fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style F fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style G fill:#e0f7fa,stroke:#00695c,stroke-width:2px
+</div>
+<h3 id="ขั้นตอนการทำงาน">ขั้นตอนการทำงาน:</h3>
+<ol>
+<li><strong>เราสร้าง Key Pair</strong> - สร้าง <strong>Public Key</strong> และ <strong>Private Key</strong> โดย <strong>Private Key</strong> และ <strong>Passphrase</strong> จะถูกจัดเก็บใน <strong>HashiCorp Vault</strong></li>
+<li><strong>ส่ง Public Key ให้ Partner</strong> - ส่ง Public Key ผ่านช่องทางที่ <strong>ปลอดภัย</strong> เช่น <strong>SFTP</strong> หรือ <strong>Secure Web Portal</strong> พร้อมแนบ <strong>Digital Signature</strong> และยืนยัน <strong>Fingerprint</strong></li>
+<li><strong>Partner Import และ Verify</strong> - Partner ตรวจสอบ <strong>Digital Signature</strong> และ <strong>Fingerprint</strong> ก่อน Import Public Key ของเราเข้าสู่ระบบ</li>
+<li><strong>Partner เข้ารหัสไฟล์</strong> - Partner ใช้ <strong>Public Key ของเรา</strong> ในการเข้ารหัส <strong>Interface File</strong></li>
+<li><strong>ส่งไฟล์ที่เข้ารหัส</strong> - ส่งไฟล์ที่เข้ารหัสแล้วมาให้เราผ่านช่องทางที่ <strong>ปลอดภัย</strong></li>
+<li><strong>เราถอดรหัส</strong> - <strong>Decryption Service</strong> ของเราดึง <strong>Private Key + Passphrase</strong> จาก <strong>Vault</strong> มาใช้ในการถอดรหัสไฟล์</li>
+</ol>
+<p><strong>ตัวอย่าง Command:</strong></p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== ฝั่งเรา (เตรียม Key สำหรับ Key Exchange) =====</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 1. Export public key (เพื่อส่งให้ Partner)</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --armor</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --export</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> your@email.com</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> ></span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 2. (Best Practice) สร้าง Digital Signature เพื่อยืนยันตัวตน</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --detach-sign</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --armor</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 3. ส่ง my_public_key.asc และ my_public_key.asc.sig ผ่าน SFTP/Secure Portal</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== ฝั่ง Partner (รับและเข้ารหัส) =====</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 1. ตรวจสอบและ Import public key ของเรา</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --verify</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc.sig</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc</span><span style="color:#6272A4;--shiki-dark:#6272A4"> # ตรวจสอบลายเซ็น</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --import</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 2. เข้ารหัสไฟล์ด้วย public key ของเรา</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --encrypt</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    --recipient</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">your@email.com</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    --output</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> encrypted_file.asc</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    input_file.txt</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== ฝั่งเรา (Decryption Service - โดย Microservice) =====</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># (สมมติว่า Private Key และ Passphrase ถูกดึงจาก Vault มาใช้ใน Process แล้ว)</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --decrypt</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --output</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> decrypted_file.txt</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> encrypted_file.asc</span></span></code></pre>
+<h3 id="สถานการณ์ที่-2-เราส่ง-interface-file-ให้-partner"><strong>สถานการณ์ที่ 2: เราส่ง Interface File ให้ Partner</strong></h3>
+<div class="mermaid">
+flowchart TD
+    A[Partner System] -->|1 สร้าง Key Pair| B[Partner Keys]
+    B -->|2 ส่ง Public Key ผ่าน SFTP Secure Portal| C[เรา Encryption Service]
+    C -->|3 เรา Import Verify Key| D[Our Keyring Ready]
+    D -->|4 เข้ารหัสไฟล์ ใช้ Public Key ของ Partner| E[Encrypted File]
+    E -->|5 ส่งไฟล์ผ่าน Secure Channel| F[Partner System]
+    F -->|6 ถอดรหัส ใช้ Private Key ของ Partner| G[Decrypted File]
+
+    style A fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style C fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style D fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style E fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style F fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style G fill:#e0f7fa,stroke:#00695c,stroke-width:2px
+</div>
+<h3 id="ขั้นตอนการทำงาน-1">ขั้นตอนการทำงาน:</h3>
+<ol>
+<li><strong>Partner สร้าง Key Pair</strong> - Partner สร้าง <strong>Public Key</strong> และ <strong>Private Key</strong> โดยจัดเก็บ <strong>Private Key</strong> และ <strong>Passphrase</strong> ไว้ในระบบของตนเองอย่าง <strong>ปลอดภัย</strong></li>
+<li><strong>ส่ง Public Key ให้เรา</strong> - Partner ส่ง <strong>Public Key</strong> ผ่านช่องทางที่ <strong>ปลอดภัย</strong> เช่น <strong>SFTP</strong> หรือ <strong>Secure Web Portal</strong> พร้อมแนบ <strong>Digital Signature</strong></li>
+<li><strong>เรา Import และ Verify</strong> - <strong>Encryption Service</strong> ของเราตรวจสอบ <strong>Digital Signature</strong> และ <strong>Fingerprint</strong> ก่อน Import <strong>Public Key ของ Partner</strong> เข้าสู่ระบบ</li>
+<li><strong>เราเข้ารหัสไฟล์</strong> - <strong>Encryption Service</strong> ของเราดึง <strong>Public Key ของ Partner</strong> มาใช้ในการเข้ารหัส <strong>Interface File</strong></li>
+<li><strong>ส่งไฟล์ที่เข้ารหัส</strong> - ส่งไฟล์ที่เข้ารหัสแล้วให้ Partner ผ่านช่องทางที่ <strong>ปลอดภัย</strong> (เช่น SFTP)</li>
+<li><strong>Partner ถอดรหัส</strong> - Partner ใช้ <strong>Private Key + Passphrase</strong> ของตนเองในการถอดรหัสไฟล์</li>
+</ol>
+<p><strong>ตัวอย่าง Command:</strong></p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== ฝั่ง Partner (Key Exchange) =====</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 1. Export public key (พร้อม Digital Signature)</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --armor</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --export</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> partner@email.com</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> ></span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> partner_public_key.asc</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --detach-sign</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --armor</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> partner_public_key.asc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 2. ส่งไฟล์ public key และ signature ให้เราผ่าน Secure Channel</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== ฝั่งเรา (Encryption Service - รับ/Verify Key และเข้ารหัส) =====</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 1. ตรวจสอบและ Import public key ของ Partner</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --verify</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> partner_public_key.asc.sig</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> partner_public_key.asc</span><span style="color:#6272A4;--shiki-dark:#6272A4"> # ตรวจสอบลายเซ็น</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --import</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> partner_public_key.asc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 2. เข้ารหัสไฟล์ด้วย public key ของ partner</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --encrypt</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    --recipient</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">partner@email.com</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    --output</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> encrypted_file.asc</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    input_file.txt</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 3. ส่งไฟล์ encrypted_file.asc ให้ Partner ผ่าน SFTP/Secure Portal</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== ฝั่ง Partner (ถอดรหัส) =====</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 1. ถอดรหัสไฟล์ด้วย private key + passphrase</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --decrypt</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --output</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> decrypted_file.txt</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> encrypted_file.asc</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ระบบจะถาม passphrase</span></span></code></pre>
+<hr>
+<h2 id="-การแลกเปลี่ยน-keys-และ-secure-transfer">🔑 การแลกเปลี่ยน Keys และ Secure Transfer</h2>
+<p>การแลกเปลี่ยน <strong>Public Key</strong> ต้องทำผ่านช่องทางที่มีความ <strong>ปลอดภัย (Secure Channel)</strong> และมีการตรวจสอบ <strong>Fingerprint</strong> เสมอ เพื่อป้องกันการโจมตีแบบ <strong>Man-in-the-Middle (MITM)</strong></p>
+<h3 id="วิธีการส่งผ่าน-secure-channel-ช่องทางปฏิบัติจริง">วิธีการส่งผ่าน Secure Channel (ช่องทางปฏิบัติจริง)</h3>
+<h4 id="1-secure-file-transfer-protocol-sftp-หรือ-secure-web-portal">1. Secure File Transfer Protocol (SFTP) หรือ Secure Web Portal</h4>
+<p>นี่คือช่องทางหลักและเป็นมาตรฐานที่ใช้ในการแลกเปลี่ยน <strong>Interface File</strong> และ <strong>Keys</strong> ระหว่างองค์กร:</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== การส่ง Public Key ผ่าน SFTP/Secure Portal =====</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 1. Export Public Key</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --armor</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --export</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> your@email.com</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> ></span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 2. (Best Practice) สร้าง Digital Signature เพื่อยืนยันความถูกต้อง</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --detach-sign</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --armor</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 3. ส่งไฟล์ Public Key (.asc) และ Signature (.asc.sig) ไปยัง SFTP Server ปลายทาง</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">sftp</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> partner_user@secure-server.com</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">put</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> /key_exchange/</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">put</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc.sig</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> /key_exchange/</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">quit</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ผู้รับจะดาวน์โหลดและใช้คำสั่ง gpg --verify เพื่อตรวจสอบลายเซ็น</span></span></code></pre>
+<h4 id="2-secure-email-transfer-ทางเลือกฉุกเฉิน"><strong>2. Secure Email Transfer (ทางเลือกฉุกเฉิน)</strong></h4>
+<p>หากจำเป็นต้องส่งผ่านอีเมล ควรแนบ Digital Signature และ Fingerprint เพื่อยืนยันตัวตน:</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ส่งไฟล์ Public Key (.asc) และไฟล์ Signature (.asc.sig)</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># พร้อมทั้งส่ง Fingerprint ผ่านช่องทางที่ 3 ที่เชื่อถือได้ (เช่น โทรศัพท์ยืนยัน)</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --fingerprint</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> your@email.com</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># Output: ABCD 1234 EF56 7890 ABCD 1234 EF56 7890 ABCD 1234</span></span></code></pre>
+<h2 id="-การจัดเก็บ-keys-ใน-vault-best-practice">🔑 การจัดเก็บ Keys ใน Vault (Best Practice)</h2>
+<p>การจัดการ <strong>Private Key</strong> ของระบบเราและ <strong>Public Key</strong> ของ Partner ต้องทำผ่าน <strong>HashiCorp Vault</strong> เพื่อให้ <strong>Microservice</strong> ดึง Key มาใช้ในการเข้ารหัส/ถอดรหัสได้โดยไม่ต้องเก็บ Key ไว้ในโค้ดหรือ File System ซึ่งเป็นหลักการ <strong>Secret Zero</strong> ที่สำคัญที่สุด</p>
+<h4 id="ตัวอย่าง-command-สำหรับ-vault-kv-secret-engine-v2">ตัวอย่าง Command สำหรับ Vault KV Secret Engine V2</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">คำสั่ง</th><th align="left">ผลลัพธ์ (ตัวอย่าง)</th><th align="left">คำอธิบาย</th></tr></thead><tbody><tr><td align="left"><strong>1. จัดเก็บ Private Key ของเรา</strong></td><td align="left"></td><td align="left"></td></tr><tr><td align="left"><code>vault kv put secret/pgp/our-system/private-key key="-----BEGIN PGP PRIVATE KEY-----..."</code></td><td align="left"><code>Key Value Secret written to: secret/data/pgp/our-system/private-key</code></td><td align="left">จัดเก็บ <strong>Private Key</strong> ของระบบเรา ไว้ใน Vault Path ที่กำหนด</td></tr><tr><td align="left"><strong>2. จัดเก็บ Passphrase ของเรา</strong></td><td align="left"></td><td align="left"></td></tr><tr><td align="left"><code>vault kv put secret/pgp/our-system/passphrase passphrase="OurSecurePassphrase123!"</code></td><td align="left"><code>Key Value Secret written to: secret/data/pgp/our-system/passphrase</code></td><td align="left">จัดเก็บ <strong>Passphrase</strong> <strong>แยก</strong>ไว้คนละ Path เพื่อเพิ่มชั้นการป้องกัน (<strong>Defense-in-Depth</strong>)</td></tr><tr><td align="left"><strong>3. จัดเก็บ Public Key ของ Partner</strong></td><td align="left"></td><td align="left"></td></tr><tr><td align="left"><code>vault kv put secret/pgp/partners/system-a/public-key key="-----BEGIN PGP PUBLIC KEY-----..."</code></td><td align="left"><code>Key Value Secret written to: secret/data/pgp/partners/system-a/public-key</code></td><td align="left">จัดเก็บ <strong>Public Key</strong> ของ Partner ‘System A’ สำหรับการเข้ารหัส</td></tr></tbody></table>
+<blockquote>
+<p><strong>หมายเหตุ:</strong> <strong>Microservice</strong> จะใช้ <strong>Vault Client</strong> ในการ <strong>Auth</strong> และดึง Key เหล่านี้มาใช้ในการทำงานแบบ <strong>Runtime</strong> ผ่าน <strong>Service Account</strong> ที่ถูกจำกัดสิทธิ์ (<strong>Least Privilege</strong>)</p>
+</blockquote>
+<hr>
+<h2 id="️-การตรวจสอบความถูกต้องของ-keys-verification">🛡️ การตรวจสอบความถูกต้องของ Keys (Verification)</h2>
+<p>การตรวจสอบนี้สำคัญที่สุดเพื่อยืนยันว่า Key ที่ได้รับมาเป็นของ <strong>Partner จริง ๆ</strong> และไม่มีการแก้ไขระหว่างการแลกเปลี่ยน</p>
+<h4 id="1-fingerprint-verification">1. Fingerprint Verification</h4>
+<p>คือการตรวจสอบค่าแฮช (<strong>Hash</strong>) สั้นๆ ของ <strong>Public Key</strong> ผ่านช่องทางที่ <strong>เชื่อถือได้</strong> (เช่น การโทรศัพท์ยืนยัน) เพื่อป้องกันการโจมตีแบบ <strong>Man-in-the-Middle (MITM)</strong></p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== คำสั่ง: ตรวจสอบ Fingerprint Key ที่ได้รับมา =====</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --fingerprint</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> partner@email.com</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># เปรียบเทียบกับ Fingerprint ที่ได้รับแจ้งจาก Partner (ต้องตรงกันทุกตัวอักษร)</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">ผลลัพธ์ตัวอย่าง</th><th align="left">คำอธิบาย</th></tr></thead><tbody><tr><td align="left"><code>pub   rsa3072 2024-01-15 [SC]</code> <br> <code>Key fingerprint: **ABCD 1234 EF56 7890 ABCD 1234 EF56 7890 ABCD 1234**</code></td><td align="left"><strong>Key Fingerprint</strong> 40 ตัวอักษรนี้จะต้องถูกเปรียบเทียบกับค่าที่ได้รับแจ้งจาก Partner ผ่านช่องทางที่ 3 (<strong>Out-of-Band</strong>) <strong>(ต้องตรงกันทุกตัวอักษร)</strong></td></tr></tbody></table>
+<h4 id="2-digital-signature-verification">2. Digital Signature Verification</h4>
+<p>ใช้เพื่อตรวจสอบว่า <strong>Public Key File</strong> ที่ได้รับมาไม่ได้ถูกแก้ไขหรือ <strong>ปลอมแปลง</strong> ระหว่างทาง (<strong>Data Integrity</strong>) โดยใช้ลายเซ็นที่ Partner สร้างขึ้นจาก <strong>Private Key</strong> ของเขา</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== คำสั่ง: ตรวจสอบ Digital Signature ของ Public Key File =====</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --verify</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> public_key.asc.sig</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> public_key.asc</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">ผลลัพธ์ตัวอย่าง</th><th align="left">คำอธิบาย</th></tr></thead><tbody><tr><td align="left"><code>gpg: Signature made Tue 10 Jun 2025 10:00:00 AM ICT</code> <br> <code>gpg: **Good signature from "Partner System A &#x3C;partner@email.com>"**</code></td><td align="left">ระบบยืนยันว่าไฟล์ <code>public_key.asc</code> ถูกเซ็นโดย <strong>Private Key</strong> ที่สอดคล้องกับ Key ID ของ Partner <strong>(“Good signature…” คือสถานะที่ถูกต้อง)</strong></td></tr><tr><td align="left"><code>gpg: BAD signature from "Partner System A &#x3C;partner@email.com>"</code></td><td align="left"><strong>สถานะผิดพลาด:</strong> แสดงว่าไฟล์ <strong>Public Key</strong> อาจถูกแก้ไข, ลายเซ็นไม่ตรง, หรือถูกเซ็นด้วย Key ที่หมดอายุ <strong>(ห้าม Import)</strong></td></tr></tbody></table>
+<h4 id="3-trust-level-setting"><strong>3. Trust Level Setting</strong></h4>
+<p>การตั้งค่าระดับความเชื่อถือ (Trust Level) ให้กับ Public Key ของ Partner ใน GPG Keyring</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== คำสั่ง: ตั้งค่า Trust Level (สำหรับ GPG Client) =====</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --edit-key</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> partner@email.com</span><span style="color:#6272A4;--shiki-dark:#6272A4"> # เข้าสู่โหมดแก้ไข Key</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">trust</span><span style="color:#6272A4;--shiki-dark:#6272A4">                             # พิมพ์คำสั่ง 'trust'</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># เลือก trust level (เช่น 4 = full trust)</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">save</span><span style="color:#6272A4;--shiki-dark:#6272A4">                              # บันทึกและออกจากโหมดแก้ไข</span></span></code></pre>
+<h3 id="best-practices-สำหรับ-key-exchange"><strong>Best Practices สำหรับ Key Exchange</strong></h3>
+<h4 id="1-security-checklist-สิ่งที่ต้องปฏิบัติ">1. Security Checklist (สิ่งที่ต้องปฏิบัติ)</h4>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="center">สถานะ</th><th align="left">รายการปฏิบัติ</th><th align="left">คำอธิบาย</th></tr></thead><tbody><tr><td align="center">✅</td><td align="left">ใช้ <strong>Secure Channel</strong> เท่านั้น</td><td align="left">ห้ามใช้ช่องทางที่ไม่เข้ารหัส (เช่น Email ธรรมดา) ในการส่ง <strong>Public Key</strong></td></tr><tr><td align="center">✅</td><td align="left">ตรวจสอบ <strong>Fingerprint</strong> ของ Public Key</td><td align="left">ยืนยันค่า Fingerprint ผ่านช่องทางที่สาม (<strong>Out-of-Band</strong>) เพื่อป้องกัน <strong>MITM</strong></td></tr><tr><td align="center">✅</td><td align="left">ใช้ <strong>Digital Signature</strong> เพื่อยืนยันความถูกต้อง</td><td align="left">ให้ Partner เซ็น Public Key ด้วย Private Key ของตนเอง เพื่อยืนยันตัวตน</td></tr><tr><td align="center">✅</td><td align="left">ตั้ง <strong>Trust Level</strong> ที่เหมาะสม</td><td align="left">กำหนดระดับความเชื่อถือใน Keyring ของ GPG (เช่น <strong>Full Trust</strong>)</td></tr><tr><td align="center">✅</td><td align="left">เก็บ <strong>Audit Log</strong> ของการแลกเปลี่ยน Keys</td><td align="left">บันทึกรายละเอียดการ Import/Export Key เพื่อการตรวจสอบย้อนหลัง</td></tr><tr><td align="center">❌</td><td align="left"><strong>ไม่ส่ง Private Key ผ่าน Network</strong></td><td align="left"><strong>Private Key</strong> ต้องถูกเก็บใน <strong>Vault</strong> และไม่เคยเผยแพร่สู่ภายนอก</td></tr></tbody></table>
+<h4 id="2-automation-script-ตัวอย่างการส่ง-key"><strong>2. Automation Script (ตัวอย่างการส่ง Key)</strong></h4>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">#!/bin/bash</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== Key Exchange Automation Script (ส่ง Public Key พร้อม Signature) =====</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ตรวจสอบ parameters</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">if</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> [ </span><span style="color:#BD93F9;--shiki-light-font-style:italic;--shiki-dark:#BD93F9;--shiki-dark-font-style:italic">$#</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> -ne</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> 2</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> ]; </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">then</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">    echo</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">Usage: </span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic">$0</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> &#x3C;partner_email> &#x3C;secure_server_user@host></span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">    exit</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> 1</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">PARTNER_EMAIL</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic">$1</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">SECURE_SERVER</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic">$2</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 1. Export public key (เปลี่ยน your@email.com เป็น Key ID ที่ใช้จริง)</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">echo</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">1. Exporting public key...</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --armor</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --export</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> your@email.com</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> ></span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 2. สร้าง digital signature (ไฟล์ .asc.sig)</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">echo</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">2. Creating digital signature...</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">gpg</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --detach-sign</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> --armor</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> my_public_key.asc</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 3. ส่งผ่าน SFTP (Secure File Transfer Protocol)</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">echo</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">3. Uploading to secure server...</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">sftp</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> $SECURE_SERVER</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> &#x3C;&#x3C;</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> EOF</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"># อัปโหลด Public Key และ Signature ไปยังโฟลเดอร์สำหรับแลกเปลี่ยน Key</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">put my_public_key.asc /incoming/keys/</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">put my_public_key.asc.sig /incoming/keys/</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">quit</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">EOF</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">echo</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">Key exchange completed successfully!</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">echo</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">Partner can download files from: </span><span style="color:#BD93F9;--shiki-dark:#BD93F9">$SECURE_SERVER</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">/incoming/keys/</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span></code></pre>
+<h2 id="️-การใช้งาน-pgp-ใน-application-microservice-spring-bootbatch">🏗️ การใช้งาน PGP ใน Application Microservice (Spring Boot/Batch)</h2>
+<p>ในสถาปัตยกรรมที่เน้นความปลอดภัย Microservice (เช่น Spring Boot หรือ Spring Batch) จะทำหน้าที่เป็น Client ในการดึง PGP Keys (ที่จัดเก็บใน Vault) มาใช้ในการเข้ารหัส/ถอดรหัสไฟล์ ณ Runtime</p>
+<h3 id="ภาพรวมระบบ-microservice--vault-integration"><strong>ภาพรวมระบบ (Microservice + Vault Integration)</strong></h3>
+<div class="mermaid">
+flowchart TD
+    A[External System] -->|1 ส่ง-รับไฟล์| B[Our Microservice (Spring Boot/Batch)];
+    B -->|2 ดึง Keys Runtime| C[HashiCorp Vault];
+    B -->|3 ใช้ Keys ใน PGP Logic| D[PGP Processing Logic];
+    D -->|4 ส่งไฟล์กลับ| A;
+    B -->|5 Audit Log| F[Monitoring];
+
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style B fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style C fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    style D fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style F fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+</div>
+<h3 id="microservice-responsibilities"><strong>Microservice Responsibilities</strong></h3>
+<p>Microservice จะถูกแบ่งบทบาทออกเป็น Components ที่ชัดเจน:</p>
+<h4 id="1-application-encryption-component-outbound-file"><strong>1. Application Encryption Component (Outbound File)</strong></h4>
+<ul>
+<li><strong>รับไฟล์</strong> จาก Internal Application หรือ Spring Batch Reader</li>
+<li><strong>ดึง Public Key</strong> ของ External System จาก Vault ผ่าน Spring Cloud Vault Client</li>
+<li><strong>เข้ารหัสไฟล์</strong> ด้วย Public Key ของ External System</li>
+<li><strong>ส่งไฟล์ที่เข้ารหัส</strong> กลับให้ External System</li>
+<li><strong>บันทึก Audit Log</strong> ทุกกิจกรรมการเข้ารหัส</li>
+</ul>
+<h4 id="2-application-decryption-component-inbound-file"><strong>2. Application Decryption Component (Inbound File)</strong></h4>
+<ul>
+<li><strong>รับไฟล์ที่เข้ารหัส</strong> จาก External System ผ่าน Spring Batch Job</li>
+<li><strong>ดึง Private Key + Passphrase</strong> จาก Vault</li>
+<li><strong>ถอดรหัสไฟล์</strong> ด้วย Private Key + Passphrase ของเรา</li>
+<li><strong>ส่งไฟล์ที่ถอดรหัส</strong> ต่อไปให้ Internal Application เพื่อประมวลผล</li>
+<li><strong>บันทึก Audit Log</strong> ทุกกิจกรรมการถอดรหัส</li>
+</ul>
+<h4 id="3-key-management-service-maintenance"><strong>3. Key Management Service (Maintenance)</strong></h4>
+<ul>
+<li><strong>จัดการ Public Keys</strong> ของ External Systems</li>
+<li><strong>จัดการ Private Key + Passphrase</strong> ของเรา</li>
+<li><strong>ตรวจสอบ Key Expiry</strong> และแจ้งเตือน (Monitor)</li>
+<li><strong>Rotate Keys</strong> ตามกำหนดเวลา</li>
+</ul>
+<h3 id="ตัวอย่างการใช้งานจริงใน-microservice-javaspring-boot"><strong>ตัวอย่างการใช้งานจริงใน Microservice (Java/Spring Boot)</strong></h3>
+<h4 id="สถานการณ์ที่-1-external-system-ส่งไฟล์ให้เรา-decryption"><strong>สถานการณ์ที่ 1: External System ส่งไฟล์ให้เรา (Decryption)</strong></h4>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">// ===== PGP Decryption Service (Component ภายใน Application Service) =====</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">@</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">Service</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">public</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> class</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> PGPDecryptionService</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    // ใช้ VaultClient ที่ Inject มาจาก Spring Cloud Vault</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    private</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> final</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> VaultClient</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> vaultClient;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    // ===== รับไฟล์ที่เข้ารหัสจาก External System =====</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    @</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">Async</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    public</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> void</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> processIncomingEncryptedFile</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> externalSystemId</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">                                           String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> encryptedFilePath</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">        try</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // 1. ดึง Private Key + Passphrase จาก Vault (Runtime Access)</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">            String</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> privateKey </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> vaultClient.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getSecret</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">pgp/private-key</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">            String</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> passphrase </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> vaultClient.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getSecret</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">pgp/passphrase</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // 2. ถอดรหัสไฟล์ด้วย Keys ที่ดึงมา</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">            String</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> decryptedFilePath </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> decryptFile</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(encryptedFilePath,</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                                                 privateKey,</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                                                 passphrase);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // 3. บันทึกไฟล์ที่ถอดรหัสแล้ว และบันทึก Audit Log</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">            fileStorage.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">storeDecryptedFile</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(decryptedFilePath);</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">            auditService.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">logFileDecryption</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(...);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        } </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">catch</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">Exception</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> e</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // จัดการ Error เช่น Keys ผิด หรือ Vault Access Error</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">            auditService.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">logDecryptionError</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(...);</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+<h4 id="สถานการณ์ที่-2-เราส่งไฟล์ให้-external-system-encryption"><strong>สถานการณ์ที่ 2: เราส่งไฟล์ให้ External System (Encryption)</strong></h4>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">// ===== PGP Encryption Service (Component ภายใน Application Service) =====</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">@</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">Service</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">public</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> class</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> PGPEncryptionService</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    private</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> final</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> VaultClient</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> vaultClient;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    private</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> final</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> ExternalSystemClient</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> externalSystemClient;</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    private</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> final</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> AuditService</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> auditService;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    // ===== ส่งไฟล์ที่เข้ารหัสให้ External System =====</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    @</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">Async</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    public</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> void</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> sendEncryptedFileToExternalSystem</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> externalSystemId</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">                                                String</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> filePath</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">        try</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // 1. ดึง Public Key ของ External System จาก Vault</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">            String</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> publicKey </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> vaultClient.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getSecret</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span></span>
+<span class="line"><span style="color:#E9F284;--shiki-dark:#E9F284">                "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">external-systems/</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> +</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> externalSystemId </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">+</span><span style="color:#E9F284;--shiki-dark:#E9F284"> "</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">/public-key</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // 2. เข้ารหัสไฟล์</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">            String</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> encryptedFilePath </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> encryptFile</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(filePath, publicKey);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // 3. ส่งไฟล์ที่เข้ารหัสให้ External System</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">            externalSystemClient.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">uploadFile</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(externalSystemId, encryptedFilePath);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // 4. บันทึก Audit Log</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">            auditService.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">logFileEncryption</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(externalSystemId,</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                                         filePath,</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                                         encryptedFilePath);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        } </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">catch</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">Exception</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> e</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // จัดการ error</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">            auditService.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">logEncryptionError</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(externalSystemId,</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                                          filePath,</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">                                          e.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getMessage</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">());</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+<h3 id="การจัดการ-keys-ใน-vault"><strong>การจัดการ Keys ใน Vault</strong></h3>
+<p>การจัดเก็บ PGP Keys ทั้งหมดต้องทำผ่าน HashiCorp Vault เพื่อให้ Microservice สามารถดึง Key มาใช้ในการทำงานได้ ณ Runtime โดยไม่ต้องมีการ Hardcode หรือจัดเก็บใน File System</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># ===== การจัดเก็บ Keys ใน Vault KV Secret Engine V2 =====</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 1. Private Key และ Passphrase ของเรา (สำหรับ Decryption)</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">vault</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> kv</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> put</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> secret/pgp/private-key</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> key=</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">-----BEGIN PGP PRIVATE KEY-----...</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">vault</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> kv</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> put</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> secret/pgp/passphrase</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> passphrase=</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">OurSecurePassphrase123!</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 2. Public Keys ของ External Systems (สำหรับ Encryption)</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">vault</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> kv</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> put</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> secret/external-systems/system-a/public-key</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    key=</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">-----BEGIN PGP PUBLIC KEY-----...</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"><span style="color:#50FA7B;--shiki-dark:#50FA7B">vault</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> kv</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> put</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C"> secret/external-systems/system-b/public-key</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> \</span></span>
+<span class="line"><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">    key=</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">-----BEGIN PGP PUBLIC KEY-----...</span><span style="color:#E9F284;--shiki-dark:#E9F284">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># 3. การเข้าถึง Keys (Least Privilege):</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># Microservice จะใช้ Service Account Token (ผ่าน Kubernetes Auth Method)</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4"># เพื่อ Authenticate กับ Vault และดึง keys ที่จำเป็นสำหรับการเข้ารหัส/ถอดรหัสเท่านั้น</span></span></code></pre>
+<h3 id="การ-monitor-และ-alert"><strong>การ Monitor และ Alert</strong></h3>
+<p>Service ต้องมีการตรวจสอบ (Monitor) สถานะของ Keys และบันทึกกิจกรรมต่างๆ เพื่อรักษาความปลอดภัย และเตรียมพร้อมสำหรับการหมุนเวียน Keys (Rotation)</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="java"><code class="language-undefined"><span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">// ===== Key Monitoring Service (Java/Spring Boot @Scheduled) =====</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">@</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">Service</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">public</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> class</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> KeyMonitoringService</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    @</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">Scheduled</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">fixedRate</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> =</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> 86400000</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) </span><span style="color:#6272A4;--shiki-dark:#6272A4">// ตรวจสอบทุก 24 ชั่วโมง (86.4 ล้าน ms)</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    public</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> void</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> checkKeyExpiry</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">() {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // ตรวจสอบ keys ที่จะหมดอายุใน 30 วันล่วงหน้า</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">        List</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">&#x3C;KeyInfo> expiringKeys </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> vaultClient.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">getExpiringKeys</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">30</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">        for</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">KeyInfo</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> key </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">:</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> expiringKeys) {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">            // ส่ง alert ไปยัง Security Team หรือ Operation Team</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">            alertService.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">sendKeyExpiryAlert</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(key);</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    @</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">EventListener</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    public</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> void</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> handleEncryptionError</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">EncryptionErrorEvent</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> event</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // แจ้งเตือนเมื่อเกิด error ในการเข้ารหัส (เช่น Public Key ของ Partner ผิดพลาด)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        alertService.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">sendEncryptionErrorAlert</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(event);</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    @</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">EventListener</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    public</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic"> void</span><span style="color:#50FA7B;--shiki-dark:#50FA7B"> handleDecryptionError</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#8BE9FD;--shiki-light-font-style:italic;--shiki-dark:#8BE9FD;--shiki-dark-font-style:italic">DecryptionErrorEvent</span><span style="color:#FFB86C;--shiki-light-font-style:italic;--shiki-dark:#FFB86C;--shiki-dark-font-style:italic"> event</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) {</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">        // แจ้งเตือนเมื่อเกิด error ในการถอดรหัส (เช่น ไฟล์เสียหาย หรือ Private Key ผิด)</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">        alertService.</span><span style="color:#50FA7B;--shiki-dark:#50FA7B">sendDecryptionErrorAlert</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(event);</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    }</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">}</span></span></code></pre>
+<h3 id="best-practices-สำหรับ-microservice"><strong>Best Practices สำหรับ Microservice</strong></h3>
+<h4 id="1-security">1. Security 🔒</h4>
+<ul>
+<li><strong>ใช้ Vault</strong> สำหรับจัดการ <strong>Keys</strong> และ <strong>Secrets</strong> ทั้งหมด (Secret Zero Principle)</li>
+<li><strong>แยก Private Key และ Passphrase</strong> ในการจัดเก็บ (Defense-in-Depth)</li>
+<li><strong>ใช้ Service Account</strong> ที่จำกัดสิทธิ์ (<strong>Least Privilege</strong>) สำหรับการเข้าถึง Vault</li>
+<li><strong>เข้ารหัสข้อมูล</strong> ในทุกสถานะ (<strong>in transit</strong> และ <strong>at rest</strong>)</li>
+</ul>
+<h4 id="2-monitoring">2. Monitoring 📊</h4>
+<ul>
+<li><strong>Audit Log</strong> ทุกการเข้ารหัส/ถอดรหัส (เพื่อการตรวจสอบย้อนหลัง)</li>
+<li><strong>Monitor Key Expiry</strong> และแจ้งเตือนล่วงหน้า (เพื่อวางแผน Key Rotation)</li>
+<li><strong>Track Error Rates</strong> และ performance metrics ของ PGP Component</li>
+<li><strong>Alert on Security Events</strong> เช่น failed decryption attempts</li>
+</ul>
+<h4 id="3-scalability">3. Scalability 🚀</h4>
+<ul>
+<li><strong>Async Processing</strong> สำหรับการเข้ารหัส/ถอดรหัสไฟล์ (ไม่บล็อก Main Thread)</li>
+<li><strong>Queue-based Processing</strong> สำหรับไฟล์ขนาดใหญ่และปริมาณงานสูง</li>
+<li><strong>Horizontal Scaling</strong> ของ Microservice ที่รัน PGP Logic</li>
+<li><strong>Caching</strong> สำหรับ frequently used keys (ลด Latency ในการเรียก Vault)</li>
+</ul>
+<h4 id="4-error-handling">4. Error Handling 🚧</h4>
+<ul>
+<li><strong>Retry Logic</strong> สำหรับ transient failures (ความล้มเหลวชั่วคราว)</li>
+<li><strong>Circuit Breaker</strong> สำหรับ external system calls (ป้องกันการเรียกซ้ำระบบภายนอกที่ไม่ตอบสนอง)</li>
+<li><strong>Dead Letter Queue (DLQ)</strong> สำหรับไฟล์ที่ไม่สามารถประมวลผลได้ (ตรวจสอบสาเหตุภายหลัง)</li>
+<li><strong>Graceful Degradation</strong> เมื่อ Vault ไม่สามารถเข้าถึงได้ (เช่น การใช้ Local Cache ชั่วคราว ภายใต้เงื่อนไขที่ปลอดภัย)</li>
+</ul>
+<hr>
+<h2 id="-สรุป">📋 สรุป</h2>
+<p>การใช้งาน <strong>PGP Encryption</strong> สำหรับการรับส่งไฟล์แบบปลอดภัยในสถาปัตยกรรม <strong>Microservice</strong> มุ่งเน้นไปที่การผสานรวม <strong>HashiCorp Vault</strong> โดยมีขั้นตอนหลักดังนี้:</p>
+<ol>
+<li><strong>การสร้าง Key Pair</strong> - สร้าง public key และ private key พร้อม passphrase</li>
+<li><strong>การแลกเปลี่ยน Public Keys</strong> - ผ่าน secure channel พร้อมการตรวจสอบความถูกต้อง (<strong>Verification</strong>)</li>
+<li><strong>การเข้ารหัสไฟล์</strong> - ใช้ public key ของผู้รับ</li>
+<li><strong>การส่งไฟล์</strong> - ควรส่งผ่านช่องทางที่ <strong>ปลอดภัย</strong> (แม้ไฟล์จะเข้ารหัสแล้วก็ตาม)</li>
+<li><strong>การถอดรหัส</strong> - ใช้ private key + passphrase ของผู้รับ (ที่ดึงมาจาก Vault)</li>
+</ol>
+<p>ในระบบ <strong>Microservice</strong> การจัดการ keys จะทำผ่าน <strong>Vault</strong> เพื่อความปลอดภัย และมีการ <strong>Monitor</strong> ตลอดเวลาเพื่อให้แน่ใจว่าระบบทำงานได้อย่างต่อเนื่องและปลอดภัย</p>  </div> </article>  </div> </main> <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200"> <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"> <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> <!-- About Section --> <div> <h3 class="text-lg font-semibold mb-4">About</h3> <p class="text-gray-900 dark:text-white">
+Just a laid-back software engineer who loves automating boring stuff,
+          diving into data, and poking around APIs to make cool things happen.
+          Living the Windows/Linux/Mac life because one OS is never enough. Made
+          by Toppy with ☕️ and occasional bursts of energy.
+</p> </div> <!-- Links Section --> <div> <h3 class="text-lg font-semibold mb-4">Links</h3> <ul class="space-y-2"> <!-- <li>
+            <a
+              href='/about'
+              class='text-gray-300 hover:text-white transition-colors'
+            >
+              About
+            </a>
+          </li> --> <li> <a href="/blog" class="text-gray-900 dark:text-white dark:hover:text-white transition-colors">
+Blog
+</a> </li> </ul> </div> <!-- Social Section --> <div> <h3 class="text-lg font-semibold mb-4">Connect</h3> <div class="flex space-x-4"> <a href="https://github.com/yourusername" class="text-gray-900 dark:text-white"> <span class="sr-only">GitHub</span> <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="https://twitter.com/yourusername" class="text-gray-900 dark:text-white"> <span class="sr-only">Twitter</span> <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"> <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path> </svg> </a> </div> </div> </div> <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400"> <p>&copy; 2025 Your Name. All rights reserved.</p> </div> </div> </footer>  </body></html> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.CW24_qGB.js"></script> 
