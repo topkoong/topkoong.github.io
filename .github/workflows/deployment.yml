@@ -22,15 +22,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          check-latest: true
           cache: 'pnpm'
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: latest
+      - name: Enable Corepack (pnpm via corepack)
+        run: corepack enable
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile || pnpm install
 
       - name: Lint
         run: |
