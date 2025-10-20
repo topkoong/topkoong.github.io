@@ -22,8 +22,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          check-latest: true
-          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest # or specify your version: 8, 9, latest
 
       - name: Enable Corepack (pnpm via corepack)
         run: corepack enable
