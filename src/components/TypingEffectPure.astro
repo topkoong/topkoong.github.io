@@ -1,0 +1,55 @@
+---
+// Pure Astro component for Typing Effect text animation
+export interface Props {
+  text: string;
+  className?: string;
+  speed?: number;
+  showCursor?: boolean;
+}
+
+const { text, className = "text-2xl font-medium", speed = 100, showCursor = true } = Astro.props;
+---
+
+<div class={`typing-effect ${className}`} data-text={text} data-speed={speed} data-showcursor={showCursor}>
+  <span class="typing-text"></span>
+  {showCursor && <span class="typing-cursor">|</span>}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const containers = document.querySelectorAll('.typing-effect');
+    
+    containers.forEach(container => {
+      const text = container.getAttribute('data-text') || '';
+      const speed = parseInt(container.getAttribute('data-speed') || '100');
+      const showCursor = container.getAttribute('data-showcursor') === 'true';
+      
+      const textElement = container.querySelector('.typing-text');
+      const cursorElement = container.querySelector('.typing-cursor');
+      
+      let currentIndex = 0;
+      
+      const typeText = () => {
+        if (currentIndex < text.length) {
+          textElement.textContent += text[currentIndex];
+          currentIndex++;
+          setTimeout(typeText, speed);
+        }
+      };
+      
+      // Start typing after a short delay
+      setTimeout(typeText, 500);
+    });
+  });
+</script>
+
+<style>
+  .typing-cursor {
+    animation: blink 0.8s infinite;
+  }
+  
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+</style>

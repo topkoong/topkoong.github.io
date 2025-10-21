@@ -1,0 +1,60 @@
+---
+// Pure Astro component for Rotate Words text animation
+export interface Props {
+  words: string[];
+  className?: string;
+  duration?: number;
+}
+
+const { words, className = "text-2xl font-semibold", duration = 2 } = Astro.props;
+---
+
+<div class={`rotate-words ${className}`} data-words={JSON.stringify(words)} data-duration={duration}>
+  <span class="rotate-words-prefix">You can </span>
+  <span class="rotate-words-current">{words[0]}</span>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const containers = document.querySelectorAll('.rotate-words');
+    
+    containers.forEach(container => {
+      const words = JSON.parse(container.getAttribute('data-words') || '[]');
+      const duration = parseFloat(container.getAttribute('data-duration') || '2') * 1000;
+      
+      const currentElement = container.querySelector('.rotate-words-current');
+      let currentIndex = 0;
+      
+      const rotateWords = () => {
+        currentIndex = (currentIndex + 1) % words.length;
+        
+        // Add exit animation
+        currentElement.style.transform = 'rotateX(90deg)';
+        currentElement.style.opacity = '0';
+        
+        setTimeout(() => {
+          currentElement.textContent = words[currentIndex];
+          currentElement.style.transform = 'rotateX(0deg)';
+          currentElement.style.opacity = '1';
+        }, 250);
+      };
+      
+      // Start rotation after initial delay
+      setTimeout(() => {
+        setInterval(rotateWords, duration);
+      }, 2000);
+    });
+  });
+</script>
+
+<style>
+  .rotate-words-current {
+    display: inline-block;
+    color: rgb(37 99 235); /* blue-600 */
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+  
+  .dark .rotate-words-current {
+    color: rgb(96 165 250); /* blue-400 */
+  }
+</style>

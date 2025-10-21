@@ -1,0 +1,41 @@
+---
+// Pure Astro component for Gradual Spacing text animation
+export interface Props {
+  text: string;
+  className?: string;
+}
+
+const { text, className = "text-4xl font-bold" } = Astro.props;
+const letters = text.split('');
+---
+
+<div class={`gradual-spacing ${className}`}>
+  {letters.map((letter, index) => (
+    <span 
+      class="gradual-spacing-letter" 
+      style={`animation-delay: ${index * 0.1}s`}
+    >
+      {letter === ' ' ? '\u00A0' : letter}
+    </span>
+  ))}
+</div>
+
+<style>
+  .gradual-spacing {
+    display: flex;
+  }
+  
+  .gradual-spacing-letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: gradualSpacingIn 0.5s ease-out forwards;
+  }
+  
+  @keyframes gradualSpacingIn {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+</style>

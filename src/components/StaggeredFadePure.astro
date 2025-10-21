@@ -1,0 +1,38 @@
+---
+// Pure Astro component for Staggered Fade text animation
+export interface Props {
+  words: string[];
+  className?: string;
+  delay?: number;
+}
+
+const { words, className = "text-xl", delay = 0.2 } = Astro.props;
+---
+
+<div class={`staggered-fade ${className}`}>
+  {words.map((word, index) => (
+    <span 
+      class="staggered-fade-word" 
+      style={`animation-delay: ${index * delay}s`}
+    >
+      {word}
+    </span>
+  ))}
+</div>
+
+<style>
+  .staggered-fade-word {
+    display: inline-block;
+    margin-right: 0.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: staggeredFadeIn 0.6s ease-out forwards;
+  }
+  
+  @keyframes staggeredFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

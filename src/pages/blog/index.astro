@@ -1,9 +1,9 @@
 ---
 // Blog listing page that shows all posts
 import Layout from '../../layouts/Layout.astro';
-import GradualSpacing from '../../components/GradualSpacing.astro';
-import TypingEffect from '../../components/TypingEffect.astro';
-import StaggeredFade from '../../components/StaggeredFade.astro';
+import GradualSpacingPure from '../../components/GradualSpacingPure.astro';
+import TypingEffectPure from '../../components/TypingEffectPure.astro';
+import StaggeredFadePure from '../../components/StaggeredFadePure.astro';
 
 interface Frontmatter {
   title: string;
@@ -115,7 +115,7 @@ const sortedPosts = publishedPosts.sort(
       <div class='relative space-y-8'>
         <!-- Main heading with Gradual Spacing animation -->
         <div class='animate-fade-in-up'>
-          <GradualSpacing 
+          <GradualSpacingPure 
             text="Blog Posts" 
             className="text-7xl font-bold tracking-tight mb-8 leading-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
           />
@@ -123,7 +123,7 @@ const sortedPosts = publishedPosts.sort(
 
         <!-- Subtitle with Staggered Fade animation -->
         <div class='animate-fade-in-up' style='animation-delay: 300ms'>
-          <StaggeredFade 
+          <StaggeredFadePure 
             words={["Thoughts,", "tutorials,", "and", "insights", "from", "my", "journey", "as", "a", "software", "engineer"]}
             className="text-3xl text-gray-600 dark:text-gray-400 font-light leading-relaxed max-w-4xl mx-auto"
             delay={0.15}
@@ -134,7 +134,7 @@ const sortedPosts = publishedPosts.sort(
         <div class='animate-fade-in-up' style='animation-delay: 600ms'>
           <div class='flex justify-center items-center space-x-8 mt-12'>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.5s'>
-              <TypingEffect 
+              <TypingEffectPure 
                 text={sortedPosts.length.toString()} 
                 className="text-3xl font-bold text-purple-600 dark:text-purple-400"
                 speed={200}
@@ -144,7 +144,7 @@ const sortedPosts = publishedPosts.sort(
             </div>
             <div class='w-px h-12 bg-gray-300 dark:bg-gray-600'></div>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.7s'>
-              <TypingEffect 
+              <TypingEffectPure 
                 text="100%" 
                 className="text-3xl font-bold text-blue-600 dark:text-blue-400"
                 speed={200}
@@ -154,7 +154,7 @@ const sortedPosts = publishedPosts.sort(
             </div>
             <div class='w-px h-12 bg-gray-300 dark:bg-gray-600'></div>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.9s'>
-              <TypingEffect 
+              <TypingEffectPure 
                 text="Free" 
                 className="text-3xl font-bold text-pink-600 dark:text-pink-400"
                 speed={200}

@@ -1,10 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import BlogCard from '../components/BlogCard.astro';
-import GradualSpacing from '../components/GradualSpacing.astro';
-import TypingEffect from '../components/TypingEffect.astro';
-import StaggeredFade from '../components/StaggeredFade.astro';
-import RotateWords from '../components/RotateWords.astro';
+import GradualSpacingPure from '../components/GradualSpacingPure.astro';
+import TypingEffectPure from '../components/TypingEffectPure.astro';
+import StaggeredFadePure from '../components/StaggeredFadePure.astro';
+import RotateWordsPure from '../components/RotateWordsPure.astro';
 
 // Define types for our markdown content
 interface Frontmatter {
@@ -104,12 +104,12 @@ const sortedPosts = publishedPosts
         <div class='relative space-y-12'>
           <!-- Main heading with Gradual Spacing animation -->
           <div class='text-center'>
-            <GradualSpacing 
+            <GradualSpacingPure 
               text="Hey, I'm Top." 
               className="text-7xl font-bold tracking-tight mb-8 leading-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
             />
             <div class="mt-4">
-              <TypingEffect 
+              <TypingEffectPure 
                 text="(Theerut)" 
                 className="text-5xl text-gray-700 dark:text-gray-300"
                 speed={150}
@@ -120,7 +120,7 @@ const sortedPosts = publishedPosts
 
           <!-- Subtitle with Staggered Fade animation -->
           <div class='text-center'>
-            <StaggeredFade 
+            <StaggeredFadePure 
               words={["Software", "Engineer.", "Building", "the", "Full", "Stack,", "Mastering", "Automation,", "and", "Scaling", "Knowledge."]}
               className="text-2xl text-gray-800 dark:text-gray-200 font-normal leading-relaxed max-w-4xl tracking-wide"
               delay={0.1}
@@ -139,7 +139,7 @@ const sortedPosts = publishedPosts
               </p>
               
               <div class='my-8'>
-                <RotateWords 
+                <RotateWordsPure 
                   words={["automate", "innovate", "create", "build", "scale"]}
                   className="text-2xl font-semibold"
                   duration={3}
