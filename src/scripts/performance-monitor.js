@@ -1,16 +1,16 @@
 /**
  * Performance Monitoring Script
- * 
+ *
  * This script monitors Core Web Vitals and other performance metrics
  * for the website. It can be integrated with analytics platforms
  * to track performance over time.
- * 
+ *
  * Features:
  * - Core Web Vitals monitoring (LCP, FID, CLS)
  * - Custom performance metrics
  * - Performance budget alerts
  * - Analytics integration ready
- * 
+ *
  * @fileoverview Performance monitoring and analytics
  */
 
@@ -18,13 +18,13 @@
 const PERFORMANCE_CONFIG = {
   // Core Web Vitals thresholds
   LCP_THRESHOLD: 2500, // 2.5 seconds
-  FID_THRESHOLD: 100,  // 100 milliseconds
-  CLS_THRESHOLD: 0.1,  // 0.1
-  
+  FID_THRESHOLD: 100, // 100 milliseconds
+  CLS_THRESHOLD: 0.1, // 0.1
+
   // Custom metrics thresholds
-  TTFB_THRESHOLD: 200,  // 200 milliseconds
-  TTI_THRESHOLD: 3500,  // 3.5 seconds
-  
+  TTFB_THRESHOLD: 200, // 200 milliseconds
+  TTI_THRESHOLD: 3500, // 3.5 seconds
+
   // Analytics configuration
   ANALYTICS_ENABLED: false, // Set to true to enable analytics
   ANALYTICS_ENDPOINT: '/api/analytics', // Analytics endpoint
@@ -155,7 +155,9 @@ class PerformanceMonitor {
   checkThreshold(metric, value) {
     const threshold = this.config[`${metric.toUpperCase()}_THRESHOLD`];
     if (threshold && value > threshold) {
-      console.warn(`Performance threshold exceeded: ${metric} = ${value}ms (threshold: ${threshold}ms)`);
+      console.warn(
+        `Performance threshold exceeded: ${metric} = ${value}ms (threshold: ${threshold}ms)`
+      );
       this.trackEvent('performance_threshold_exceeded', {
         metric,
         value,
@@ -204,7 +206,9 @@ class PerformanceMonitor {
       cls: this.getScore('cls', this.metrics.cls, this.config.CLS_THRESHOLD),
     };
 
-    const overallScore = Object.values(scores).reduce((sum, score) => sum + score, 0) / Object.keys(scores).length;
+    const overallScore =
+      Object.values(scores).reduce((sum, score) => sum + score, 0) /
+      Object.keys(scores).length;
     return {
       overall: Math.round(overallScore),
       breakdown: scores,
@@ -216,14 +220,20 @@ class PerformanceMonitor {
    */
   getScore(metric, value, threshold) {
     if (!value) return 0;
-    
+
     switch (metric) {
       case 'lcp':
-        return value <= threshold ? 100 : Math.max(0, 100 - ((value - threshold) / threshold) * 50);
+        return value <= threshold
+          ? 100
+          : Math.max(0, 100 - ((value - threshold) / threshold) * 50);
       case 'fid':
-        return value <= threshold ? 100 : Math.max(0, 100 - ((value - threshold) / threshold) * 50);
+        return value <= threshold
+          ? 100
+          : Math.max(0, 100 - ((value - threshold) / threshold) * 50);
       case 'cls':
-        return value <= threshold ? 100 : Math.max(0, 100 - ((value - threshold) / threshold) * 50);
+        return value <= threshold
+          ? 100
+          : Math.max(0, 100 - ((value - threshold) / threshold) * 50);
       default:
         return value <= threshold ? 100 : 0;
     }
@@ -241,10 +251,11 @@ class PerformanceMonitor {
 // Initialize performance monitoring
 if (typeof window !== 'undefined') {
   window.performanceMonitor = new PerformanceMonitor();
-  
+
   // Expose metrics globally for debugging
   window.getPerformanceMetrics = () => window.performanceMonitor.getMetrics();
-  window.getPerformanceScore = () => window.performanceMonitor.getPerformanceScore();
+  window.getPerformanceScore = () =>
+    window.performanceMonitor.getPerformanceScore();
 }
 
 // Export for module usage

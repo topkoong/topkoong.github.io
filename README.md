@@ -17,7 +17,7 @@ A modern, responsive personal blog built with Astro, featuring dark/light mode, 
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - pnpm (recommended) or npm
 
 ### Installation
@@ -78,25 +78,30 @@ topkoong.github.io/
 ### Key Directories Explained
 
 #### `src/components/`
+
 - **Purpose**: Reusable Astro components
 - **Convention**: PascalCase naming (e.g., `BlogCard.astro`)
 - **Documentation**: All components have comprehensive JSDoc comments
 - **Types**: TypeScript interfaces for props and data structures
 
 #### `src/layouts/`
+
 - **Layout.astro**: Main site layout with SEO, theme management, and global styles
 - **BlogPost.astro**: Specialized layout for blog posts with enhanced typography
 
 #### `src/pages/`
+
 - **File-based routing**: Each `.astro` file becomes a route
 - **Blog posts**: Markdown files in `blog/posts/` directory
 - **Dynamic routes**: `[slug].astro` for dynamic blog post pages
 
 #### `src/plugins/`
+
 - **Custom plugins**: Extend Astro's markdown processing
 - **Mermaid support**: Enables diagram rendering in blog posts
 
 #### `.github/workflows/`
+
 - **Automated deployment**: Builds and deploys on push to main
 - **Branch sync**: Keeps master synchronized with main
 
@@ -105,6 +110,7 @@ topkoong.github.io/
 ### Development Workflow
 
 1. **Setup Environment**:
+
    ```bash
    # Clone and install dependencies
    git clone https://github.com/topkoong/topkoong.github.io.git
@@ -113,6 +119,7 @@ topkoong.github.io/
    ```
 
 2. **Start Development**:
+
    ```bash
    # Start local development server
    pnpm dev
@@ -120,27 +127,29 @@ topkoong.github.io/
    ```
 
 3. **Make Changes**:
+
    - Edit components in `src/components/`
    - Add blog posts in `src/pages/blog/posts/`
    - Update layouts in `src/layouts/`
 
 4. **Test and Build**:
+
    ```bash
    # Preview production build
    pnpm preview
-   
+
    # Build for production
    pnpm build
    ```
 
 ### Available Scripts
 
-| Command | Action |
-| :------ | :----- |
-| `pnpm dev` | Start development server with hot reload |
-| `pnpm build` | Build production site to `./dist/` |
-| `pnpm preview` | Preview production build locally |
-| `pnpm astro` | Run Astro CLI commands |
+| Command        | Action                                   |
+| :------------- | :--------------------------------------- |
+| `pnpm dev`     | Start development server with hot reload |
+| `pnpm build`   | Build production site to `./dist/`       |
+| `pnpm preview` | Preview production build locally         |
+| `pnpm astro`   | Run Astro CLI commands                   |
 
 ### Development Guidelines
 
@@ -168,9 +177,9 @@ topkoong.github.io/
 
 ```yaml
 ---
-title: "Your Post Title"
-date: "2024-01-01"
-description: "Brief description of your post"
+title: 'Your Post Title'
+date: '2024-01-01'
+description: 'Brief description of your post'
 published: true # Optional, defaults to true
 ---
 ```
@@ -198,7 +207,7 @@ The site supports both dark and light modes with:
 The site uses GitHub Actions for automatic deployment:
 
 1. **Trigger**: Push changes to the `main` branch
-2. **Build Process**: 
+2. **Build Process**:
    - Install dependencies with pnpm
    - Build static site with Astro
    - Deploy to GitHub Pages
@@ -211,7 +220,7 @@ The site uses GitHub Actions for automatic deployment:
 name: Deploy to GitHub Pages
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -327,10 +336,10 @@ Blog posts automatically get SEO optimization:
 
 ```yaml
 ---
-title: "Your Post Title"           # Used for <title> tag
-date: "2024-01-01"                # Used for publication date
-description: "Brief description"  # Used for meta description
-tags: ["tag1", "tag2"]           # Used for keywords
+title: 'Your Post Title' # Used for <title> tag
+date: '2024-01-01' # Used for publication date
+description: 'Brief description' # Used for meta description
+tags: ['tag1', 'tag2'] # Used for keywords
 ---
 ```
 

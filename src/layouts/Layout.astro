@@ -1,11 +1,11 @@
 ---
 /**
  * Base Layout Component
- * 
+ *
  * This is the main layout component that provides the common structure,
  * styling, and meta tags for all pages in the Astro blog. It handles
  * SEO optimization, theme management, and responsive design.
- * 
+ *
  * Features:
  * - Comprehensive SEO meta tags (Open Graph, Twitter Cards, structured data)
  * - Dark/light mode theme switching with flash prevention
@@ -13,7 +13,7 @@
  * - Google Fonts integration (Inter + JetBrains Mono)
  * - Automatic theme initialization
  * - Social media preview support
- * 
+ *
  * @fileoverview Main layout component with SEO and theming
  */
 
@@ -118,12 +118,12 @@ const structuredData = {
       href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap'
       rel='stylesheet'
     />
-    
+
     <!-- Performance optimizations -->
     <!-- DNS prefetch for external resources -->
     <link rel='dns-prefetch' href='//fonts.googleapis.com' />
     <link rel='dns-prefetch' href='//fonts.gstatic.com' />
-    
+
     <!-- Preload critical resources -->
     <link rel='preload' href='/favicon.svg' as='image' type='image/svg+xml' />
 
@@ -210,14 +210,14 @@ const structuredData = {
       }
     </script>
   </head>
-  
+
   <!-- Main body with responsive classes and theme support -->
   <body
     class='min-h-screen flex flex-col bg-white text-gray-900 dark:bg-black dark:text-white transition-colors duration-200'
   >
     <!-- Navigation component -->
     <Navbar />
-    
+
     <!-- Main content area with responsive container -->
     <main class='flex-1'>
       <div class='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -225,7 +225,7 @@ const structuredData = {
         <slot />
       </div>
     </main>
-    
+
     <!-- Footer component -->
     <Footer />
   </body>
@@ -236,7 +236,7 @@ const structuredData = {
     * {
       box-sizing: border-box;
     }
-    
+
     /* Smooth scrolling with performance optimization */
     html {
       scroll-behavior: smooth;
@@ -249,7 +249,7 @@ const structuredData = {
     html.dark {
       background-color: black;
     }
-    
+
     /* GPU acceleration for animations */
     .animate-fade-in-up,
     .animate-slide-in-right,
@@ -260,7 +260,7 @@ const structuredData = {
       will-change: transform, opacity;
       transform: translateZ(0); /* Force GPU layer */
     }
-    
+
     /* Optimize font rendering */
     body {
       font-smooth: antialiased;

@@ -5,6 +5,7 @@ This document provides comprehensive guidance on performance optimization for To
 ## 🎯 Performance Overview
 
 The site is optimized for:
+
 - **Core Web Vitals**: LCP, FID, and CLS optimization
 - **Loading Performance**: Fast initial page loads
 - **Runtime Performance**: Smooth interactions and animations
@@ -18,6 +19,7 @@ The site is optimized for:
 **Target**: < 2.5 seconds
 
 #### Current Optimizations
+
 - **Image Optimization**: WebP format with proper sizing
 - **Font Loading**: Preconnect to Google Fonts
 - **Critical CSS**: Inline critical styles
@@ -27,13 +29,13 @@ The site is optimized for:
 
 ```html
 <!-- Font preconnection for faster loading -->
-<link rel='preconnect' href='https://fonts.googleapis.com' />
-<link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
 <!-- Optimized font loading -->
 <link
-  href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap'
-  rel='stylesheet'
+  href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
 />
 ```
 
@@ -62,6 +64,7 @@ export default defineConfig({
 **Target**: < 100 milliseconds
 
 #### Current Optimizations
+
 - **Minimal JavaScript**: Only essential JS loaded
 - **Partytown Integration**: Third-party scripts moved to web workers
 - **Code Splitting**: Automatic chunking of JavaScript
@@ -88,7 +91,7 @@ partytown({
     }
     return 'dark';
   };
-  
+
   const theme = getTheme();
   if (theme === 'light') {
     document.documentElement.classList.remove('dark');
@@ -103,6 +106,7 @@ partytown({
 **Target**: < 0.1
 
 #### Current Optimizations
+
 - **Image Dimensions**: Proper width/height attributes
 - **Font Loading**: `font-display: swap` for smooth loading
 - **Dynamic Content**: Reserved space for dynamic elements
@@ -131,18 +135,21 @@ partytown({
 ### Resource Optimization
 
 #### Image Optimization
+
 - **Format**: WebP with JPEG fallback
 - **Sizing**: Responsive images with proper dimensions
 - **Lazy Loading**: Images load as needed
 - **Compression**: Optimized file sizes
 
 #### CSS Optimization
+
 - **Critical CSS**: Inline critical styles
 - **Unused CSS**: Tailwind purging removes unused styles
 - **Minification**: Production builds are minified
 - **Caching**: Proper cache headers
 
 #### JavaScript Optimization
+
 - **Code Splitting**: Automatic chunking
 - **Tree Shaking**: Remove unused code
 - **Minification**: Production builds are minified
@@ -161,6 +168,7 @@ prefetch: {
 ### Caching Strategy
 
 #### Browser Caching
+
 ```javascript
 // Static assets caching
 headers: {
@@ -174,6 +182,7 @@ headers: {
 ```
 
 #### Service Worker (Future Enhancement)
+
 ```javascript
 // Future implementation for offline support
 const CACHE_NAME = 'topkoong-v1';
@@ -181,7 +190,7 @@ const urlsToCache = [
   '/',
   '/blog',
   '/static/css/main.css',
-  '/static/js/main.js'
+  '/static/js/main.js',
 ];
 ```
 
@@ -236,11 +245,13 @@ const urlsToCache = [
 ### Mobile-Specific Optimizations
 
 #### Touch Performance
+
 - **Touch Targets**: Minimum 44px touch targets
 - **Smooth Scrolling**: Hardware-accelerated scrolling
 - **Reduced Motion**: Respect `prefers-reduced-motion`
 
 #### Network Optimization
+
 - **Compression**: Gzip/Brotli compression
 - **Critical Path**: Prioritize above-the-fold content
 - **Progressive Enhancement**: Core functionality works without JS
@@ -268,12 +279,12 @@ const urlsToCache = [
 export default defineConfig({
   // Static site generation for fast loading
   output: 'static',
-  
+
   // Build optimizations
   build: {
     inlineStylesheets: 'auto', // Inline small CSS files
   },
-  
+
   // Vite optimizations
   vite: {
     build: {
@@ -281,13 +292,13 @@ export default defineConfig({
         output: {
           manualChunks: {
             'framer-motion': ['framer-motion'],
-            'mermaid': ['mermaid'],
+            mermaid: ['mermaid'],
           },
         },
       },
     },
   },
-  
+
   // Prefetching for instant navigation
   prefetch: {
     prefetchAll: true,
@@ -303,13 +314,13 @@ export default defineConfig({
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   darkMode: 'class',
-  
+
   // Purge unused styles in production
   purge: {
     enabled: true,
     content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   },
-  
+
   theme: {
     extend: {
       // Custom animations optimized for performance
@@ -327,12 +338,14 @@ export default {
 ### Core Web Vitals Monitoring
 
 #### Google PageSpeed Insights
+
 - **URL**: https://pagespeed.web.dev/
 - **Frequency**: Monthly monitoring
 - **Metrics**: LCP, FID, CLS scores
 - **Actions**: Address any regressions immediately
 
 #### Chrome DevTools
+
 - **Performance Tab**: Analyze runtime performance
 - **Lighthouse Tab**: Comprehensive performance audit
 - **Network Tab**: Monitor resource loading
@@ -341,6 +354,7 @@ export default {
 ### Performance Budget
 
 #### Target Metrics
+
 - **LCP**: < 2.5 seconds
 - **FID**: < 100 milliseconds
 - **CLS**: < 0.1
@@ -348,6 +362,7 @@ export default {
 - **Bundle Size**: < 100KB (gzipped)
 
 #### Monitoring Tools
+
 ```javascript
 // Performance monitoring script (future enhancement)
 const observer = new PerformanceObserver((list) => {
@@ -364,6 +379,7 @@ observer.observe({ entryTypes: ['largest-contentful-paint'] });
 ## 🛠️ Performance Optimization Checklist
 
 ### Build-Time Optimizations
+
 - [ ] Code splitting implemented
 - [ ] Tree shaking enabled
 - [ ] Unused CSS purged
@@ -373,6 +389,7 @@ observer.observe({ entryTypes: ['largest-contentful-paint'] });
 - [ ] Gzip/Brotli compression enabled
 
 ### Runtime Optimizations
+
 - [ ] Critical CSS inlined
 - [ ] Non-critical CSS deferred
 - [ ] JavaScript deferred where possible
@@ -382,6 +399,7 @@ observer.observe({ entryTypes: ['largest-contentful-paint'] });
 - [ ] Third-party scripts optimized
 
 ### Network Optimizations
+
 - [ ] CDN implemented (if applicable)
 - [ ] Proper cache headers set
 - [ ] Resource hints (preconnect, preload) used
@@ -390,6 +408,7 @@ observer.observe({ entryTypes: ['largest-contentful-paint'] });
 - [ ] Service worker implemented (future)
 
 ### Mobile Optimizations
+
 - [ ] Touch targets minimum 44px
 - [ ] Smooth scrolling enabled
 - [ ] Reduced motion respected
@@ -401,12 +420,14 @@ observer.observe({ entryTypes: ['largest-contentful-paint'] });
 ### Development Guidelines
 
 #### Code Organization
+
 - **Modular Architecture**: Keep components small and focused
 - **Lazy Loading**: Load components only when needed
 - **Tree Shaking**: Remove unused code
 - **Bundle Analysis**: Regular bundle size monitoring
 
 #### Asset Management
+
 - **Image Optimization**: Use appropriate formats and sizes
 - **Font Loading**: Optimize font loading strategy
 - **CSS Organization**: Minimize CSS specificity
@@ -415,12 +436,14 @@ observer.observe({ entryTypes: ['largest-contentful-paint'] });
 ### Production Optimizations
 
 #### Server Configuration
+
 - **Compression**: Enable Gzip/Brotli
 - **Caching**: Set appropriate cache headers
 - **CDN**: Use content delivery network
 - **HTTP/2**: Enable HTTP/2 for multiplexing
 
 #### Monitoring and Maintenance
+
 - **Regular Audits**: Monthly performance reviews
 - **Bundle Analysis**: Monitor bundle size growth
 - **User Feedback**: Monitor user experience metrics
@@ -431,18 +454,21 @@ observer.observe({ entryTypes: ['largest-contentful-paint'] });
 ### Key Performance Indicators
 
 #### Loading Performance
+
 - **Time to First Byte (TTFB)**: < 200ms
 - **First Contentful Paint (FCP)**: < 1.8s
 - **Largest Contentful Paint (LCP)**: < 2.5s
 - **Time to Interactive (TTI)**: < 3.5s
 
 #### User Experience
+
 - **First Input Delay (FID)**: < 100ms
 - **Cumulative Layout Shift (CLS)**: < 0.1
 - **Speed Index**: < 3.4s
 - **Total Blocking Time (TBT)**: < 200ms
 
 #### Resource Efficiency
+
 - **Bundle Size**: < 100KB (gzipped)
 - **Image Optimization**: WebP format
 - **Cache Hit Rate**: > 90%

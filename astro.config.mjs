@@ -1,9 +1,9 @@
 /**
  * Astro Configuration File
- * 
+ *
  * This file configures the Astro build system with integrations, performance optimizations,
  * and markdown processing settings for the personal blog website.
- * 
+ *
  * Key Features:
  * - Tailwind CSS for styling
  * - Sitemap generation for SEO
@@ -24,15 +24,15 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   // Production site URL for GitHub Pages deployment
   site: 'https://topkoong.github.io',
-  
+
   // Astro integrations for enhanced functionality
   integrations: [
     // Tailwind CSS integration for utility-first styling
     tailwind(),
-    
+
     // Automatic sitemap generation for SEO
     sitemap(),
-    
+
     // Partytown for offloading third-party scripts to web workers
     // Improves main thread performance by moving analytics scripts
     partytown({
@@ -42,13 +42,13 @@ export default defineConfig({
       },
     }),
   ],
-  
+
   // Build optimizations for production
   build: {
     // Automatically inline small CSS files to reduce HTTP requests
     inlineStylesheets: 'auto',
   },
-  
+
   // Vite configuration for advanced build optimizations
   vite: {
     build: {
@@ -59,9 +59,9 @@ export default defineConfig({
             // Separate chunk for Framer Motion (if used in future)
             'framer-motion': ['framer-motion'],
             // Separate chunk for Mermaid diagrams
-            'mermaid': ['mermaid'],
+            mermaid: ['mermaid'],
             // Separate chunk for Tailwind CSS
-            'tailwind': ['tailwindcss'],
+            tailwind: ['tailwindcss'],
           },
         },
       },
@@ -71,7 +71,7 @@ export default defineConfig({
       include: ['mermaid', 'tailwindcss'],
     },
   },
-  
+
   // Prefetch configuration for improved navigation performance
   prefetch: {
     // Prefetch all links on the page for instant navigation
@@ -79,7 +79,7 @@ export default defineConfig({
     // Only prefetch links that are currently in the viewport
     defaultStrategy: 'viewport',
   },
-  
+
   // Markdown processing configuration
   markdown: {
     // Shiki syntax highlighting configuration
@@ -105,13 +105,13 @@ export default defineConfig({
         },
       ],
     },
-    
+
     // Remark plugins for markdown processing
     remarkPlugins: [
       // Custom plugin for Mermaid diagram support
       remarkMermaidAstro,
     ],
-    
+
     // Rehype plugins for HTML processing
     rehypePlugins: [
       // Placeholder for future HTML transformations
@@ -119,7 +119,7 @@ export default defineConfig({
         return tree;
       },
     ],
-    
+
     // Use Shiki for syntax highlighting (better than Prism)
     syntaxHighlight: 'shiki',
   },
