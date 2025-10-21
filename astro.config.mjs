@@ -58,9 +58,17 @@ export default defineConfig({
           manualChunks: {
             // Separate chunk for Framer Motion (if used in future)
             'framer-motion': ['framer-motion'],
+            // Separate chunk for Mermaid diagrams
+            'mermaid': ['mermaid'],
+            // Separate chunk for Tailwind CSS
+            'tailwind': ['tailwindcss'],
           },
         },
       },
+    },
+    // Performance optimizations
+    optimizeDeps: {
+      include: ['mermaid', 'tailwindcss'],
     },
   },
   

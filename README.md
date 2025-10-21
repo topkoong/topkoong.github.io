@@ -271,11 +271,23 @@ pnpm build
 
 The site is optimized for performance with:
 
+- **Core Web Vitals**: LCP < 2.5s, FID < 100ms, CLS < 0.1
 - **Static Generation**: Pre-built pages for fast loading
 - **Code Splitting**: Automatic chunking of JavaScript
-- **Image Optimization**: Responsive images with proper formats
+- **Image Optimization**: WebP format with responsive sizing
+- **Font Optimization**: Preconnect and font-display: swap
 - **Prefetching**: Automatic link prefetching for navigation
+- **GPU Acceleration**: Hardware-accelerated animations
 - **Minimal JavaScript**: Only loads JS when needed
+
+### Performance Features
+
+- **Partytown Integration**: Third-party scripts moved to web workers
+- **Critical CSS**: Inline critical styles for faster rendering
+- **Resource Hints**: DNS prefetch and preconnect for external resources
+- **Caching Strategy**: Optimized cache headers for static assets
+- **Bundle Optimization**: Separate chunks for better caching
+- **Animation Performance**: GPU-accelerated CSS animations
 
 ## 🔍 SEO Optimization
 
@@ -370,6 +382,7 @@ import Layout from '../layouts/Layout.astro';
 - **CONTRIBUTING.md**: Development guidelines and code standards
 - **BLOG_GUIDE.md**: Blog post structure and content guidelines
 - **SEO_GUIDE.md**: Comprehensive SEO implementation and optimization guide
+- **PERFORMANCE_GUIDE.md**: Performance optimization and Core Web Vitals guide
 
 ### Code Documentation
 

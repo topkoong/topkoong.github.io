@@ -113,10 +113,19 @@ const structuredData = {
     <link rel='preconnect' href='https://fonts.googleapis.com' />
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
     <!-- Load Inter (body text) and JetBrains Mono (code) fonts -->
+    <!-- Using font-display: swap for better performance -->
     <link
       href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap'
       rel='stylesheet'
     />
+    
+    <!-- Performance optimizations -->
+    <!-- DNS prefetch for external resources -->
+    <link rel='dns-prefetch' href='//fonts.googleapis.com' />
+    <link rel='dns-prefetch' href='//fonts.gstatic.com' />
+    
+    <!-- Preload critical resources -->
+    <link rel='preload' href='/favicon.svg' as='image' type='image/svg+xml' />
 
     <!-- Primary Meta Tags for SEO -->
     <title>{title}</title>
@@ -223,14 +232,40 @@ const structuredData = {
 
   <!-- Global styles for consistent theming and transitions -->
   <style is:global>
-    /* Base styles with smooth transitions */
+    /* Performance optimizations */
+    * {
+      box-sizing: border-box;
+    }
+    
+    /* Smooth scrolling with performance optimization */
     html {
+      scroll-behavior: smooth;
       transition: background-color 0.2s ease-in-out;
       background-color: white;
+      /* Prevent layout shift */
+      font-display: swap;
     }
 
     html.dark {
       background-color: black;
+    }
+    
+    /* GPU acceleration for animations */
+    .animate-fade-in-up,
+    .animate-slide-in-right,
+    .animate-word-by-word,
+    .animate-moving-text,
+    .animate-highlight-mantra,
+    .animate-bounce-in {
+      will-change: transform, opacity;
+      transform: translateZ(0); /* Force GPU layer */
+    }
+    
+    /* Optimize font rendering */
+    body {
+      font-smooth: antialiased;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     /* Prose styles with dark mode support */
