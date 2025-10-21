@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.14.5"><!-- Google Fonts for better typography --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><!-- Primary Meta Tags --><title>เจาะลึก SQL Subquery: วิธีการใช้งานและเทคนิคการเขียนเพื่อประสิทธิภาพสูงสุด 🚀</title><meta name="title" content="เจาะลึก SQL Subquery: วิธีการใช้งานและเทคนิคการเขียนเพื่อประสิทธิภาพสูงสุด 🚀"><meta name="description" content="เรียนรู้การใช้งาน SQL Subquery ตั้งแต่พื้นฐานจนถึงเทคนิคขั้นสูง พร้อมตัวอย่างการใช้งานจริง และกลยุทธ์การเลือกใช้ JOIN หรือ CTE เพื่อ Performance ที่ดีกว่า"><meta name="keywords" content="software engineer, full-stack development, automation, tutorials, blog, programming, web development"><meta name="author" content="Theeruttop (Toppy)"><meta name="robots" content="index, follow"><meta name="language" content="English"><meta name="revisit-after" content="7 days"><!-- Canonical URL --><link rel="canonical" href="https://topkoong.github.io/blog/posts/subquery-magic-and-perf/"><!-- Open Graph / Facebook --><meta property="og:type" content="article"><meta property="og:url" content="https://topkoong.github.io/blog/posts/subquery-magic-and-perf/"><meta property="og:title" content="เจาะลึก SQL Subquery: วิธีการใช้งานและเทคนิคการเขียนเพื่อประสิทธิภาพสูงสุด 🚀"><meta property="og:description" content="เรียนรู้การใช้งาน SQL Subquery ตั้งแต่พื้นฐานจนถึงเทคนิคขั้นสูง พร้อมตัวอย่างการใช้งานจริง และกลยุทธ์การเลือกใช้ JOIN หรือ CTE เพื่อ Performance ที่ดีกว่า"><meta property="og:image" content="https://topkoong.github.io/social-preview"><meta property="og:site_name" content="Toppy's Digital Playground"><meta property="og:locale" content="en_US"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://topkoong.github.io/blog/posts/subquery-magic-and-perf/"><meta property="twitter:title" content="เจาะลึก SQL Subquery: วิธีการใช้งานและเทคนิคการเขียนเพื่อประสิทธิภาพสูงสุด 🚀"><meta property="twitter:description" content="เรียนรู้การใช้งาน SQL Subquery ตั้งแต่พื้นฐานจนถึงเทคนิคขั้นสูง พร้อมตัวอย่างการใช้งานจริง และกลยุทธ์การเลือกใช้ JOIN หรือ CTE เพื่อ Performance ที่ดีกว่า"><meta property="twitter:image" content="https://topkoong.github.io/social-preview"><meta property="twitter:creator" content="@topkoong"><!-- Additional Meta Tags --><meta name="theme-color" content="#8b5cf6"><meta name="msapplication-TileColor" content="#8b5cf6"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><!-- Structured Data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"เจาะลึก SQL Subquery: วิธีการใช้งานและเทคนิคการเขียนเพื่อประสิทธิภาพสูงสุด 🚀","description":"เรียนรู้การใช้งาน SQL Subquery ตั้งแต่พื้นฐานจนถึงเทคนิคขั้นสูง พร้อมตัวอย่างการใช้งานจริง และกลยุทธ์การเลือกใช้ JOIN หรือ CTE เพื่อ Performance ที่ดีกว่า","url":"https://topkoong.github.io/blog/posts/subquery-magic-and-perf/","author":{"@type":"Person","name":"Theeruttop (Toppy)","url":"https://topkoong.github.io"},"publisher":{"@type":"Person","name":"Theeruttop (Toppy)","url":"https://topkoong.github.io"},"datePublished":"2024-06-13T00:00:00.000Z","dateModified":"2024-06-13T00:00:00.000Z"}</script><!-- Initialize theme before page loads to prevent flash --><script>
+      // This script runs immediately and prevents flash of wrong theme
+      const getTheme = () => {
+        if (
+          typeof localStorage !== 'undefined' &&
+          localStorage.getItem('theme')
+        ) {
+          return localStorage.getItem('theme');
+        }
+        return 'dark'; // Force dark mode as default
+      };
+
+      // Get and apply theme immediately
+      const theme = getTheme();
+
+      if (theme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+
+      // Set dark mode as default for new users
+      if (
+        typeof localStorage !== 'undefined' &&
+        !localStorage.getItem('theme')
+      ) {
+        localStorage.setItem('theme', 'dark');
+      }
+    </script><link rel="stylesheet" href="/_astro/_slug_.BMt7hexD.css">
+<link rel="stylesheet" href="/_astro/2023-year-in-review_md.CratWVIC.css">
+<style>html{transition:background-color .2s ease-in-out;background-color:#fff}html.dark{background-color:#000}.prose{max-width:80ch}.prose h1,.prose h2,.prose h3,.prose h4,.prose h5,.prose h6{--tw-text-opacity: 1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.prose h1:is(.dark *),.prose h2:is(.dark *),.prose h3:is(.dark *),.prose h4:is(.dark *),.prose h5:is(.dark *),.prose h6:is(.dark *){--tw-text-opacity: 1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.prose h1,.prose h2,.prose h3,.prose h4,.prose h5,.prose h6{margin-top:2em;margin-bottom:1em}.prose p{--tw-text-opacity: 1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.prose p:is(.dark *){--tw-text-opacity: 1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.prose a{--tw-text-opacity: 1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.prose a:is(.dark *){--tw-text-opacity: 1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.prose a{text-decoration:underline}.prose a:hover{--tw-text-opacity: 1;color:rgb(30 64 175 / var(--tw-text-opacity, 1))}.prose a:hover:is(.dark *){--tw-text-opacity: 1;color:rgb(147 197 253 / var(--tw-text-opacity, 1))}.prose code{background-color:transparent!important;padding:.2em .4em;border-radius:.25em}.dark .prose code{background-color:transparent!important}.prose pre{padding:1em;border-radius:.5em;overflow-x:auto}.prose img{max-width:100%;height:auto}
+</style></head> <body class="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-black dark:text-white transition-colors duration-200"> <nav class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200 relative z-50"> <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"> <div class="flex justify-between items-center h-16">   <div class="flex space-x-4 sm:space-x-8"> <a href="/" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"> Home </a><a href="/blog" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors"> Blog </a> </div>  <button id="theme-toggle" class="rounded-lg p-2 text-gray-400 hover:text-white transition-colors" aria-label="Toggle theme">  <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg>  <svg id="moon-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function d(){const n=document.getElementById("theme-toggle"),e=document.getElementById("sun-icon"),t=document.getElementById("moon-icon");if(!n||!e||!t){console.log("Theme toggle elements not found");return}(localStorage.getItem("theme")||"dark")==="light"?(document.documentElement.classList.remove("dark"),e.classList.remove("hidden"),t.classList.add("hidden")):(document.documentElement.classList.add("dark"),e.classList.add("hidden"),t.classList.remove("hidden")),n.addEventListener("click",function(){document.documentElement.classList.contains("dark")?(document.documentElement.classList.remove("dark"),e.classList.remove("hidden"),t.classList.add("hidden"),localStorage.setItem("theme","light")):(document.documentElement.classList.add("dark"),e.classList.add("hidden"),t.classList.remove("hidden"),localStorage.setItem("theme","dark"))})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",d):d();</script> </div> </div> </nav> <main class="flex-1"> <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">  <article class="max-w-5xl mx-auto" data-astro-cid-bvzihdzo> <header class="mb-12" data-astro-cid-bvzihdzo> <div class="animate-fade-in-up" data-astro-cid-bvzihdzo> <h1 class="text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight" data-astro-cid-bvzihdzo> เจาะลึก SQL Subquery: วิธีการใช้งานและเทคนิคการเขียนเพื่อประสิทธิภาพสูงสุด 🚀 </h1> <div class="flex items-center space-x-4 text-gray-600 dark:text-gray-400" data-astro-cid-bvzihdzo> <time class="text-lg" datetime="2024-06-13T00:00:00.000Z" data-astro-cid-bvzihdzo> June 13, 2024 </time> <div class="w-2 h-2 bg-purple-500 rounded-full" data-astro-cid-bvzihdzo></div> <span class="text-lg" data-astro-cid-bvzihdzo>Theeruttop (Toppy)</span> </div>  </div> </header>  <div class="prose prose-gray dark:prose-invert max-w-none
+      prose-headings:text-gray-900 dark:prose-headings:text-white
+      prose-p:text-gray-700 dark:prose-p:text-gray-300
+      prose-a:text-blue-600 dark:prose-a:text-blue-400
+      prose-strong:text-gray-900 dark:prose-strong:text-white
+      prose-blockquote:border-gray-200 dark:prose-blockquote:border-gray-700
+      prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400
+      prose-ul:text-gray-700 dark:prose-ul:text-gray-300
+      prose-ol:text-gray-700 dark:prose-ol:text-gray-300
+      prose-li:text-gray-700 dark:prose-li:text-gray-300
+      prose-hr:border-gray-200 dark:prose-hr:border-gray-700
+      prose-table:border-gray-200 dark:prose-table:border-gray-700
+      prose-th:border-gray-200 dark:prose-th:border-gray-700
+      prose-td:border-gray-200 dark:prose-td:border-gray-700" data-astro-cid-bvzihdzo> <h1 id="เจาะลึก-sql-subquery-วิธีการใช้งานและเทคนิคการเขียนเพื่อประสิทธิภาพสูงสุด">เจาะลึก SQL Subquery: วิธีการใช้งานและเทคนิคการเขียนเพื่อประสิทธิภาพสูงสุด</h1>
+<h2 id="-บทนำ">📖 บทนำ</h2>
+<p><strong>SQL Subquery</strong> คือการเขียน Query ซ้อน Query หรือที่เรียกว่า <strong>“Inner Query”</strong> ซึ่งใช้ผลลัพธ์ของมันส่งต่อไปให้ <strong>“Outer Query”</strong> ประมวลผลต่อ เครื่องมือนี้ทำให้เราสามารถจัดการกับเงื่อนไขและการคำนวณที่ซับซ้อนได้ในประโยค SQL เดียว การเข้าใจ Subquery อย่างลึกซึ้งจึงเป็นทักษะสำคัญที่ช่วยยกระดับการเขียนโค้ดของคุณให้มีประสิทธิภาพและยืดหยุ่น</p>
+<hr>
+<h2 id="-subquery-คืออะไร">🔍 Subquery คืออะไร?</h2>
+<p><strong>Subquery</strong> คือ Query ที่ถูกฝังอยู่ในวงเล็บภายใน Query หลัก มันจะทำหน้าที่ <strong>“คำนวณก่อน”</strong> หรือ <strong>“ดึงข้อมูลชั่วคราว”</strong> ก่อนที่ Query หลักจะดำเนินการต่อ</p>
+<h3 id="โครงสร้างพื้นฐาน">โครงสร้างพื้นฐาน</h3>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="sql"><code class="language-undefined"><span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">SELECT</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> column1</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> table1</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">WHERE</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> column_filter </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    -- Subquery อยู่ตรงนี้ (จะรันก่อนเสมอ)</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    SELECT</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> calculated_value </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> table2 </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">WHERE</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> condition</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span></code></pre>
+<hr>
+<h2 id="-ประเภทของ-subquery-และการใช้งาน">🎯 ประเภทของ Subquery และการใช้งาน</h2>
+<p>เราแบ่ง Subquery ออกเป็น 3 ประเภทหลัก ตามลักษณะของผลลัพธ์ที่คืนกลับมา:</p>
+<h3 id="1-scalar-subquery-คืนค่าเดียว-single-row-single-column">1. Scalar Subquery (คืนค่าเดียว: Single Row, Single Column)</h3>
+<p>คืนค่าข้อมูลเพียง <strong>1 แถว และ 1 คอลัมน์</strong> เท่านั้น ใช้สำหรับเปรียบเทียบค่าเดียว หรือนำไปแสดงผล</p>
+<h4 id="ตัวอย่างที่-1-การเปรียบเทียบกับค่าเฉลี่ยรวม-ใช้ใน-where">ตัวอย่างที่ 1: การเปรียบเทียบกับค่าเฉลี่ยรวม (ใช้ใน WHERE)</h4>
+<p><strong>โจทย์:</strong> แสดงเฉพาะสินค้าที่มีราคาสูงกว่าราคาเฉลี่ยของสินค้าทั้งหมดในฐานข้อมูล</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="sql"><code class="language-undefined"><span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">SELECT</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> product_name, price</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> products</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">WHERE</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> price </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">></span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    -- Scalar Subquery: คืนค่าราคาเฉลี่ยรวม (เช่น 14062.50)</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    SELECT</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> AVG</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(price)</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> products</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span></code></pre>
+<p><strong>อธิบาย:</strong> Database รัน Subquery เพื่อหาค่า <code>AVG(price)</code> ออกมาเป็นตัวเลขเดียว จากนั้น Outer Query จะใช้ตัวเลขนั้นเป็นเกณฑ์ในการกรอง</p>
+<h4 id="ตัวอย่างที่-2-การแสดงค่ารวมที่คำนวณมา-ใช้ใน-select">ตัวอย่างที่ 2: การแสดงค่ารวมที่คำนวณมา (ใช้ใน SELECT)</h4>
+<p><strong>โจทย์:</strong> แสดงข้อมูลสินค้าทุกชิ้น พร้อมระบุว่าราคาสินค้าชิ้นนั้นสูงกว่าราคาเฉลี่ยรวมของสินค้าทั้งหมดอยู่เท่าไร</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="sql"><code class="language-undefined"><span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">SELECT</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    product_name,</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    price,</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    -- Scalar Subquery: ถูกใช้ในการคำนวณ</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">    price </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">-</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span><span style="color:#FF79C6;--shiki-dark:#FF79C6">SELECT</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> AVG</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(price) </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> products) </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">AS</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> difference_from_average</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> products;</span></span></code></pre>
+<p><strong>อธิบาย:</strong> Scalar Subquery ถูกใช้เป็นตัวเลขคงที่ในการคำนวณ Column ใหม่ (<code>difference_from_average</code>) สำหรับทุกแถวใน Outer Query</p>
+<h3 id="2-column-subquery-คืนค่าหลายแถว-single-column">2. Column Subquery (คืนค่าหลายแถว, Single Column)</h3>
+<p>คืนค่าข้อมูล <strong>หลายแถว แต่มีเพียง 1 คอลัมน์</strong> ใช้สำหรับเปรียบเทียบกับชุดค่า (Set of values) โดยใช้ Operators เช่น <strong><code>IN</code></strong>, <strong><code>NOT IN</code></strong>, <strong><code>ANY</code></strong>, <strong><code>ALL</code></strong></p>
+<h4 id="ตัวอย่างที่-3-การกรองด้วยชุด-id-ใช้กับ-in">ตัวอย่างที่ 3: การกรองด้วยชุด ID (ใช้กับ IN)</h4>
+<p><strong>โจทย์:</strong> ดึงข้อมูลออเดอร์ทั้งหมดที่ถูกสั่งโดยลูกค้าที่ลงทะเบียนในปี 2023</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="sql"><code class="language-undefined"><span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">SELECT</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> order_id, customer_id, order_date</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> orders</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">WHERE</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> customer_id </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">IN</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    -- Column Subquery: คืนชุดของ customer_id ที่เข้าเงื่อนไข (เช่น 'C001', 'C002', ...)</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    SELECT</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> customer_id</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> customers</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    WHERE</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> registration_date </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">BETWEEN</span><span style="color:#E9F284;--shiki-dark:#E9F284"> '</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">2023-01-01</span><span style="color:#E9F284;--shiki-dark:#E9F284">'</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> AND</span><span style="color:#E9F284;--shiki-dark:#E9F284"> '</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">2023-12-31</span><span style="color:#E9F284;--shiki-dark:#E9F284">'</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span></code></pre>
+<p><strong>อธิบาย:</strong> Subquery สร้างลิสต์ของ ID ลูกค้าที่ลงทะเบียนในปี 2023 จากนั้น Outer Query ใช้ <code>IN</code> เพื่อเลือกเฉพาะออเดอร์ของลูกค้าในลิสต์นั้น</p>
+<h4 id="ตัวอย่างที่-4-การเปรียบเทียบกับทุกค่าในชุด-ใช้กับ-all">ตัวอย่างที่ 4: การเปรียบเทียบกับทุกค่าในชุด (ใช้กับ ALL)</h4>
+<p><strong>โจทย์:</strong> หาผลิตภัณฑ์ที่มีราคาสูงกว่าราคาสินค้าทั้งหมดในหมวดหมู่ ‘Home’ (คือแพงกว่าสินค้า Home ที่แพงที่สุด)</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="sql"><code class="language-undefined"><span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">SELECT</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> product_name, price, category</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> products</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">WHERE</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> price </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">></span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> ALL (</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    -- Column Subquery: คืนชุดของราคาในหมวดหมู่ 'Home' (เช่น 5000.00, 2500.00)</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    SELECT</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> price</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> products</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    WHERE</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> category </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#E9F284;--shiki-dark:#E9F284"> '</span><span style="color:#F1FA8C;--shiki-dark:#F1FA8C">Home</span><span style="color:#E9F284;--shiki-dark:#E9F284">'</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span></code></pre>
+<p><strong>อธิบาย:</strong> <code>> ALL</code> หมายถึงต้องมากกว่าทุกค่าที่คืนมา ดังนั้นสินค้าที่แสดงออกมาจะมีราคาสูงกว่า 5000.00</p>
+<h3 id="3-table-subquery-คืนค่าหลายแถว-multiple-columns">3. Table Subquery (คืนค่าหลายแถว, Multiple Columns)</h3>
+<p>คืนค่าข้อมูล <strong>หลายแถว และ หลายคอลัมน์</strong> ใช้สำหรับสร้างตารางเสมือนชั่วคราว มักใช้ใน <strong><code>FROM</code></strong> Clause หรือใช้กับ <strong><code>EXISTS</code></strong></p>
+<h4 id="ตัวอย่างที่-5-การวิเคราะห์ยอดขายตามเมือง-ใช้ใน-from">ตัวอย่างที่ 5: การวิเคราะห์ยอดขายตามเมือง (ใช้ใน FROM)</h4>
+<p><strong>โจทย์:</strong> แสดงยอดขายรวมของแต่ละเมือง พร้อมกับจำนวนลูกค้าทั้งหมดในเมืองนั้น ๆ</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="sql"><code class="language-undefined"><span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">SELECT</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    c</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">city</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">    total_sales</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">city_total_sales</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> customers c</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">JOIN</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    -- Table Subquery: สร้างตารางชั่วคราว 'total_sales' ที่มี city และยอดรวม</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    SELECT</span></span>
+<span class="line"><span style="color:#BD93F9;--shiki-dark:#BD93F9">        c_inner</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">city</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">,</span></span>
+<span class="line"><span style="color:#8BE9FD;--shiki-dark:#8BE9FD">        SUM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">o</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">total_amount</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">AS</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> city_total_sales</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> customers c_inner</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    JOIN</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> orders o </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">ON</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> c_inner</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">customer_id</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> =</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> o</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">customer_id</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    GROUP BY</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> c_inner</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">city</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">) total_sales </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">ON</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> c</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">city</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> =</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> total_sales</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">city</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">GROUP BY</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> c</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">city</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">, </span><span style="color:#BD93F9;--shiki-dark:#BD93F9">total_sales</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">city_total_sales</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">;</span></span></code></pre>
+<p><strong>อธิบาย:</strong> Subquery ถูกรันก่อนเพื่อสรุปยอดขายรายเมือง จากนั้น Outer Query จะ <code>JOIN</code> ตารางชั่วคราวนี้เข้ากับตาราง <code>customers</code> หลักเพื่อรวมข้อมูลลูกค้าที่ไม่ได้สั่งซื้อเข้ามาด้วย (ถ้าใช้ <code>LEFT JOIN</code>) หรือใช้เพื่อจัดระเบียบการแสดงผล</p>
+<hr>
+<h2 id="-correlated-subquery-กับดัก-performance-ย้ำอีกครั้ง">🔄 Correlated Subquery: กับดัก Performance (ย้ำอีกครั้ง!)</h2>
+<p><strong>Correlated Subquery</strong> คือ Subquery ที่อ้างอิง Column จาก Query หลัก ซึ่งทำให้มันต้องถูกรันซ้ำสำหรับ <strong>ทุก ๆ แถว</strong> ใน Outer Query</p>
+<h3 id="ตัวอย่างที่-6-การหา-max-per-group-max-per-group">ตัวอย่างที่ 6: การหา Max Per Group (Max-per-group)</h3>
+<p><strong>โจทย์:</strong> หาออเดอร์ล่าสุดของลูกค้าแต่ละคน (เป็นตัวอย่างคลาสสิกของ Correlated Subquery)</p>
+<pre class="astro-code astro-code-themes dracula dracula" style="background-color:#282A36;--shiki-dark-bg:#282A36;color:#F8F8F2;--shiki-dark:#F8F8F2; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="sql"><code class="language-undefined"><span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">SELECT</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> order_id, customer_id, order_date</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> orders o1</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">WHERE</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> order_date </span><span style="color:#FF79C6;--shiki-dark:#FF79C6">=</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> (</span></span>
+<span class="line"><span style="color:#6272A4;--shiki-dark:#6272A4">    -- Correlated Subquery: รันซ้ำเพื่อหา Max(order_date) ของลูกค้าที่ตรงกัน (o2.customer_id = o1.customer_id)</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    SELECT</span><span style="color:#8BE9FD;--shiki-dark:#8BE9FD"> MAX</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">(order_date)</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    FROM</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2"> orders o2</span></span>
+<span class="line"><span style="color:#FF79C6;--shiki-dark:#FF79C6">    WHERE</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> o2</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">customer_id</span><span style="color:#FF79C6;--shiki-dark:#FF79C6"> =</span><span style="color:#BD93F9;--shiki-dark:#BD93F9"> o1</span><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">.</span><span style="color:#BD93F9;--shiki-dark:#BD93F9">customer_id</span></span>
+<span class="line"><span style="color:#F8F8F2;--shiki-dark:#F8F8F2">);</span></span></code></pre>
+<p><strong>อธิบาย:</strong> หากตาราง <code>orders</code> มี 10,000 แถว Subquery นี้อาจต้องถูกรันใกล้เคียง 10,000 ครั้ง ทำให้ Performance ตกอย่างมาก <strong>ในกรณีนี้ การใช้ Window Function (เช่น <code>ROW_NUMBER()</code>) จะมีประสิทธิภาพสูงกว่ามาก</strong></p>
+<hr>
+<h2 id="-สรุป-กลยุทธ์การใช้งานเพื่อ-performance">🚀 สรุป: กลยุทธ์การใช้งานเพื่อ Performance</h2>
+<p>การเลือกใช้ Subquery หรือเครื่องมืออื่น ๆ ขึ้นอยู่กับวัตถุประสงค์และผลลัพธ์ที่ต้องการ:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">สถานการณ์</th><th align="left">ทางเลือกที่ดีที่สุด</th><th align="left">เหตุผล</th></tr></thead><tbody><tr><td align="left"><strong>เชื่อมข้อมูลระหว่างตาราง</strong></td><td align="left"><strong>JOIN</strong></td><td align="left">Database Optimizer จัดการได้ดีกว่า และใช้ Index ได้เต็มที่</td></tr><tr><td align="left"><strong>สร้างตารางสรุปชั่วคราว</strong></td><td align="left"><strong>CTE (WITH Clause)</strong></td><td align="left">โค้ดเป็นระเบียบ อ่านง่าย และ Performance มักดีกว่า Correlated Subquery</td></tr><tr><td align="left"><strong>ตรวจสอบว่ามีข้อมูลอยู่หรือไม่</strong></td><td align="left"><strong>EXISTS</strong></td><td align="left">หยุดการค้นหาเร็ว เหมาะสำหรับเงื่อนไข <code>TRUE/FALSE</code></td></tr><tr><td align="left"><strong>ต้องคำนวณค่าเดียวแบบ Dynamic</strong></td><td align="left"><strong>Scalar Subquery</strong></td><td align="left">เหมาะสมที่สุดในการใช้ใน <code>WHERE</code> หรือ <code>SELECT</code></td></tr></tbody></table>  </div> </article>  </div> </main> <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200"> <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8"> <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> <!-- About Section --> <div> <h3 class="text-lg font-semibold mb-4">About</h3> <p class="text-gray-900 dark:text-white">
+Just a laid-back software engineer who loves automating boring stuff,
+          diving into data, and poking around APIs to make cool things happen.
+          Living the Windows/Linux/Mac life because one OS is never enough. Made
+          by Toppy with ☕️ and occasional bursts of energy.
+</p> </div> <!-- Links Section --> <div> <h3 class="text-lg font-semibold mb-4">Links</h3> <ul class="space-y-2"> <!-- <li>
+            <a
+              href='/about'
+              class='text-gray-300 hover:text-white transition-colors'
+            >
+              About
+            </a>
+          </li> --> <li> <a href="/blog" class="text-gray-900 dark:text-white dark:hover:text-white transition-colors">
+Blog
+</a> </li> </ul> </div> <!-- Social Section --> <div> <h3 class="text-lg font-semibold mb-4">Connect</h3> <div class="flex space-x-4"> <a href="https://github.com/yourusername" class="text-gray-900 dark:text-white"> <span class="sr-only">GitHub</span> <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"> <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path> </svg> </a> <a href="https://twitter.com/yourusername" class="text-gray-900 dark:text-white"> <span class="sr-only">Twitter</span> <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"> <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path> </svg> </a> </div> </div> </div> <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400"> <p>&copy; 2025 Your Name. All rights reserved.</p> </div> </div> </footer>  </body></html> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.CW24_qGB.js"></script> 
