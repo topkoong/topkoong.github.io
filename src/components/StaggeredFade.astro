@@ -1,0 +1,25 @@
+---
+// Astro component for Staggered Fade text animation
+export interface Props {
+  words: string[];
+  className?: string;
+  delay?: number;
+}
+
+const { words, className = "text-xl", delay = 0.2 } = Astro.props;
+const uniqueId = Math.random().toString(36).substr(2, 9);
+---
+
+<div id={`staggered-fade-${uniqueId}`} class={className}></div>
+
+<script define:vars={{ words, className, delay, uniqueId }}>
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+  import { StaggeredFade } from '../components/TextAnimations';
+
+  const container = document.getElementById(`staggered-fade-${uniqueId}`);
+  if (container) {
+    const root = createRoot(container);
+    root.render(React.createElement(StaggeredFade, { words, className, delay }));
+  }
+</script>

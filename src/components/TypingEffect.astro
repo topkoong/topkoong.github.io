@@ -1,0 +1,26 @@
+---
+// Astro component for Typing Effect text animation
+export interface Props {
+  text: string;
+  className?: string;
+  speed?: number;
+  showCursor?: boolean;
+}
+
+const { text, className = "text-2xl font-medium", speed = 100, showCursor = true } = Astro.props;
+const uniqueId = Math.random().toString(36).substr(2, 9);
+---
+
+<div id={`typing-effect-${uniqueId}`} class={className}></div>
+
+<script define:vars={{ text, className, speed, showCursor, uniqueId }}>
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+  import { TypingEffect } from '../components/TextAnimations';
+
+  const container = document.getElementById(`typing-effect-${uniqueId}`);
+  if (container) {
+    const root = createRoot(container);
+    root.render(React.createElement(TypingEffect, { text, className, speed, showCursor }));
+  }
+</script>

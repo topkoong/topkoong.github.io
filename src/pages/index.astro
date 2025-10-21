@@ -1,6 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import BlogCard from '../components/BlogCard.astro';
+import GradualSpacing from '../components/GradualSpacing.astro';
+import TypingEffect from '../components/TypingEffect.astro';
+import StaggeredFade from '../components/StaggeredFade.astro';
+import RotateWords from '../components/RotateWords.astro';
 
 // Define types for our markdown content
 interface Frontmatter {
@@ -98,63 +102,53 @@ const sortedPosts = publishedPosts
       {/* Hero Section */}
       <section class='py-20 text-left relative overflow-hidden'>
         <div class='relative space-y-12'>
-          <!-- Main heading with typewriter effect -->
-          <div class='animate-fade-in-up'>
-            <h1 class='text-7xl font-bold tracking-tight mb-8 leading-tight'>
-              <span class='block'>
-                <span
-                  class='bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent typewriter-text'
-                >
-                  Hey, I'm Top.
-                </span>
-              </span>
-              <span
-                class='block text-5xl mt-4 text-gray-700 dark:text-gray-300 animate-slide-in-right'
-                style='animation-delay: 1.5s'
-              >
-                (Theerut)
-              </span>
-            </h1>
+          <!-- Main heading with Gradual Spacing animation -->
+          <div class='text-center'>
+            <GradualSpacing 
+              text="Hey, I'm Top." 
+              className="text-7xl font-bold tracking-tight mb-8 leading-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+            />
+            <div class="mt-4">
+              <TypingEffect 
+                text="(Theerut)" 
+                className="text-5xl text-gray-700 dark:text-gray-300"
+                speed={150}
+                showCursor={false}
+              />
+            </div>
           </div>
 
-          <!-- Subtitle with clean animation -->
-          <div class='animate-fade-in-up' style='animation-delay: 300ms'>
-            <p
-              class='text-2xl text-gray-800 dark:text-gray-200 font-normal leading-relaxed max-w-4xl tracking-wide'
-            >
-              Software Engineer. Building the Full Stack, Mastering Automation,
-              and Scaling Knowledge.
-            </p>
+          <!-- Subtitle with Staggered Fade animation -->
+          <div class='text-center'>
+            <StaggeredFade 
+              words={["Software", "Engineer.", "Building", "the", "Full", "Stack,", "Mastering", "Automation,", "and", "Scaling", "Knowledge."]}
+              className="text-2xl text-gray-800 dark:text-gray-200 font-normal leading-relaxed max-w-4xl tracking-wide"
+              delay={0.1}
+            />
           </div>
 
-          <!-- Description with moving text animation -->
-          <div class='animate-fade-in-up' style='animation-delay: 600ms'>
-            <div
-              class='text-gray-700 dark:text-gray-300 space-y-8 leading-relaxed text-xl max-w-3xl px-8 py-6'
-            >
-              <p class='animate-moving-text' style='animation-delay: 1.5s'>
+          <!-- Description with Rotate Words animation -->
+          <div class='text-center space-y-8'>
+            <div class='text-gray-700 dark:text-gray-300 leading-relaxed text-xl max-w-3xl mx-auto px-8 py-6'>
+              <p class='mb-6'>
                 Welcome to my digital space. I'm a developer who enjoys
-                navigating both the <span class='highlight-text'
-                  >Frontend experience</span
-                > and the complexity of
-                <span class='highlight-text'>Backend services</span>. This site
-                serves as my public notebook where I dump random thoughts and
+                navigating both the <span class='text-blue-600 dark:text-blue-400 font-semibold'>Frontend experience</span>
+                and the complexity of <span class='text-purple-600 dark:text-purple-400 font-semibold'>Backend services</span>. 
+                This site serves as my public notebook where I dump random thoughts and
                 sometimes share stuff that might actually help you.
               </p>
-              <p class='animate-moving-text' style='animation-delay: 2s'>
-                My mantra is simple:
-              </p>
-              <div class='animate-moving-text' style='animation-delay: 2.2s'>
-                <blockquote
-                  class='text-xl font-medium text-gray-800 dark:text-gray-200 italic text-center py-8 px-6 border-l-2 border-gray-300 dark:border-gray-600 bg-gray-50/30 dark:bg-gray-800/20 rounded-lg my-8 max-w-2xl mx-auto'
-                >
-                  "Why do things manually when you can automate them?"
-                </blockquote>
+              
+              <div class='my-8'>
+                <RotateWords 
+                  words={["automate", "innovate", "create", "build", "scale"]}
+                  className="text-2xl font-semibold"
+                  duration={3}
+                />
               </div>
-              <p class='animate-moving-text' style='animation-delay: 2.4s'>
-                I'm dedicated to writing efficient scripts and code that
-                eliminate repetitive work, and I share the practical tools and
-                techniques I use to make development easier.
+              
+              <p class='text-lg text-gray-600 dark:text-gray-400 italic'>
+                I'm dedicated to writing efficient scripts and code that eliminate repetitive work, 
+                and I share the practical tools and techniques I use to make development easier.
               </p>
             </div>
           </div>

@@ -1,0 +1,24 @@
+---
+// Astro component for Gradual Spacing text animation
+export interface Props {
+  text: string;
+  className?: string;
+}
+
+const { text, className = "text-4xl font-bold" } = Astro.props;
+const uniqueId = Math.random().toString(36).substr(2, 9);
+---
+
+<div id={`gradual-spacing-${uniqueId}`} class={className}></div>
+
+<script define:vars={{ text, className, uniqueId }}>
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+  import { GradualSpacing } from '../components/TextAnimations';
+
+  const container = document.getElementById(`gradual-spacing-${uniqueId}`);
+  if (container) {
+    const root = createRoot(container);
+    root.render(React.createElement(GradualSpacing, { text, className }));
+  }
+</script>

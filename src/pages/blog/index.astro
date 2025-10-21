@@ -1,6 +1,9 @@
 ---
 // Blog listing page that shows all posts
 import Layout from '../../layouts/Layout.astro';
+import GradualSpacing from '../../components/GradualSpacing.astro';
+import TypingEffect from '../../components/TypingEffect.astro';
+import StaggeredFade from '../../components/StaggeredFade.astro';
 
 interface Frontmatter {
   title: string;
@@ -110,37 +113,53 @@ const sortedPosts = publishedPosts.sort(
       </div>
       
       <div class='relative space-y-8'>
-        <!-- Main heading with typewriter effect -->
+        <!-- Main heading with Gradual Spacing animation -->
         <div class='animate-fade-in-up'>
-          <h1 class='text-7xl font-bold tracking-tight mb-8 leading-tight'>
-            <span class='bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent typewriter-text'>
-              Blog Posts
-            </span>
-          </h1>
+          <GradualSpacing 
+            text="Blog Posts" 
+            className="text-7xl font-bold tracking-tight mb-8 leading-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+          />
         </div>
 
-        <!-- Subtitle with clean animation -->
+        <!-- Subtitle with Staggered Fade animation -->
         <div class='animate-fade-in-up' style='animation-delay: 300ms'>
-          <p class='text-3xl text-gray-600 dark:text-gray-400 font-light leading-relaxed max-w-4xl mx-auto'>
-            Thoughts, tutorials, and insights from my journey as a software engineer
-          </p>
+          <StaggeredFade 
+            words={["Thoughts,", "tutorials,", "and", "insights", "from", "my", "journey", "as", "a", "software", "engineer"]}
+            className="text-3xl text-gray-600 dark:text-gray-400 font-light leading-relaxed max-w-4xl mx-auto"
+            delay={0.15}
+          />
         </div>
 
-        <!-- Stats section -->
+        <!-- Stats section with Typing Effect -->
         <div class='animate-fade-in-up' style='animation-delay: 600ms'>
           <div class='flex justify-center items-center space-x-8 mt-12'>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.5s'>
-              <div class='text-3xl font-bold text-purple-600 dark:text-purple-400'>{sortedPosts.length}</div>
+              <TypingEffect 
+                text={sortedPosts.length.toString()} 
+                className="text-3xl font-bold text-purple-600 dark:text-purple-400"
+                speed={200}
+                showCursor={false}
+              />
               <div class='text-sm text-gray-600 dark:text-gray-400'>Articles</div>
             </div>
             <div class='w-px h-12 bg-gray-300 dark:bg-gray-600'></div>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.7s'>
-              <div class='text-3xl font-bold text-blue-600 dark:text-blue-400'>100%</div>
+              <TypingEffect 
+                text="100%" 
+                className="text-3xl font-bold text-blue-600 dark:text-blue-400"
+                speed={200}
+                showCursor={false}
+              />
               <div class='text-sm text-gray-600 dark:text-gray-400'>Practical</div>
             </div>
             <div class='w-px h-12 bg-gray-300 dark:bg-gray-600'></div>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.9s'>
-              <div class='text-3xl font-bold text-pink-600 dark:text-pink-400'>Free</div>
+              <TypingEffect 
+                text="Free" 
+                className="text-3xl font-bold text-pink-600 dark:text-pink-400"
+                speed={200}
+                showCursor={false}
+              />
               <div class='text-sm text-gray-600 dark:text-gray-400'>Knowledge</div>
             </div>
           </div>
