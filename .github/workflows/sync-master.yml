@@ -1,0 +1,64 @@
+name: Sync Master with Main
+
+# This workflow automatically syncs the master branch with the main branch
+# whenever there are new commits pushed to main
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  sync-master:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write # Required to push to master branch
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for proper branch operations
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+      
+      - name: Sync master with main
+        run: |
+          echo "🔄 Syncing master branch with main..."
+          
+          # Ensure we're on main and it's up to date
+          git checkout main
+          git pull origin main
+          
+          # Switch to master branch
+          git checkout master
+          
+          # Reset master to match main exactly
+          git reset --hard main
+          
+          # Push the updated master branch
+          git push origin master --force-with-lease
+          
+          echo "✅ Master branch successfully synchronized with main!"
+      
+      - name: Verify sync
+        run: |
+          echo "📊 Branch Status:"
+          echo "Main:   $(git log --oneline -1 main)"
+          echo "Master: $(git log --oneline -1 master)"
+          
+          # Verify both branches point to the same commit
+          MAIN_COMMIT=$(git rev-parse main)
+          MASTER_COMMIT=$(git rev-parse master)
+          
+          if [ "$MAIN_COMMIT" = "$MASTER_COMMIT" ]; then
+            echo "✅ Verification successful: Both branches point to the same commit"
+          else
+            echo "❌ Verification failed: Branches are not synchronized"
+            exit 1
+          fi
