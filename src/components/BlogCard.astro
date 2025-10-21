@@ -1,51 +1,93 @@
 ---
-// src/components/BlogCard.astro
+/**
+ * Blog Card Component
+ * 
+ * This component renders a preview card for blog posts with:
+ * - Post title and description
+ * - Publication date
+ * - Hover animations and effects
+ * - Link to full blog post
+ * - Responsive design with dark mode support
+ * 
+ * Features:
+ * - Gradient overlay on hover
+ * - Smooth transitions and animations
+ * - Text truncation for consistent card heights
+ * - Accessible link structure
+ * - Dark/light mode theming
+ * - Purple accent color scheme
+ * 
+ * @fileoverview Blog post preview card component
+ */
+
+/**
+ * Props interface for the BlogCard component
+ * Provides TypeScript support and documentation for all required props
+ */
 interface Props {
-  title: string;
-  description: string;
-  date: string;
-  slug: string;
+  title: string;        // Blog post title (required)
+  description: string;   // Brief description/summary (required)
+  date: string;         // Publication date (required)
+  slug: string;         // URL slug for the blog post (required)
 }
 
+/**
+ * Destructure props from Astro.props
+ * All props are required and must be provided by the parent component
+ */
 const { title, description, date, slug } = Astro.props;
 ---
 
+<!-- 
+  Blog Card Template
+  
+  This template creates an interactive blog post preview card with:
+  - Full-height clickable link
+  - Hover animations and visual feedback
+  - Gradient overlay effects
+  - Responsive content layout
+  - Dark mode support
+-->
 <a href={`/blog/${slug}`} class='block group h-full'>
+  <!-- Main card container with hover effects -->
   <div
     class='relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-1 h-full'
   >
-    <!-- Gradient overlay -->
+    <!-- Subtle gradient overlay that appears on hover -->
     <div
       class='absolute inset-0 bg-gradient-to-br from-purple-500/5 via-blue-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'
     >
     </div>
 
+    <!-- Card content container with flexbox layout -->
     <div class='relative p-8 h-full flex flex-col'>
-      <!-- Date -->
+      <!-- Date section with decorative dot -->
       <div class='flex items-center justify-between mb-4'>
         <time class='text-sm font-medium text-purple-600 dark:text-purple-400'>
           {date}
         </time>
+        <!-- Decorative purple dot -->
         <div class='w-2 h-2 bg-purple-500 rounded-full opacity-60'></div>
       </div>
 
-      <!-- Title -->
+      <!-- Blog post title with hover color change -->
       <h2
         class='text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 line-clamp-2 flex-grow'
       >
         {title}
       </h2>
 
-      <!-- Description -->
+      <!-- Blog post description with text truncation -->
       <p class='text-gray-600 dark:text-gray-300 line-clamp-3 mb-6'>
         {description}
       </p>
 
-      <!-- Read more -->
+      <!-- Call-to-action with arrow icon and slide animation -->
       <div
         class='flex items-center text-purple-600 dark:text-purple-400 font-medium group-hover:translate-x-1 transition-transform duration-300 mt-auto'
       >
         <span>Read more</span>
+        <!-- Right arrow icon -->
         <svg
           xmlns='http://www.w3.org/2000/svg'
           class='h-4 w-4 ml-2'
@@ -62,7 +104,17 @@ const { title, description, date, slug } = Astro.props;
   </div>
 </a>
 
+<!-- 
+  Component Styles
+  
+  These styles provide text truncation utilities for consistent card heights.
+  Uses CSS line-clamp for modern browsers with fallback support.
+-->
 <style>
+  /* 
+    Text truncation utility for 2 lines
+    Ensures blog post titles don't exceed 2 lines for consistent card layout
+  */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -70,6 +122,10 @@ const { title, description, date, slug } = Astro.props;
     overflow: hidden;
   }
 
+  /* 
+    Text truncation utility for 3 lines
+    Ensures blog post descriptions don't exceed 3 lines for consistent card layout
+  */
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
