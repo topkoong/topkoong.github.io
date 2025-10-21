@@ -1,9 +1,36 @@
 ---
-// src/components/ThemeToggle.astro
+/**
+ * Theme Toggle Component
+ * 
+ * This component provides a button for switching between dark and light themes.
+ * It includes:
+ * - Sun and moon icons that toggle visibility
+ * - localStorage persistence for theme preference
+ * - Smooth transitions between themes
+ * - Accessible button with proper ARIA labels
+ * 
+ * Features:
+ * - Visual feedback with icon changes
+ * - Persistent theme selection
+ * - Smooth color transitions
+ * - Accessible design with screen reader support
+ * - Robust error handling
+ * 
+ * @fileoverview Theme toggle button with icon switching
+ */
 
 // Theme toggle component for switching between dark and light modes
 ---
 
+<!-- 
+  Theme Toggle Button Template
+  
+  This template creates a theme toggle button with:
+  - Sun icon (visible in light mode)
+  - Moon icon (visible in dark mode)
+  - Proper accessibility attributes
+  - Hover effects and transitions
+-->
 <button
   id='theme-toggle'
   class='rounded-lg p-2 text-gray-400 hover:text-white transition-colors'
@@ -42,22 +69,37 @@
   </svg>
 </button>
 
+<!-- 
+  Theme Toggle JavaScript
+  
+  This script handles:
+  - Theme detection and application
+  - Icon visibility switching
+  - localStorage persistence
+  - Click event handling
+  - Error handling for missing elements
+-->
 <script>
-  // Simple theme toggle functionality
+  /**
+   * Initialize the theme toggle functionality
+   * Sets up event listeners and applies the current theme
+   */
   function initThemeToggle() {
+    // Get DOM elements
     const toggleButton = document.getElementById('theme-toggle');
     const sunIcon = document.getElementById('sun-icon');
     const moonIcon = document.getElementById('moon-icon');
 
+    // Check if all required elements exist
     if (!toggleButton || !sunIcon || !moonIcon) {
       console.log('Theme toggle elements not found');
       return;
     }
 
-    // Get current theme
+    // Get current theme from localStorage or default to dark
     const currentTheme = localStorage.getItem('theme') || 'dark';
 
-    // Apply current theme
+    // Apply current theme on page load
     if (currentTheme === 'light') {
       document.documentElement.classList.remove('dark');
       sunIcon.classList.remove('hidden');
@@ -68,7 +110,7 @@
       moonIcon.classList.remove('hidden');
     }
 
-    // Add click handler
+    // Add click event listener for theme switching
     toggleButton.addEventListener('click', function () {
       const isDark = document.documentElement.classList.contains('dark');
 
@@ -88,7 +130,8 @@
     });
   }
 
-  // Initialize when DOM is ready
+  // Initialize theme toggle when DOM is ready
+  // Handle both cases: DOM already loaded or still loading
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initThemeToggle);
   } else {

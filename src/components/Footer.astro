@@ -1,11 +1,44 @@
 ---
+/**
+ * Footer Component
+ * 
+ * This component provides the website footer with:
+ * - About section with personal description
+ * - Navigation links
+ * - Social media links (GitHub, X/Twitter)
+ * - Copyright information
+ * - Responsive grid layout
+ * 
+ * Features:
+ * - Three-column responsive layout
+ * - Social media icons with hover effects
+ * - Dark/light mode support
+ * - Accessible link structure
+ * - Dynamic copyright year
+ * 
+ * @fileoverview Website footer with social links and information
+ */
+
+// Get current year for copyright notice
 const currentYear = new Date().getFullYear();
 ---
 
+<!-- 
+  Footer Template
+  
+  This template creates a comprehensive footer with:
+  - Three-column responsive grid layout
+  - About section with personal description
+  - Navigation links
+  - Social media links with icons
+  - Copyright notice
+-->
 <footer
   class='border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200'
 >
+  <!-- Main footer content container -->
   <div class='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+    <!-- Three-column responsive grid -->
     <div class='grid grid-cols-1 md:grid-cols-3 gap-8'>
       <!-- About Section -->
       <div>
@@ -22,14 +55,7 @@ const currentYear = new Date().getFullYear();
       <div>
         <h3 class='text-lg font-semibold mb-4'>Links</h3>
         <ul class='space-y-2'>
-          <!-- <li>
-            <a
-              href='/about'
-              class='text-gray-300 hover:text-white transition-colors'
-            >
-              About
-            </a>
-          </li> -->
+          <!-- Blog link -->
           <li>
             <a
               href='/blog'
@@ -45,6 +71,7 @@ const currentYear = new Date().getFullYear();
       <div>
         <h3 class='text-lg font-semibold mb-4'>Connect</h3>
         <div class='flex space-x-4'>
+          <!-- GitHub link with icon -->
           <a
             href='https://github.com/topkoong'
             target='_blank'
@@ -58,6 +85,8 @@ const currentYear = new Date().getFullYear();
               ></path>
             </svg>
           </a>
+          
+          <!-- X/Twitter link with icon -->
           <a
             href='https://x.com/toptheerut'
             target='_blank'
@@ -75,6 +104,7 @@ const currentYear = new Date().getFullYear();
       </div>
     </div>
 
+    <!-- Copyright notice -->
     <div class='mt-8 pt-8 border-t border-gray-800 text-center text-gray-400'>
       <p>&copy; {currentYear} Your Name. All rights reserved.</p>
     </div>

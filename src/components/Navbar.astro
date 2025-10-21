@@ -1,19 +1,50 @@
 ---
-// src/components/Navbar.astro
+/**
+ * Navigation Bar Component
+ *
+ * This component provides the main navigation for the website with:
+ * - Responsive navigation links
+ * - Theme toggle functionality
+ * - Dark/light mode support
+ * - High z-index to ensure it stays above other elements
+ *
+ * Features:
+ * - Clean, minimal design
+ * - Smooth color transitions
+ * - Accessible navigation structure
+ * - Mobile-responsive layout
+ *
+ * @fileoverview Main navigation component with theme toggle
+ */
+
+// Import the theme toggle component
 import ThemeToggle from './ThemeToggle.astro';
+
+// Define navigation items with labels and URLs
+// This array can be easily extended to add more navigation items
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Blog', href: '/blog' },
 ];
 ---
 
+<!-- 
+  Navigation Bar Template
+  
+  This template creates a responsive navigation bar with:
+  - Navigation links on the left
+  - Theme toggle button on the right
+  - Proper spacing and responsive design
+  - High z-index to stay above floating elements
+-->
 <nav
   class='border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-colors duration-200 relative z-50'
 >
+  <!-- Container with responsive padding and max-width -->
   <div class='max-w-5xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <!-- Flex container for navigation items and theme toggle -->
     <div class='flex justify-between items-center h-16'>
-      {/* Changed from justify-center to justify-between */}
-      {/* Navigation links */}
+      {/* Navigation links section */}
       <div class='flex space-x-4 sm:space-x-8'>
         {
           navItems.map((item) => (
@@ -26,7 +57,8 @@ const navItems = [
           ))
         }
       </div>
-      {/* Theme toggle */}
+
+      {/* Theme toggle button */}
       <ThemeToggle />
     </div>
   </div>

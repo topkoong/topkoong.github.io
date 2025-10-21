@@ -1,14 +1,45 @@
 ---
+/**
+ * Gradual Spacing Animation Component
+ * 
+ * This component creates a text animation where letters appear one by one
+ * with a sliding effect from left to right. It supports gradient text,
+ * standout styling, and responsive design.
+ * 
+ * Features:
+ * - Letter-by-letter animation with staggered timing
+ * - Gradient text support with fallbacks
+ * - Standout title styling with glow effects
+ * - Dark/light mode compatibility
+ * - Responsive design with flex-wrap
+ * - Browser compatibility fallbacks
+ * 
+ * Props:
+ * - text: The text to animate
+ * - className: Additional CSS classes for styling
+ * 
+ * @fileoverview Pure Astro component for gradual spacing text animation
+ */
+
 // Pure Astro component for Gradual Spacing text animation
 export interface Props {
-  text: string;
-  className?: string;
+  text: string; // The text content to animate
+  className?: string; // Optional additional CSS classes
 }
 
+// Destructure props with default styling
 const { text, className = 'text-4xl font-bold' } = Astro.props;
+
+// Split text into individual letters for animation
 const letters = text.split('');
 ---
 
+<!-- 
+  Gradual Spacing Animation Template
+  
+  This template creates a container with individual letter spans,
+  each with a staggered animation delay for the sliding effect.
+-->
 <div class={`gradual-spacing ${className}`}>
   {
     letters.map((letter, index) => (
@@ -16,34 +47,48 @@ const letters = text.split('');
         class='gradual-spacing-letter'
         style={`animation-delay: ${index * 0.1}s`}
       >
+        {/* Use non-breaking space for actual spaces to maintain layout */}
         {letter === ' ' ? '\u00A0' : letter}
       </span>
     ))
   }
 </div>
 
+<!-- 
+  Gradual Spacing Animation Styles
+  
+  This style section includes:
+  - Base animation styles for the container and letters
+  - Gradient text support with browser fallbacks
+  - Standout title styling with glow effects
+  - Dark/light mode compatibility
+  - Responsive design considerations
+-->
 <style>
+  /* Base container styling with flex layout */
   .gradual-spacing {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
   }
 
+  /* Individual letter animation styling */
   .gradual-spacing-letter {
     display: inline-block;
-    opacity: 0;
-    transform: translateX(-20px);
+    opacity: 0; /* Start invisible */
+    transform: translateX(-20px); /* Start offset to the left */
     animation: gradualSpacingIn 0.5s ease-out forwards;
   }
 
+  /* Keyframe animation for letter appearance */
   @keyframes gradualSpacingIn {
     to {
-      opacity: 1;
-      transform: translateX(0);
+      opacity: 1; /* Fade in */
+      transform: translateX(0); /* Slide to final position */
     }
   }
 
-  /* Ensure gradient text works properly */
+  /* Gradient text styling for enhanced visual appeal */
   .gradual-spacing.bg-gradient-to-r {
     background: linear-gradient(to right, #1f2937, #374151, #111827);
     -webkit-background-clip: text;
@@ -52,7 +97,7 @@ const letters = text.split('');
     color: transparent;
   }
 
-  /* Dark mode gradient */
+  /* Dark mode gradient variant */
   .dark .gradual-spacing.bg-gradient-to-r {
     background: linear-gradient(to right, #f3f4f6, #e5e7eb, #f9fafb);
     -webkit-background-clip: text;
@@ -61,7 +106,7 @@ const letters = text.split('');
     color: transparent;
   }
 
-  /* Standout title that matches background */
+  /* Standout title styling with gradient and glow effects */
   .gradual-spacing.standout-title {
     background: linear-gradient(135deg, #8b5cf6, #3b82f6, #ec4899);
     -webkit-background-clip: text;
@@ -76,6 +121,7 @@ const letters = text.split('');
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   }
 
+  /* Dark mode standout title variant */
   .dark .gradual-spacing.standout-title {
     background: linear-gradient(135deg, #a78bfa, #60a5fa, #f472b6);
     -webkit-background-clip: text;
@@ -85,6 +131,7 @@ const letters = text.split('');
     text-shadow: 0 4px 8px rgba(167, 139, 250, 0.4);
   }
 
+  /* Glow animation for standout titles */
   @keyframes standout-glow {
     0% {
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)) brightness(1);
@@ -94,7 +141,7 @@ const letters = text.split('');
     }
   }
 
-  /* Fallback for browsers that don't support background-clip: text */
+  /* Browser compatibility fallback for background-clip: text */
   @supports not (-webkit-background-clip: text) {
     .gradual-spacing.standout-title {
       background: none;
@@ -108,6 +155,7 @@ const letters = text.split('');
     }
   }
 
+  /* Inherit gradient properties for individual letters */
   .gradual-spacing-letter {
     background: inherit;
     -webkit-background-clip: inherit;

@@ -1,20 +1,54 @@
 ---
+/**
+ * Blog Post Layout Component
+ * 
+ * This layout is specifically designed for rendering individual blog posts
+ * from markdown files. It extends the base Layout component with additional
+ * features for blog content including Mermaid diagram support, enhanced
+ * syntax highlighting, and article-specific SEO optimization.
+ * 
+ * Features:
+ * - Article-specific SEO meta tags and structured data
+ * - Mermaid diagram rendering with theme support
+ * - Enhanced syntax highlighting with Shiki
+ * - Responsive typography with Tailwind Typography
+ * - Dark/light mode support for all content
+ * - Tag display and article metadata
+ * - Smooth animations and transitions
+ * 
+ * @fileoverview Blog post layout with advanced content rendering
+ */
+
 // Layout specifically for blog post markdown files
 import Layout from './Layout.astro';
+
 // Get frontmatter from markdown file
+// The frontmatter contains metadata like title, date, description, tags
 const { frontmatter } = Astro.props;
 
-// Format dates for SEO
+// Format dates for SEO in ISO format
+// This ensures proper structured data for search engines
 const publishedTime = new Date(frontmatter.date).toISOString();
 const modifiedTime = frontmatter.modified
   ? new Date(frontmatter.modified).toISOString()
   : publishedTime;
 
-// Generate article-specific keywords
+// Generate article-specific keywords for SEO
+// Combines general site keywords with post-specific tags
 const articleKeywords = frontmatter.tags ? frontmatter.tags.join(', ') : '';
 const allKeywords = `software engineer, full-stack development, automation, tutorials, blog, programming, web development${articleKeywords ? ', ' + articleKeywords : ''}`;
 ---
 
+<!-- 
+  Blog Post Layout Template
+  
+  This template renders the blog post content with enhanced styling,
+  animations, and interactive features. It includes:
+  - Article header with title, date, author, and tags
+  - Responsive prose content with Tailwind Typography
+  - Dark/light mode support for all elements
+  - Smooth fade-in animations
+-->
 <Layout
   title={frontmatter.title}
   description={frontmatter.description}
@@ -23,17 +57,23 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
   modifiedTime={modifiedTime}
   keywords={allKeywords}
 >
+  <!-- Main article container with responsive max-width -->
   <article class='max-w-5xl mx-auto'>
+    <!-- Article header with metadata and styling -->
     <header class='mb-12'>
       <div class='animate-fade-in-up'>
+        <!-- Main article title with responsive typography -->
         <h1
           class='text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight'
         >
           {frontmatter.title}
         </h1>
+        
+        <!-- Article metadata: date and author -->
         <div
           class='flex items-center space-x-4 text-gray-600 dark:text-gray-400'
         >
+          <!-- Publication date with proper datetime attribute -->
           <time class='text-lg' datetime={publishedTime}>
             {
               new Date(frontmatter.date).toLocaleDateString('en-US', {
@@ -43,9 +83,15 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
               })
             }
           </time>
+          
+          <!-- Visual separator dot -->
           <div class='w-2 h-2 bg-purple-500 rounded-full'></div>
+          
+          <!-- Author name -->
           <span class='text-lg'>Theeruttop (Toppy)</span>
         </div>
+        
+        <!-- Article tags (if present) -->
         {
           frontmatter.tags && (
             <div class='mt-6 flex flex-wrap gap-2'>
@@ -59,7 +105,12 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
         }
       </div>
     </header>
-    {/* Apply Tailwind Typography to markdown content */}
+    
+    <!-- 
+      Main content area with Tailwind Typography
+      This applies beautiful typography styles to the rendered markdown content
+      with full dark/light mode support
+    -->
     <div
       class='prose prose-gray dark:prose-invert max-w-none
       prose-headings:text-gray-900 dark:prose-headings:text-white
@@ -76,27 +127,48 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
       prose-th:border-gray-200 dark:prose-th:border-gray-700
       prose-td:border-gray-200 dark:prose-td:border-gray-700'
     >
+      <!-- Rendered markdown content goes here -->
       <slot />
-      {/* Rendered markdown content goes here */}
     </div>
   </article>
 </Layout>
 
+<!-- 
+  Mermaid Diagram Rendering Script
+  
+  This script handles the initialization and rendering of Mermaid diagrams
+  in blog posts. It includes:
+  - Dynamic theme switching (light/dark mode)
+  - Error handling for failed renders
+  - Unique ID generation for each diagram
+  - Theme-specific color mapping
+  - Responsive diagram sizing
+  - Theme change detection and re-rendering
+  
+  The script uses MutationObserver to detect theme changes and re-renders
+  all diagrams with the appropriate theme colors.
+-->
 <script>
-  // Initialize Mermaid when the page loads
   // Initialize Mermaid when the page loads
   document.addEventListener('DOMContentLoaded', async () => {
     try {
+      // Dynamically import Mermaid library
       const mermaid = await import('mermaid');
 
-      // Function to configure and initialize Mermaid
+      /**
+       * Configure and initialize Mermaid with theme-specific settings
+       * This function sets up Mermaid with appropriate colors and styling
+       * based on the current theme (light or dark)
+       */
       const initializeMermaid = () => {
+        // Detect current theme from document class
         const isDarkMode = document.documentElement.classList.contains('dark');
 
+        // Initialize Mermaid with theme-specific configuration
         mermaid.default.initialize({
-          startOnLoad: false,
+          startOnLoad: false, // We'll manually trigger rendering
           theme: isDarkMode ? 'dark' : 'default',
-          securityLevel: 'loose',
+          securityLevel: 'loose', // Allow more diagram types
           fontFamily: 'system-ui, -apple-system, sans-serif',
           fontSize: 16,
           flowchart: {
@@ -106,6 +178,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
             nodeSpacing: 50,
             rankSpacing: 50,
           },
+          // Theme-specific color variables
           themeVariables: isDarkMode
             ? {
                 // Dark mode theme variables
@@ -154,7 +227,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
       // Initial setup
       initializeMermaid();
 
-      // Wait for DOM to be ready
+      // Wait for DOM to be ready, then render diagrams
       setTimeout(() => {
         const mermaidContainers = document.querySelectorAll('.mermaid');
 
@@ -174,7 +247,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
               // Force dark backgrounds and white text after render
               setTimeout(() => {
                 if (document.documentElement.classList.contains('dark')) {
-                  // Map of light colors to dark colors
+                  // Map of light colors to dark colors for better contrast
                   const colorMap: Record<string, string> = {
                     '#e0f2fe': '#1e3a8a',
                     '#fce4ec': '#881337',
@@ -186,7 +259,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
                     '#f3e5f5': '#581c87',
                   };
 
-                  // Change node background colors
+                  // Change node background colors to dark variants
                   container
                     .querySelectorAll(
                       '.node rect, .node circle, .node ellipse, .node polygon'
@@ -233,22 +306,23 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
         });
       }, 100);
 
-      // Listen for theme changes
+      // Listen for theme changes using MutationObserver
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (
             mutation.type === 'attributes' &&
             mutation.attributeName === 'class'
           ) {
+            // Re-initialize Mermaid with new theme
             initializeMermaid();
 
             setTimeout(() => {
-              // Remove all existing SVGs
+              // Remove all existing SVGs to prevent duplicates
               document.querySelectorAll('.mermaid svg').forEach((svg) => {
                 svg.remove();
               });
 
-              // Reset all containers
+              // Reset and re-render all containers
               const mermaidContainers = document.querySelectorAll('.mermaid');
               mermaidContainers.forEach((container, index) => {
                 // Reset processed state
@@ -267,7 +341,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
                     nodes: [container as HTMLElement],
                   });
 
-                  // Force dark backgrounds and white text after re-render
+                  // Apply theme-specific styling after re-render
                   setTimeout(() => {
                     if (document.documentElement.classList.contains('dark')) {
                       const colorMap: Record<string, string> = {
@@ -281,6 +355,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
                         '#f3e5f5': '#581c87',
                       };
 
+                      // Apply dark theme colors to nodes
                       container
                         .querySelectorAll(
                           '.node rect, .node circle, .node ellipse, .node polygon'
@@ -296,6 +371,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
                           }
                         });
 
+                      // Apply white text to all text elements
                       container
                         .querySelectorAll(
                           'foreignObject div, foreignObject span, foreignObject p'
@@ -318,6 +394,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
         });
       });
 
+      // Start observing theme changes
       observer.observe(document.documentElement, {
         attributes: true,
         attributeFilter: ['class'],
@@ -328,8 +405,22 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
   });
 </script>
 
+<!-- 
+  Blog Post Styles
+  
+  This style section contains all the CSS for blog post rendering including:
+  - Smooth animations and transitions
+  - Mermaid diagram styling with theme support
+  - Enhanced syntax highlighting overrides
+  - Responsive design for mobile devices
+  - Typography improvements
+  - Dark/light mode color schemes
+  
+  The styles are organized into logical sections for maintainability.
+-->
 <style>
   /* ===== ANIMATIONS ===== */
+  /* Smooth fade-in animation for article headers */
   @keyframes fade-in-up {
     from {
       opacity: 0;
@@ -341,13 +432,14 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
     }
   }
 
+  /* Apply fade-in animation to article headers */
   .animate-fade-in-up {
     animation: fade-in-up 0.8s ease-out forwards;
     opacity: 0;
   }
 
   /* ===== MERMAID FLOWCHART STYLING ===== */
-
+  /* Base Mermaid container styling */
   .mermaid {
     border-radius: 0.75rem;
     padding: 2rem;
@@ -358,8 +450,8 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
     border: 2px solid #e5e7eb;
   }
 
-  /* ADD SOLUTION 1 HERE - RIGHT AFTER THE EXISTING .mermaid RULE */
-  /* Allow mermaid to break out of prose constraints */
+  /* Allow mermaid diagrams to break out of prose constraints */
+  /* This ensures diagrams can be full-width even within prose containers */
   .prose .mermaid {
     max-width: none !important;
     width: 100vw !important;
@@ -377,14 +469,15 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
     margin: 0 auto !important;
   }
 
+  /* Responsive SVG sizing */
   .mermaid svg {
     max-width: 100%;
     height: auto;
     min-height: 300px;
   }
 
-  /* ===== LIGHT MODE ===== */
-
+  /* ===== LIGHT MODE MERMAID STYLING ===== */
+  /* Light mode text and line styling */
   .mermaid .label,
   .mermaid .nodeLabel,
   .mermaid .edgeLabel,
@@ -403,8 +496,8 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
     fill: #424242 !important;
   }
 
-  /* ===== DARK MODE ===== */
-
+  /* ===== DARK MODE MERMAID STYLING ===== */
+  /* Dark mode container styling */
   .dark .mermaid {
     background-color: #1f2937 !important;
     border: 2px solid #4b5563 !important;
@@ -422,6 +515,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
   }
 
   /* Override all node fill colors to use dark versions */
+  /* These rules ensure consistent dark theme colors */
   .dark .mermaid .node rect[style*='fill:#e0f2fe'],
   .dark .mermaid rect[style*='fill:#e0f2fe'] {
     fill: #1e3a8a !important; /* Dark blue */
@@ -524,160 +618,9 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
   .dark .mermaid .edgePath[style*='stroke-dasharray'] marker path {
     fill: #fbbf24 !important;
   }
-  /* ===== ENHANCED SYNTAX HIGHLIGHTING (Let Shiki handle the colors) ===== */
-
-  /* Light mode - inline code (no background) */
-  /* .prose code:not(pre code) {
-    background-color: transparent !important;
-    color: #e11d48 !important;
-    padding: 0.125rem 0.375rem !important;
-    border-radius: 0.25rem !important;
-    font-size: 0.875em !important;
-    font-weight: 500 !important;
-    border: 1px solid #e2e8f0 !important;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace !important;
-  } */
-
-  /* Dark mode - inline code (no background) */
-  /* .dark .prose code:not(pre code) {
-    background-color: transparent !important;
-    color: #fbbf24 !important;
-    border: 1px solid #334155 !important;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace !important;
-  } */
-
-  /* AGGRESSIVE OVERRIDE - Remove ALL backgrounds from inline code */
-  /* .prose code,
-  .prose code:not(pre code),
-  .prose code[style*='background'],
-  .prose code[style*='background-color'],
-  .prose code[style*='rgb(243 244 246'],
-  .prose code[style*='rgb(243, 244, 246'],
-  .prose code[style*='--tw-bg-opacity'],
-  .prose code[style*='var(--tw-bg-opacity'],
-  .prose code[style*='var(--tw-bg-opacity, 1)'],
-  .prose code[style*='var(--tw-bg-opacity,1)'],
-  .prose code[style*='var(--tw-bg-opacity, 1)'] {
-    --tw-bg-opacity: 0 !important;
-    background-color: transparent !important;
-    background: transparent !important;
-    background-image: none !important;
-  } */
-
-  /* Dark mode overrides */
-  /* .dark .prose code,
-  .dark .prose code:not(pre code),
-  .dark .prose code[style*='background'],
-  .dark .prose code[style*='background-color'],
-  .dark .prose code[style*='--tw-bg-opacity'],
-  .dark .prose code[style*='var(--tw-bg-opacity'] {
-    --tw-bg-opacity: 0 !important;
-    background-color: transparent !important;
-    background: transparent !important;
-    background-image: none !important;
-  } */
-
-  /* ULTRA-SPECIFIC OVERRIDES for Tailwind prose */
-  /* .prose code[class*='bg-'],
-  .prose code[class*='bg-gray'],
-  .prose code[class*='bg-slate'],
-  .prose code[class*='bg-zinc'],
-  .prose code[class*='bg-neutral'],
-  .prose code[class*='bg-stone'] {
-    background-color: transparent !important;
-    background: transparent !important;
-    --tw-bg-opacity: 0 !important;
-  } */
-
-  /* .dark .prose code[class*='bg-'],
-  .dark .prose code[class*='bg-gray'],
-  .dark .prose code[class*='bg-slate'],
-  .dark .prose code[class*='bg-zinc'],
-  .dark .prose code[class*='bg-neutral'],
-  .dark .prose code[class*='bg-stone'] {
-    background-color: transparent !important;
-    background: transparent !important;
-    --tw-bg-opacity: 0 !important;
-  } */
-
-  /* ===== SIMPLE BACKGROUND CONTROL FOR CODE BLOCKS ===== */
-
-  /* Light mode - clean white background */
-  /* .prose pre {
-    background-color: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    padding: 1.5rem !important;
-    border-radius: 0.75rem !important;
-    overflow-x: auto !important;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace !important;
-    font-size: 0.875rem !important;
-    line-height: 1.6 !important;
-  } */
-
-  /* Dark mode - dark background */
-  /* .dark .prose pre {
-    background-color: #282a36 !important;
-    border: 1px solid #334155 !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
-  } */
-
-  /* Remove any line backgrounds */
-  /* .prose pre .line,
-  .prose pre span.line {
-    background-color: transparent !important;
-  } */
-
-  /* Ensure code elements are transparent */
-  /* .prose pre code {
-    background-color: transparent !important;
-    padding: 0 !important;
-    border: none !important;
-    font-size: inherit !important;
-    font-weight: 400 !important;
-  } */
-
-  /* Code block language labels */
-  /* .prose pre::before {
-    content: attr(data-language);
-    position: absolute;
-    top: 0.75rem;
-    right: 1rem;
-    font-size: 0.75rem;
-    color: #6b7280;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  } */
-
-  /* .dark .prose pre::before {
-    color: #9ca3af;
-  } */
-
-  /* Copy button styling */
-  /* .prose pre {
-    position: relative;
-  } */
-
-  /* .prose pre:hover::after {
-    content: 'Copy';
-    position: absolute;
-    top: 0.75rem;
-    right: 1rem;
-    font-size: 0.75rem;
-    color: #6b7280;
-    font-weight: 500;
-    cursor: pointer;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-  } */
-
-  /* .dark .prose pre:hover::after {
-    color: #9ca3af;
-  } */
 
   /* ===== RESPONSIVE DESIGN ===== */
-
+  /* Mobile-specific Mermaid styling */
   @media (max-width: 768px) {
     .mermaid {
       padding: 1rem;
@@ -696,7 +639,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
   }
 
   /* ===== TYPOGRAPHY ===== */
-
+  /* Enhanced heading styles with proper hierarchy */
   .prose h1,
   .prose h2,
   .prose h3,
@@ -712,6 +655,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
     opacity: 1 !important;
   }
 
+  /* Specific heading sizes for better hierarchy */
   .prose h1 {
     font-size: 2.25em;
   }
@@ -729,6 +673,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
     color: #f9fafb;
   }
 
+  /* Spacing adjustments for better readability */
   .prose h3 + p {
     margin-top: 1em;
   }
@@ -737,6 +682,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
     margin-top: 1.5em;
   }
 
+  /* Thai font support for better internationalization */
   .prose {
     font-family:
       'Noto Sans Thai',

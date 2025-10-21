@@ -1,22 +1,46 @@
 ---
+/**
+ * Base Layout Component
+ * 
+ * This is the main layout component that provides the common structure,
+ * styling, and meta tags for all pages in the Astro blog. It handles
+ * SEO optimization, theme management, and responsive design.
+ * 
+ * Features:
+ * - Comprehensive SEO meta tags (Open Graph, Twitter Cards, structured data)
+ * - Dark/light mode theme switching with flash prevention
+ * - Responsive design with Tailwind CSS
+ * - Google Fonts integration (Inter + JetBrains Mono)
+ * - Automatic theme initialization
+ * - Social media preview support
+ * 
+ * @fileoverview Main layout component with SEO and theming
+ */
+
 // Base layout component that provides common structure and styling
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 
-// Define props interface for TypeScript support
+/**
+ * Props interface for the Layout component
+ * Provides TypeScript support and documentation for all available props
+ */
 interface Props {
-  title: string; // Required page title
-  description?: string; // Optional meta description
-  image?: string; // Optional social media image
-  url?: string; // Optional canonical URL
-  type?: string; // Optional page type (article, website, etc.)
-  publishedTime?: string; // Optional published time for articles
-  modifiedTime?: string; // Optional modified time for articles
-  author?: string; // Optional author name
-  keywords?: string; // Optional keywords
+  title: string; // Required page title for SEO and browser tab
+  description?: string; // Optional meta description for SEO
+  image?: string; // Optional social media preview image
+  url?: string; // Optional canonical URL for SEO
+  type?: string; // Optional page type (article, website, etc.) for structured data
+  publishedTime?: string; // Optional published time for articles (ISO format)
+  modifiedTime?: string; // Optional modified time for articles (ISO format)
+  author?: string; // Optional author name for structured data
+  keywords?: string; // Optional keywords for SEO meta tags
 }
 
-// Destructure props with defaults
+/**
+ * Destructure props with sensible defaults
+ * These defaults ensure the site works even if props are not provided
+ */
 const {
   title,
   description = 'Theeruttop (Toppy) - Software Engineer sharing insights on full-stack development, automation, and scaling knowledge through practical tutorials and thoughts.',
@@ -29,12 +53,19 @@ const {
   keywords = 'software engineer, full-stack development, automation, tutorials, blog, programming, web development',
 } = Astro.props;
 
-// Generate image URL safely
+/**
+ * Generate image URL safely
+ * Handles both relative and absolute image URLs for social media previews
+ */
 const imageUrl = image.startsWith('http')
   ? image
   : new URL(image, Astro.site || Astro.url.origin).href;
 
-// Generate structured data
+/**
+ * Generate structured data for SEO
+ * Creates JSON-LD structured data that search engines can understand
+ * Supports both website and article types with appropriate properties
+ */
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': type === 'article' ? 'Article' : 'WebSite',
@@ -51,11 +82,13 @@ const structuredData = {
     name: author,
     url: 'https://topkoong.github.io',
   },
+  // Add article-specific properties if this is an article
   ...(type === 'article' &&
     publishedTime && {
       datePublished: publishedTime,
       dateModified: modifiedTime || publishedTime,
     }),
+  // Add website-specific properties if this is a website
   ...(type === 'WebSite' && {
     potentialAction: {
       '@type': 'SearchAction',
@@ -69,20 +102,23 @@ const structuredData = {
 <!doctype html>
 <html lang='en'>
   <head>
+    <!-- Basic HTML meta tags -->
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
     <meta name='generator' content={Astro.generator} />
 
     <!-- Google Fonts for better typography -->
+    <!-- Preconnect to Google Fonts for faster loading -->
     <link rel='preconnect' href='https://fonts.googleapis.com' />
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <!-- Load Inter (body text) and JetBrains Mono (code) fonts -->
     <link
       href='https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap'
       rel='stylesheet'
     />
 
-    <!-- Primary Meta Tags -->
+    <!-- Primary Meta Tags for SEO -->
     <title>{title}</title>
     <meta name='title' content={title} />
     <meta name='description' content={description} />
@@ -92,10 +128,11 @@ const structuredData = {
     <meta name='language' content='English' />
     <meta name='revisit-after' content='7 days' />
 
-    <!-- Canonical URL -->
+    <!-- Canonical URL to prevent duplicate content issues -->
     <link rel='canonical' href={url} />
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph / Facebook Meta Tags -->
+    <!-- These tags control how the page appears when shared on Facebook -->
     <meta property='og:type' content={type} />
     <meta property='og:url' content={url} />
     <meta property='og:title' content={title} />
@@ -104,7 +141,8 @@ const structuredData = {
     <meta property='og:site_name' content="Toppy's Digital Playground" />
     <meta property='og:locale' content='en_US' />
 
-    <!-- Twitter -->
+    <!-- Twitter Card Meta Tags -->
+    <!-- These tags control how the page appears when shared on Twitter/X -->
     <meta property='twitter:card' content='summary_large_image' />
     <meta property='twitter:url' content={url} />
     <meta property='twitter:title' content={title} />
@@ -112,7 +150,7 @@ const structuredData = {
     <meta property='twitter:image' content={imageUrl} />
     <meta property='twitter:creator' content='@topkoong' />
 
-    <!-- Additional Meta Tags -->
+    <!-- Additional Meta Tags for PWA and mobile optimization -->
     <meta name='theme-color' content='#8b5cf6' />
     <meta name='msapplication-TileColor' content='#8b5cf6' />
     <meta name='apple-mobile-web-app-capable' content='yes' />
@@ -121,15 +159,20 @@ const structuredData = {
       content='black-translucent'
     />
 
-    <!-- Structured Data -->
+    <!-- Structured Data for Search Engines -->
+    <!-- JSON-LD format that search engines can easily parse -->
     <script
       type='application/ld+json'
       set:html={JSON.stringify(structuredData)}
     />
 
     <!-- Initialize theme before page loads to prevent flash -->
+    <!-- This script runs immediately and prevents the flash of wrong theme -->
     <script is:inline>
-      // This script runs immediately and prevents flash of wrong theme
+      /**
+       * Get the current theme from localStorage or default to dark
+       * @returns {string} The current theme ('light' or 'dark')
+       */
       const getTheme = () => {
         if (
           typeof localStorage !== 'undefined' &&
@@ -140,7 +183,7 @@ const structuredData = {
         return 'dark'; // Force dark mode as default
       };
 
-      // Get and apply theme immediately
+      // Get and apply theme immediately to prevent flash
       const theme = getTheme();
 
       if (theme === 'light') {
@@ -158,20 +201,29 @@ const structuredData = {
       }
     </script>
   </head>
+  
+  <!-- Main body with responsive classes and theme support -->
   <body
     class='min-h-screen flex flex-col bg-white text-gray-900 dark:bg-black dark:text-white transition-colors duration-200'
   >
+    <!-- Navigation component -->
     <Navbar />
+    
+    <!-- Main content area with responsive container -->
     <main class='flex-1'>
       <div class='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+        <!-- Page content slot -->
         <slot />
       </div>
     </main>
+    
+    <!-- Footer component -->
     <Footer />
   </body>
 
+  <!-- Global styles for consistent theming and transitions -->
   <style is:global>
-    /* Base styles with transitions */
+    /* Base styles with smooth transitions */
     html {
       transition: background-color 0.2s ease-in-out;
       background-color: white;
@@ -183,10 +235,10 @@ const structuredData = {
 
     /* Prose styles with dark mode support */
     .prose {
-      max-width: 80ch;
+      max-width: 80ch; /* Optimal reading width */
     }
 
-    /* Light mode styles */
+    /* Light mode heading styles */
     .prose h1,
     .prose h2,
     .prose h3,
@@ -198,10 +250,12 @@ const structuredData = {
       margin-bottom: 1em;
     }
 
+    /* Paragraph text with proper contrast */
     .prose p {
       @apply text-gray-700 dark:text-gray-300;
     }
 
+    /* Link styling with hover effects */
     .prose a {
       @apply text-blue-600 dark:text-blue-400;
       text-decoration: underline;
@@ -211,7 +265,7 @@ const structuredData = {
       @apply text-blue-800 dark:text-blue-300;
     }
 
-    /* Inline code styling */
+    /* Inline code styling - transparent background */
     .prose code {
       background-color: transparent !important;
       padding: 0.2em 0.4em;
@@ -223,14 +277,14 @@ const structuredData = {
       background-color: transparent !important;
     }
 
-    /* Code blocks - DO NOT style here, let BlogPost.astro handle it */
+    /* Code blocks - let BlogPost.astro handle detailed styling */
     .prose pre {
       padding: 1em;
       border-radius: 0.5em;
       overflow-x: auto;
     }
 
-    /* Image handling */
+    /* Responsive image handling */
     .prose img {
       max-width: 100%;
       height: auto;

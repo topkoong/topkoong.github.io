@@ -1,53 +1,116 @@
 ---
+/**
+ * Typing Effect Animation Component
+ * 
+ * This component creates a typewriter-style animation where text appears
+ * character by character with a blinking cursor. It's perfect for
+ * displaying dynamic text content with a professional typing effect.
+ * 
+ * Features:
+ * - Character-by-character typing animation
+ * - Configurable typing speed
+ * - Optional blinking cursor
+ * - Multiple instances support
+ * - Responsive design
+ * - Clean, accessible implementation
+ * 
+ * Props:
+ * - text: The text to type out
+ * - className: Additional CSS classes for styling
+ * - speed: Typing speed in milliseconds (default: 100ms)
+ * - showCursor: Whether to show the blinking cursor (default: true)
+ * 
+ * @fileoverview Pure Astro component for typing effect animation
+ */
+
 // Pure Astro component for Typing Effect text animation
 export interface Props {
-  text: string;
-  className?: string;
-  speed?: number;
-  showCursor?: boolean;
+  text: string; // The text content to type out
+  className?: string; // Optional additional CSS classes
+  speed?: number; // Typing speed in milliseconds
+  showCursor?: boolean; // Whether to show the blinking cursor
 }
 
+// Destructure props with sensible defaults
 const { text, className = "text-2xl font-medium", speed = 100, showCursor = true } = Astro.props;
 ---
 
+<!-- 
+  Typing Effect Animation Template
+  
+  This template creates a container with:
+  - A text span that will be populated by JavaScript
+  - An optional blinking cursor
+  - Data attributes for JavaScript configuration
+-->
 <div class={`typing-effect ${className}`} data-text={text} data-speed={speed} data-showcursor={showCursor}>
   <span class="typing-text"></span>
   {showCursor && <span class="typing-cursor">|</span>}
 </div>
 
+<!-- 
+  Typing Effect JavaScript
+  
+  This script handles:
+  - Character-by-character text animation
+  - Multiple instance support
+  - Configurable typing speed
+  - Cursor blinking animation
+-->
 <script>
+  // Initialize typing effect when DOM is ready
   document.addEventListener('DOMContentLoaded', () => {
+    // Find all typing effect containers
     const containers = document.querySelectorAll('.typing-effect');
     
+    // Process each container individually
     containers.forEach(container => {
+      // Extract configuration from data attributes
       const text = container.getAttribute('data-text') || '';
       const speed = parseInt(container.getAttribute('data-speed') || '100');
       const showCursor = container.getAttribute('data-showcursor') === 'true';
       
+      // Get DOM elements for this instance
       const textElement = container.querySelector('.typing-text');
       const cursorElement = container.querySelector('.typing-cursor');
       
-      let currentIndex = 0;
+      let currentIndex = 0; // Track current character position
       
+      /**
+       * Recursive function to type out text character by character
+       * Uses setTimeout for smooth animation timing
+       */
       const typeText = () => {
         if (currentIndex < text.length) {
+          // Add next character to the text element
           textElement.textContent += text[currentIndex];
           currentIndex++;
+          // Schedule next character after specified delay
           setTimeout(typeText, speed);
         }
       };
       
-      // Start typing after a short delay
+      // Start typing animation after a short delay for better UX
       setTimeout(typeText, 500);
     });
   });
 </script>
 
+<!-- 
+  Typing Effect Styles
+  
+  This style section includes:
+  - Blinking cursor animation
+  - Smooth transitions
+  - Responsive design considerations
+-->
 <style>
+  /* Blinking cursor animation */
   .typing-cursor {
     animation: blink 0.8s infinite;
   }
   
+  /* Cursor blink keyframes */
   @keyframes blink {
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0; }

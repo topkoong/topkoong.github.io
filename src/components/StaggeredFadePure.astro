@@ -1,14 +1,43 @@
 ---
+/**
+ * Staggered Fade Animation Component
+ * 
+ * This component creates a staggered fade-in animation where words appear
+ * one by one with a subtle upward slide effect. Perfect for displaying
+ * lists or phrases with elegant timing.
+ * 
+ * Features:
+ * - Word-by-word fade-in animation
+ * - Configurable delay between words
+ * - Smooth upward slide transition
+ * - Responsive design
+ * - Clean, accessible implementation
+ * 
+ * Props:
+ * - words: Array of words to animate
+ * - className: Additional CSS classes for styling
+ * - delay: Delay between word animations in seconds (default: 0.2s)
+ * 
+ * @fileoverview Pure Astro component for staggered fade animation
+ */
+
 // Pure Astro component for Staggered Fade text animation
 export interface Props {
-  words: string[];
-  className?: string;
-  delay?: number;
+  words: string[]; // Array of words to animate
+  className?: string; // Optional additional CSS classes
+  delay?: number; // Delay between word animations in seconds
 }
 
+// Destructure props with sensible defaults
 const { words, className = "text-xl", delay = 0.2 } = Astro.props;
 ---
 
+<!-- 
+  Staggered Fade Animation Template
+  
+  This template creates a container with individual word spans,
+  each with a staggered animation delay for the fade-in effect.
+-->
 <div class={`staggered-fade ${className}`}>
   {words.map((word, index) => (
     <span 
@@ -20,19 +49,29 @@ const { words, className = "text-xl", delay = 0.2 } = Astro.props;
   ))}
 </div>
 
+<!-- 
+  Staggered Fade Animation Styles
+  
+  This style section includes:
+  - Base animation styles for individual words
+  - Smooth fade-in and slide-up effects
+  - Proper spacing between words
+-->
 <style>
+  /* Individual word animation styling */
   .staggered-fade-word {
     display: inline-block;
-    margin-right: 0.5rem;
-    opacity: 0;
-    transform: translateY(20px);
+    margin-right: 0.5rem; /* Space between words */
+    opacity: 0; /* Start invisible */
+    transform: translateY(20px); /* Start offset below */
     animation: staggeredFadeIn 0.6s ease-out forwards;
   }
   
+  /* Keyframe animation for word appearance */
   @keyframes staggeredFadeIn {
     to {
-      opacity: 1;
-      transform: translateY(0);
+      opacity: 1; /* Fade in */
+      transform: translateY(0); /* Slide to final position */
     }
   }
 </style>

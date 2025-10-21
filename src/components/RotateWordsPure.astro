@@ -1,60 +1,122 @@
 ---
+/**
+ * Rotate Words Animation Component
+ * 
+ * This component creates a rotating words animation where different words
+ * cycle through with a 3D flip effect. Perfect for displaying dynamic
+ * content like skills, interests, or changing phrases.
+ * 
+ * Features:
+ * - 3D flip transition between words
+ * - Configurable rotation duration
+ * - Smooth opacity transitions
+ * - Dark/light mode color support
+ * - Multiple instances support
+ * - Clean, accessible implementation
+ * 
+ * Props:
+ * - words: Array of words to rotate through
+ * - className: Additional CSS classes for styling
+ * - duration: Duration between word changes in seconds (default: 2s)
+ * 
+ * @fileoverview Pure Astro component for rotating words animation
+ */
+
 // Pure Astro component for Rotate Words text animation
 export interface Props {
-  words: string[];
-  className?: string;
-  duration?: number;
+  words: string[]; // Array of words to rotate through
+  className?: string; // Optional additional CSS classes
+  duration?: number; // Duration between word changes in seconds
 }
 
+// Destructure props with sensible defaults
 const { words, className = "text-2xl font-semibold", duration = 2 } = Astro.props;
 ---
 
+<!-- 
+  Rotate Words Animation Template
+  
+  This template creates a container with:
+  - A static prefix text
+  - A dynamic word that rotates through the provided array
+  - Data attributes for JavaScript configuration
+-->
 <div class={`rotate-words ${className}`} data-words={JSON.stringify(words)} data-duration={duration}>
   <span class="rotate-words-prefix">I love to </span>
   <span class="rotate-words-current">{words[0]}</span>
 </div>
 
+<!-- 
+  Rotate Words JavaScript
+  
+  This script handles:
+  - Word rotation with 3D flip effect
+  - Configurable timing
+  - Multiple instance support
+  - Smooth transitions
+-->
 <script>
+  // Initialize word rotation when DOM is ready
   document.addEventListener('DOMContentLoaded', () => {
+    // Find all rotate words containers
     const containers = document.querySelectorAll('.rotate-words');
     
+    // Process each container individually
     containers.forEach(container => {
+      // Extract configuration from data attributes
       const words = JSON.parse(container.getAttribute('data-words') || '[]');
       const duration = parseFloat(container.getAttribute('data-duration') || '2') * 1000;
       
+      // Get the current word element
       const currentElement = container.querySelector('.rotate-words-current');
-      let currentIndex = 0;
+      let currentIndex = 0; // Track current word position
       
+      /**
+       * Function to rotate to the next word with 3D flip effect
+       * Uses transform and opacity for smooth transitions
+       */
       const rotateWords = () => {
+        // Calculate next word index (cycle back to 0 when reaching end)
         currentIndex = (currentIndex + 1) % words.length;
         
-        // Add exit animation
+        // Add exit animation (flip out)
         currentElement.style.transform = 'rotateX(90deg)';
         currentElement.style.opacity = '0';
         
+        // After flip out completes, change word and flip in
         setTimeout(() => {
           currentElement.textContent = words[currentIndex];
           currentElement.style.transform = 'rotateX(0deg)';
           currentElement.style.opacity = '1';
-        }, 250);
+        }, 250); // Half of the transition duration
       };
       
-      // Start rotation after initial delay
+      // Start rotation after initial delay for better UX
       setTimeout(() => {
         setInterval(rotateWords, duration);
-      }, 2000);
+      }, 2000); // 2 second initial delay
     });
   });
 </script>
 
+<!-- 
+  Rotate Words Styles
+  
+  This style section includes:
+  - 3D flip transition effects
+  - Color styling for light/dark modes
+  - Smooth transitions
+-->
 <style>
+  /* Current word styling with 3D transitions */
   .rotate-words-current {
     display: inline-block;
-    color: rgb(37 99 235); /* blue-600 */
+    color: rgb(37 99 235); /* blue-600 for light mode */
     transition: transform 0.5s ease, opacity 0.5s ease;
   }
   
+  /* Dark mode color variant */
   .dark .rotate-words-current {
-    color: rgb(96 165 250); /* blue-400 */
+    color: rgb(96 165 250); /* blue-400 for dark mode */
   }
 </style>
