@@ -84,83 +84,73 @@ const sortedPosts = publishedPosts.sort(
     <!-- Content with relative positioning -->
     <div class='relative z-20 max-w-5xl mx-auto'>
     <!-- Hero Section -->
-    <section class='py-20 text-center relative overflow-hidden mb-20'>
+    <section class='py-16 text-center relative overflow-hidden mb-16'>
       <!-- Background gradient -->
-      <div class='absolute inset-0 bg-gradient-to-br from-purple-50/50 via-blue-50/30 to-pink-50/50 dark:from-purple-900/20 dark:via-blue-900/10 dark:to-pink-900/20 rounded-3xl'></div>
+      <div class='absolute inset-0 bg-gradient-to-br from-slate-50/80 via-blue-50/60 to-purple-50/80 dark:from-slate-900/90 dark:via-blue-900/80 dark:to-purple-900/90 rounded-3xl'></div>
       
       <!-- Floating Particles -->
       <div class='particles-container absolute inset-0 overflow-hidden pointer-events-none'>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
-        <div class='particle'></div>
+        <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
+        <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
+        <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
+        <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
+        <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
+        <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
+        <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
+        <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
+        <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
+        <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
       </div>
       
-      <div class='relative space-y-8'>
-        <!-- Main heading with Gradual Spacing animation -->
+      <div class='relative space-y-8 px-8'>
+        <!-- Main heading with The Verge style -->
         <div class='animate-fade-in-up'>
           <GradualSpacingPure 
-            text="Blog Posts" 
-            className="text-7xl font-bold tracking-tight mb-8 leading-tight bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+            text="The Blog" 
+            className="text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-tight verge-title"
           />
         </div>
 
-        <!-- Subtitle with Staggered Fade animation -->
+        <!-- Subtitle with sophisticated styling -->
         <div class='animate-fade-in-up' style='animation-delay: 300ms'>
           <StaggeredFadePure 
-            words={["Thoughts,", "tutorials,", "and", "insights", "from", "my", "journey", "as", "a", "software", "engineer"]}
-            className="text-3xl text-gray-600 dark:text-gray-400 font-light leading-relaxed max-w-4xl mx-auto"
-            delay={0.15}
+            words={["Insights,", "tutorials,", "and", "thoughts", "from", "the", "frontlines", "of", "software", "engineering"]}
+            className="text-xl text-slate-600 dark:text-slate-300 font-light leading-relaxed max-w-3xl mx-auto"
+            delay={0.12}
           />
         </div>
 
-        <!-- Stats section with Typing Effect -->
+        <!-- Elegant stats section -->
         <div class='animate-fade-in-up' style='animation-delay: 600ms'>
-          <div class='flex justify-center items-center space-x-8 mt-12'>
+          <div class='flex justify-center items-center space-x-12 mt-12'>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.5s'>
               <TypingEffectPure 
                 text={sortedPosts.length.toString()} 
-                className="text-3xl font-bold text-purple-600 dark:text-purple-400"
-                speed={200}
+                className="text-2xl font-semibold text-blue-600 dark:text-blue-400"
+                speed={150}
                 showCursor={false}
               />
-              <div class='text-sm text-gray-600 dark:text-gray-400'>Articles</div>
+              <div class='text-sm text-slate-500 dark:text-slate-400 uppercase tracking-wide'>Articles</div>
             </div>
-            <div class='w-px h-12 bg-gray-300 dark:bg-gray-600'></div>
+            <div class='w-px h-8 bg-slate-300 dark:bg-slate-600'></div>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.7s'>
               <TypingEffectPure 
                 text="100%" 
-                className="text-3xl font-bold text-blue-600 dark:text-blue-400"
-                speed={200}
+                className="text-2xl font-semibold text-purple-600 dark:text-purple-400"
+                speed={150}
                 showCursor={false}
               />
-              <div class='text-sm text-gray-600 dark:text-gray-400'>Practical</div>
+              <div class='text-sm text-slate-500 dark:text-slate-400 uppercase tracking-wide'>Practical</div>
             </div>
-            <div class='w-px h-12 bg-gray-300 dark:bg-gray-600'></div>
+            <div class='w-px h-8 bg-slate-300 dark:bg-slate-600'></div>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.9s'>
               <TypingEffectPure 
                 text="Free" 
-                className="text-3xl font-bold text-pink-600 dark:text-pink-400"
-                speed={200}
+                className="text-2xl font-semibold text-emerald-600 dark:text-emerald-400"
+                speed={150}
                 showCursor={false}
               />
-              <div class='text-sm text-gray-600 dark:text-gray-400'>Knowledge</div>
+              <div class='text-sm text-slate-500 dark:text-slate-400 uppercase tracking-wide'>Knowledge</div>
             </div>
           </div>
         </div>
@@ -169,65 +159,97 @@ const sortedPosts = publishedPosts.sort(
 
     <!-- Blog Posts Grid -->
     <section class='animate-fade-in-up' style='animation-delay: 800ms'>
-      <div class='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
-        {
-          sortedPosts.map((post, index) => (
+      <div class='space-y-8'>
+        <!-- Featured Article (First Post) -->
+        {sortedPosts.length > 0 && (
+          <article class='verge-card group relative overflow-hidden rounded-lg bg-white dark:bg-black border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-all duration-200 hover:shadow-lg hover:-translate-y-1'>
+            <a href={`/blog/${sortedPosts[0].slug}`} class='block'>
+              <div class='relative p-8 md:p-12'>
+                <!-- Featured Badge -->
+                <div class='absolute top-6 right-6'>
+                  <span class='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'>
+                    Featured
+                  </span>
+                </div>
+                
+                <!-- Article Meta -->
+                <div class='flex items-center space-x-4 mb-6'>
+                  <time class='text-sm font-medium text-slate-500 dark:text-slate-400'>
+                    {new Date(sortedPosts[0].frontmatter.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </time>
+                  <div class='w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full'></div>
+                  <span class='text-sm text-slate-500 dark:text-slate-400'>Featured Article</span>
+                </div>
+                
+                <!-- Article Title -->
+                <h2 class='text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight'>
+                  {sortedPosts[0].frontmatter.title}
+                </h2>
+                
+                <!-- Article Description -->
+                <p class='text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-6 line-clamp-3'>
+                  {sortedPosts[0].frontmatter.description}
+                </p>
+                
+                <!-- Read More -->
+                <div class='flex items-center text-blue-600 dark:text-blue-400 font-medium group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-300'>
+                  <span>Read Article</span>
+                  <svg class='ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7'></path>
+                  </svg>
+                </div>
+              </div>
+            </a>
+          </article>
+        )}
+        
+        <!-- Regular Articles Grid -->
+        <div class='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+          {sortedPosts.slice(1).map((post, index) => (
             <article 
-              class='blog-card group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2'
-              style={`animation-delay: ${2 + index * 0.1}s`}
+              class='verge-card group relative overflow-hidden rounded-lg bg-white dark:bg-black border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-all duration-200 hover:shadow-md hover:-translate-y-1'
+              style={`animation-delay: ${1 + index * 0.1}s`}
             >
               <a href={`/blog/${post.slug}`} class='block h-full'>
-                <!-- Gradient overlay -->
-                <div class='absolute inset-0 bg-gradient-to-br from-purple-500/5 via-blue-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500'></div>
-                
-                <!-- Floating elements -->
-                <div class='absolute top-4 right-4 w-3 h-3 bg-purple-500 rounded-full opacity-20 group-hover:opacity-60 transition-opacity duration-300'></div>
-                <div class='absolute bottom-4 left-4 w-2 h-2 bg-blue-500 rounded-full opacity-20 group-hover:opacity-60 transition-opacity duration-300'></div>
-                
-                <div class='relative p-8 h-full flex flex-col'>
-                  <!-- Date with animation -->
-                  <div class='flex items-center justify-between mb-6'>
-                    <time class='text-sm font-medium text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/30 px-3 py-1 rounded-full'>
+                <div class='relative p-6 h-full flex flex-col'>
+                  <!-- Article Meta -->
+                  <div class='flex items-center justify-between mb-4'>
+                    <time class='text-sm font-medium text-slate-500 dark:text-slate-400'>
                       {new Date(post.frontmatter.date).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric',
                       })}
                     </time>
-                    <div class='w-2 h-2 bg-purple-500 rounded-full opacity-60 animate-pulse'></div>
+                    <div class='w-2 h-2 bg-blue-500 rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-300'></div>
                   </div>
                   
-                  <!-- Title with hover effect -->
-                  <h2 class='text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 line-clamp-2 leading-tight'>
+                  <!-- Article Title -->
+                  <h3 class='text-xl font-bold text-slate-900 dark:text-slate-100 mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight line-clamp-2'>
                     {post.frontmatter.title}
-                  </h2>
+                  </h3>
                   
-                  <!-- Description -->
-                  <p class='text-gray-600 dark:text-gray-300 flex-grow line-clamp-3 mb-6 leading-relaxed'>
+                  <!-- Article Description -->
+                  <p class='text-slate-600 dark:text-slate-300 leading-relaxed mb-4 line-clamp-3 flex-grow'>
                     {post.frontmatter.description}
                   </p>
                   
-                  <!-- Read more with enhanced animation -->
-                  <div class='flex items-center text-purple-600 dark:text-purple-400 font-medium group-hover:translate-x-2 transition-transform duration-300 mt-auto'>
-                    <span class='group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors'>Read more</span>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      class='h-4 w-4 ml-2 group-hover:scale-110 transition-transform duration-300'
-                      viewBox='0 0 20 20'
-                      fill='currentColor'
-                    >
-                      <path
-                        fill-rule='evenodd'
-                        d='M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z'
-                        clip-rule='evenodd'
-                      />
+                  <!-- Read More -->
+                  <div class='flex items-center text-blue-600 dark:text-blue-400 font-medium text-sm group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-300 mt-auto'>
+                    <span>Read More</span>
+                    <svg class='ml-1 w-3 h-3 transform group-hover:translate-x-1 transition-transform duration-300' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                      <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7'></path>
                     </svg>
                   </div>
                 </div>
               </a>
             </article>
-          ))
-        }
+          ))}
+        </div>
       </div>
     </section>
 
@@ -643,6 +665,51 @@ const sortedPosts = publishedPosts.sort(
     /* ===== SMOOTH SCROLLING ===== */
     html {
       scroll-behavior: smooth;
+    }
+
+    /* ===== THE VERGE INSPIRED CARDS ===== */
+    .verge-card {
+      background: #ffffff;
+      border: 1px solid #e5e5e5;
+      transition: all 0.2s ease;
+    }
+
+    .dark .verge-card {
+      background: #000000;
+      border: 1px solid #333333;
+    }
+
+    .verge-card:hover {
+      border-color: #000000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark .verge-card:hover {
+      border-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    }
+
+    /* ===== LINE CLAMP UTILITIES ===== */
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ===== PERFORMANCE OPTIMIZATIONS ===== */
+    .animate-fade-in-up,
+    .animate-bounce-in,
+    .featured-article,
+    .article-card {
+      will-change: transform, opacity;
     }
   </style>
 </Layout>

@@ -4,14 +4,12 @@ import partytown from '@astrojs/partytown';
 import remarkMermaidAstro from './src/plugins/remark-mermaid-astro.js';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
-import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://topkoong.github.io',
   integrations: [
     tailwind(),
-    react(),
     sitemap(),
     partytown({
       config: {

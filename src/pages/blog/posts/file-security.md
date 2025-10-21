@@ -2,7 +2,7 @@
 layout: ../../../layouts/BlogPost.astro
 title: 'การรับส่งไฟล์แบบปลอดภัยด้วย PGP Encryption 🔒'
 description: 'เจาะลึกระบบเข้ารหัสไฟล์ด้วย PGP พร้อมตัวอย่างการใช้งานจริงและการผสานรวมกับ Microservice Architecture'
-date: '2024-12-30'
+date: '2024-10-31'
 published: true
 ---
 
