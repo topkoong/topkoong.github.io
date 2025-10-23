@@ -442,6 +442,7 @@ import Layout from '../layouts/Layout.astro';
 - **SEO_GUIDE.md**: Comprehensive SEO implementation and optimization guide
 - **PERFORMANCE_GUIDE.md**: Performance optimization and Core Web Vitals guide
 - **SEMANTIC_HTML5_GUIDE.md**: Semantic HTML5 implementation and accessibility guide
+- **NAMING_CONVENTIONS.md**: Production-grade naming conventions and best practices
 
 ### Code Documentation
 
@@ -456,6 +457,28 @@ import Layout from '../layouts/Layout.astro';
 - **API Documentation**: All public interfaces documented
 - **Examples**: Code examples for complex functionality
 - **Maintenance**: Documentation updated with code changes
+
+## 📋 Naming Conventions
+
+### Production-Grade Standards
+
+The project follows strict naming conventions for maintainability and professionalism:
+
+- **Components**: PascalCase (e.g., `BlogCard.astro`, `ThemeToggle.astro`)
+- **Pages**: lowercase (e.g., `index.astro`, `blog/index.astro`)
+- **Blog Posts**: kebab-case with date prefix (e.g., `2023-year-in-review.md`)
+- **Variables**: camelCase (e.g., `sortedPosts`, `publishedTime`)
+- **CSS Classes**: kebab-case with BEM methodology
+- **Git Branches**: lowercase with prefixes (e.g., `feature/semantic-html5`)
+
+### Recent Improvements
+
+- ✅ **Removed "Pure" suffix** from animation components
+- ✅ **Fixed double extensions** in blog post files
+- ✅ **Standardized component naming** across the codebase
+- ✅ **Implemented consistent patterns** for all file types
+
+See [NAMING_CONVENTIONS.md](./NAMING_CONVENTIONS.md) for comprehensive guidelines.
 
 ## 🤝 Contributing
 

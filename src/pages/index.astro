@@ -1,10 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import BlogCard from '../components/BlogCard.astro';
-import GradualSpacingPure from '../components/GradualSpacingPure.astro';
-import TypingEffectPure from '../components/TypingEffectPure.astro';
-import StaggeredFadePure from '../components/StaggeredFadePure.astro';
-import RotateWordsPure from '../components/RotateWordsPure.astro';
+import GradualSpacing from '../components/GradualSpacing.astro';
+import TypingEffect from '../components/TypingEffect.astro';
+import StaggeredFade from '../components/StaggeredFade.astro';
+import RotateWords from '../components/RotateWords.astro';
 
 // Define types for our markdown content
 interface Frontmatter {
@@ -115,12 +115,12 @@ const sortedPosts = publishedPosts
         <header class='relative space-y-12'>
           <!-- Main heading with standout typography -->
           <section class='text-center'>
-            <GradualSpacingPure
+            <GradualSpacing
               text="Hey, I'm Top."
               className='text-7xl md:text-8xl font-black tracking-tight mb-8 leading-tight standout-title'
             />
             <div class='mt-4'>
-              <TypingEffectPure
+              <TypingEffect
                 text='Theerut'
                 className='text-3xl text-purple-600 dark:text-purple-400 font-medium tracking-wide'
                 speed={120}
@@ -131,7 +131,7 @@ const sortedPosts = publishedPosts
 
           <!-- Subtitle with clean design -->
           <section class='text-center'>
-            <StaggeredFadePure
+            <StaggeredFade
               words={[
                 'Software',
                 'Engineer.',
@@ -169,7 +169,7 @@ const sortedPosts = publishedPosts
               </p>
 
               <div class='my-8'>
-                <RotateWordsPure
+                <RotateWords
                   words={[
                     'automate',
                     'innovate',
