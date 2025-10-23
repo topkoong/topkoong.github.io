@@ -3,14 +3,14 @@
   <!-- Homepage - highest priority -->
   <url>
     <loc>https://topkoong.github.io/</loc>
-    <lastmod>2025-10-23T05:37:36.160Z</lastmod>
+    <lastmod>2025-10-23T10:14:38.089Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <!-- Blog index page - high priority -->
   <url>
     <loc>https://topkoong.github.io//blog</loc>
-    <lastmod>2025-10-23T05:37:36.160Z</lastmod>
+    <lastmod>2025-10-23T10:14:38.089Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
