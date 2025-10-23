@@ -115,7 +115,7 @@ const sortedPosts = publishedPosts.sort(
         <p class='animate-fade-in-up' style='animation-delay: 300ms'>
           <StaggeredFade 
             words={["Insights,", "tutorials,", "and", "thoughts", "from", "the", "frontlines", "of", "software", "engineering"]}
-            className="text-xl text-slate-600 dark:text-slate-300 font-light leading-relaxed max-w-3xl mx-auto"
+            className="text-xl text-gray-600 dark:text-gray-300 font-light leading-relaxed max-w-3xl mx-auto"
             delay={0.12}
           />
         </p>
@@ -130,9 +130,9 @@ const sortedPosts = publishedPosts.sort(
                 speed={150}
                 showCursor={false}
               />
-              <div class='text-sm text-slate-500 dark:text-slate-400 uppercase tracking-wide'>Articles</div>
+              <div class='text-sm text-gray-600 dark:text-gray-300 uppercase tracking-wide'>Articles</div>
             </div>
-            <div class='w-px h-8 bg-slate-300 dark:bg-slate-600'></div>
+            <div class='w-px h-8 bg-gray-300 dark:bg-gray-600'></div>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.7s'>
               <TypingEffect 
                 text="100%" 
@@ -140,9 +140,9 @@ const sortedPosts = publishedPosts.sort(
                 speed={150}
                 showCursor={false}
               />
-              <div class='text-sm text-slate-500 dark:text-slate-400 uppercase tracking-wide'>Practical</div>
+              <div class='text-sm text-gray-600 dark:text-gray-300 uppercase tracking-wide'>Practical</div>
             </div>
-            <div class='w-px h-8 bg-slate-300 dark:bg-slate-600'></div>
+            <div class='w-px h-8 bg-gray-300 dark:bg-gray-600'></div>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.9s'>
               <TypingEffect 
                 text="Free" 
@@ -150,7 +150,7 @@ const sortedPosts = publishedPosts.sort(
                 speed={150}
                 showCursor={false}
               />
-              <div class='text-sm text-slate-500 dark:text-slate-400 uppercase tracking-wide'>Knowledge</div>
+              <div class='text-sm text-gray-600 dark:text-gray-300 uppercase tracking-wide'>Knowledge</div>
             </div>
           </div>
         </div>
@@ -162,7 +162,7 @@ const sortedPosts = publishedPosts.sort(
       <div class='space-y-6'>
         <!-- Featured Article (First Post) -->
         {sortedPosts.length > 0 && (
-          <article class='verge-card group relative overflow-hidden rounded-lg bg-white dark:bg-black border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-all duration-200 hover:shadow-lg hover:-translate-y-1'>
+          <article class='verge-card group relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-all duration-200 hover:shadow-lg hover:-translate-y-1'>
             <a href={`/blog/${sortedPosts[0].slug}`} class='block'>
               <div class='relative p-6 md:p-8'>
                 <!-- Featured Badge -->
@@ -174,15 +174,15 @@ const sortedPosts = publishedPosts.sort(
                 
                 <!-- Article Meta -->
                 <div class='flex items-center space-x-4 mb-4'>
-                  <time class='text-sm font-medium text-slate-500 dark:text-slate-400'>
+                  <time class='text-sm font-medium text-gray-600 dark:text-gray-300'>
                     {new Date(sortedPosts[0].frontmatter.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
                     })}
                   </time>
-                  <div class='w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full'></div>
-                  <span class='text-sm text-slate-500 dark:text-slate-400'>Featured Article</span>
+                  <div class='w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full'></div>
+                  <span class='text-sm text-gray-600 dark:text-gray-300'>Featured Article</span>
                 </div>
                 
                 <!-- Article Title -->
@@ -211,14 +211,14 @@ const sortedPosts = publishedPosts.sort(
         <div class='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
           {sortedPosts.slice(1).map((post, index) => (
             <article 
-              class='verge-card group relative overflow-hidden rounded-lg bg-white dark:bg-black border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-all duration-200 hover:shadow-md hover:-translate-y-1'
+              class='verge-card group relative overflow-hidden rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-all duration-200 hover:shadow-md hover:-translate-y-1'
               style={`animation-delay: ${1 + index * 0.1}s`}
             >
               <a href={`/blog/${post.slug}`} class='block h-full'>
                 <div class='relative p-5 h-full flex flex-col'>
                   <!-- Article Meta -->
                   <div class='flex items-center justify-between mb-4'>
-                    <time class='text-sm font-medium text-slate-500 dark:text-slate-400'>
+                    <time class='text-sm font-medium text-gray-600 dark:text-gray-300'>
                       {new Date(post.frontmatter.date).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
@@ -675,7 +675,7 @@ const sortedPosts = publishedPosts.sort(
     }
 
     .dark .verge-card {
-      background: #000000;
+      background: #111111;
       border: 1px solid #333333;
     }
 
