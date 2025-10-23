@@ -1,14 +1,14 @@
 ---
 /**
  * Blog Card Component
- * 
+ *
  * This component renders a preview card for blog posts with:
  * - Post title and description
  * - Publication date
  * - Hover animations and effects
  * - Link to full blog post
  * - Responsive design with dark mode support
- * 
+ *
  * Features:
  * - Gradient overlay on hover
  * - Smooth transitions and animations
@@ -16,7 +16,7 @@
  * - Accessible link structure
  * - Dark/light mode theming
  * - Purple accent color scheme
- * 
+ *
  * @fileoverview Blog post preview card component
  */
 
@@ -25,10 +25,10 @@
  * Provides TypeScript support and documentation for all required props
  */
 interface Props {
-  title: string;        // Blog post title (required)
-  description: string;   // Brief description/summary (required)
-  date: string;         // Publication date (required)
-  slug: string;         // URL slug for the blog post (required)
+  title: string; // Blog post title (required)
+  description: string; // Brief description/summary (required)
+  date: string; // Publication date (required)
+  slug: string; // URL slug for the blog post (required)
 }
 
 /**
@@ -65,7 +65,10 @@ const { title, description, date, slug } = Astro.props;
       <div class='relative p-8 h-full flex flex-col'>
         <!-- Date section with decorative dot -->
         <header class='flex items-center justify-between mb-4'>
-          <time class='text-sm font-medium text-purple-600 dark:text-purple-400' datetime={date}>
+          <time
+            class='text-sm font-medium text-purple-600 dark:text-purple-400'
+            datetime={date}
+          >
             {date}
           </time>
           <!-- Decorative purple dot -->
