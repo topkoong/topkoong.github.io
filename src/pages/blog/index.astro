@@ -82,9 +82,9 @@ const sortedPosts = publishedPosts.sort(
     </div>
 
     <!-- Content with relative positioning -->
-    <main class='relative z-20 max-w-5xl mx-auto'>
+    <main class='relative z-20 max-w-5xl mx-auto px-4'>
     <!-- Hero Section -->
-    <section class='py-16 text-center relative overflow-hidden mb-16'>
+    <header class='py-12 text-center relative overflow-hidden mb-12'>
       <!-- Background gradient -->
       <div class='absolute inset-0 bg-gradient-to-br from-slate-50/80 via-blue-50/60 to-purple-50/80 dark:from-slate-900/90 dark:via-blue-900/80 dark:to-purple-900/90 rounded-3xl'></div>
       
@@ -102,27 +102,27 @@ const sortedPosts = publishedPosts.sort(
         <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
       </div>
       
-      <header class='relative space-y-8 px-8'>
+      <div class='relative space-y-6 px-6'>
         <!-- Main heading with The Verge style -->
-        <section class='animate-fade-in-up'>
+        <h1 class='animate-fade-in-up'>
           <GradualSpacing 
             text="The Blog" 
             className="text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-tight verge-title"
           />
-        </section>
+        </h1>
 
         <!-- Subtitle with sophisticated styling -->
-        <section class='animate-fade-in-up' style='animation-delay: 300ms'>
+        <p class='animate-fade-in-up' style='animation-delay: 300ms'>
           <StaggeredFade 
             words={["Insights,", "tutorials,", "and", "thoughts", "from", "the", "frontlines", "of", "software", "engineering"]}
             className="text-xl text-slate-600 dark:text-slate-300 font-light leading-relaxed max-w-3xl mx-auto"
             delay={0.12}
           />
-        </section>
+        </p>
 
         <!-- Elegant stats section -->
-        <section class='animate-fade-in-up' style='animation-delay: 600ms'>
-          <div class='flex justify-center items-center space-x-12 mt-12'>
+        <div class='animate-fade-in-up' style='animation-delay: 600ms'>
+          <div class='flex justify-center items-center space-x-8 mt-8'>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.5s'>
               <TypingEffect 
                 text={sortedPosts.length.toString()} 
@@ -155,16 +155,16 @@ const sortedPosts = publishedPosts.sort(
           </div>
         </div>
       </div>
-    </section>
+    </header>
 
     <!-- Blog Posts Grid -->
     <section class='animate-fade-in-up' style='animation-delay: 800ms'>
-      <div class='space-y-8'>
+      <div class='space-y-6'>
         <!-- Featured Article (First Post) -->
         {sortedPosts.length > 0 && (
           <article class='verge-card group relative overflow-hidden rounded-lg bg-white dark:bg-black border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-all duration-200 hover:shadow-lg hover:-translate-y-1'>
             <a href={`/blog/${sortedPosts[0].slug}`} class='block'>
-              <div class='relative p-8 md:p-12'>
+              <div class='relative p-6 md:p-8'>
                 <!-- Featured Badge -->
                 <div class='absolute top-6 right-6'>
                   <span class='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'>
@@ -173,7 +173,7 @@ const sortedPosts = publishedPosts.sort(
                 </div>
                 
                 <!-- Article Meta -->
-                <div class='flex items-center space-x-4 mb-6'>
+                <div class='flex items-center space-x-4 mb-4'>
                   <time class='text-sm font-medium text-slate-500 dark:text-slate-400'>
                     {new Date(sortedPosts[0].frontmatter.date).toLocaleDateString('en-US', {
                       year: 'numeric',
@@ -186,12 +186,12 @@ const sortedPosts = publishedPosts.sort(
                 </div>
                 
                 <!-- Article Title -->
-                <h2 class='text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight'>
+                <h2 class='text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight'>
                   {sortedPosts[0].frontmatter.title}
                 </h2>
                 
                 <!-- Article Description -->
-                <p class='text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-6 line-clamp-3'>
+                <p class='text-lg text-gray-700 dark:text-gray-200 leading-relaxed mb-4 line-clamp-3'>
                   {sortedPosts[0].frontmatter.description}
                 </p>
                 
@@ -208,14 +208,14 @@ const sortedPosts = publishedPosts.sort(
         )}
         
         <!-- Regular Articles Grid -->
-        <div class='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+        <div class='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
           {sortedPosts.slice(1).map((post, index) => (
             <article 
               class='verge-card group relative overflow-hidden rounded-lg bg-white dark:bg-black border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-all duration-200 hover:shadow-md hover:-translate-y-1'
               style={`animation-delay: ${1 + index * 0.1}s`}
             >
               <a href={`/blog/${post.slug}`} class='block h-full'>
-                <div class='relative p-6 h-full flex flex-col'>
+                <div class='relative p-5 h-full flex flex-col'>
                   <!-- Article Meta -->
                   <div class='flex items-center justify-between mb-4'>
                     <time class='text-sm font-medium text-slate-500 dark:text-slate-400'>
@@ -229,12 +229,12 @@ const sortedPosts = publishedPosts.sort(
                   </div>
                   
                   <!-- Article Title -->
-                  <h3 class='text-xl font-bold text-slate-900 dark:text-slate-100 mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight line-clamp-2'>
+                  <h3 class='text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight line-clamp-2'>
                     {post.frontmatter.title}
                   </h3>
                   
                   <!-- Article Description -->
-                  <p class='text-slate-600 dark:text-slate-300 leading-relaxed mb-4 line-clamp-3 flex-grow'>
+                  <p class='text-gray-700 dark:text-gray-200 leading-relaxed mb-4 line-clamp-3 flex-grow'>
                     {post.frontmatter.description}
                   </p>
                   
@@ -255,10 +255,10 @@ const sortedPosts = publishedPosts.sort(
 
     <!-- Empty state -->
     {sortedPosts.length === 0 && (
-      <div class='text-center py-20 animate-fade-in-up' style='animation-delay: 1s'>
+      <div class='text-center py-16 animate-fade-in-up' style='animation-delay: 1s'>
         <div class='text-8xl mb-6 animate-bounce-in' style='animation-delay: 1.5s'>📝</div>
-        <h3 class='text-3xl font-bold text-gray-900 dark:text-white mb-4 animate-reveal-text' style='animation-delay: 1.7s'>No posts yet</h3>
-        <p class='text-xl text-gray-600 dark:text-gray-400 animate-reveal-text' style='animation-delay: 1.9s'>Check back soon for new content!</p>
+        <h2 class='text-3xl font-bold text-gray-900 dark:text-white mb-4 animate-reveal-text' style='animation-delay: 1.7s'>No posts yet</h2>
+        <p class='text-xl text-gray-700 dark:text-gray-200 animate-reveal-text' style='animation-delay: 1.9s'>Check back soon for new content!</p>
       </div>
     )}
     </main>
@@ -270,13 +270,13 @@ const sortedPosts = publishedPosts.sort(
       const articles = document.querySelectorAll('.blog-card');
       
       articles.forEach((article, index) => {
-        article.style.opacity = '0';
-        article.style.transform = 'translateY(30px) scale(0.95)';
+        (article as HTMLElement).style.opacity = '0';
+        (article as HTMLElement).style.transform = 'translateY(30px) scale(0.95)';
         
         setTimeout(() => {
-          article.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-          article.style.opacity = '1';
-          article.style.transform = 'translateY(0) scale(1)';
+          (article as HTMLElement).style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+          (article as HTMLElement).style.opacity = '1';
+          (article as HTMLElement).style.transform = 'translateY(0) scale(1)';
         }, index * 100 + 2000);
       });
 
