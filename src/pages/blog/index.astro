@@ -115,7 +115,7 @@ const sortedPosts = publishedPosts.sort(
         <p class='animate-fade-in-up' style='animation-delay: 300ms'>
           <StaggeredFade 
             words={["Insights,", "tutorials,", "and", "thoughts", "from", "the", "frontlines", "of", "software", "engineering"]}
-            className="text-xl text-gray-600 dark:text-gray-300 font-light leading-relaxed max-w-3xl mx-auto"
+            className="text-xl text-gray-700 dark:text-gray-200 font-light leading-relaxed max-w-3xl mx-auto"
             delay={0.12}
           />
         </p>
@@ -130,7 +130,7 @@ const sortedPosts = publishedPosts.sort(
                 speed={150}
                 showCursor={false}
               />
-              <div class='text-sm text-gray-600 dark:text-gray-300 uppercase tracking-wide'>Articles</div>
+              <div class='text-sm text-gray-700 dark:text-gray-200 uppercase tracking-wide'>Articles</div>
             </div>
             <div class='w-px h-8 bg-gray-300 dark:bg-gray-600'></div>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.7s'>
@@ -140,7 +140,7 @@ const sortedPosts = publishedPosts.sort(
                 speed={150}
                 showCursor={false}
               />
-              <div class='text-sm text-gray-600 dark:text-gray-300 uppercase tracking-wide'>Practical</div>
+              <div class='text-sm text-gray-700 dark:text-gray-200 uppercase tracking-wide'>Practical</div>
             </div>
             <div class='w-px h-8 bg-gray-300 dark:bg-gray-600'></div>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.9s'>
@@ -150,7 +150,7 @@ const sortedPosts = publishedPosts.sort(
                 speed={150}
                 showCursor={false}
               />
-              <div class='text-sm text-gray-600 dark:text-gray-300 uppercase tracking-wide'>Knowledge</div>
+              <div class='text-sm text-gray-700 dark:text-gray-200 uppercase tracking-wide'>Knowledge</div>
             </div>
           </div>
         </div>
@@ -174,7 +174,7 @@ const sortedPosts = publishedPosts.sort(
                 
                 <!-- Article Meta -->
                 <div class='flex items-center space-x-4 mb-4'>
-                  <time class='text-sm font-medium text-gray-600 dark:text-gray-300'>
+                  <time class='text-sm font-medium text-gray-700 dark:text-gray-200'>
                     {new Date(sortedPosts[0].frontmatter.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -182,11 +182,11 @@ const sortedPosts = publishedPosts.sort(
                     })}
                   </time>
                   <div class='w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full'></div>
-                  <span class='text-sm text-gray-600 dark:text-gray-300'>Featured Article</span>
+                  <span class='text-sm text-gray-700 dark:text-gray-200'>Featured Article</span>
                 </div>
                 
                 <!-- Article Title -->
-                <h2 class='text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight'>
+                <h2 class='text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight'>
                   {sortedPosts[0].frontmatter.title}
                 </h2>
                 
@@ -218,7 +218,7 @@ const sortedPosts = publishedPosts.sort(
                 <div class='relative p-5 h-full flex flex-col'>
                   <!-- Article Meta -->
                   <div class='flex items-center justify-between mb-4'>
-                    <time class='text-sm font-medium text-gray-600 dark:text-gray-300'>
+                    <time class='text-sm font-medium text-gray-700 dark:text-gray-200'>
                       {new Date(post.frontmatter.date).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
@@ -229,7 +229,7 @@ const sortedPosts = publishedPosts.sort(
                   </div>
                   
                   <!-- Article Title -->
-                  <h3 class='text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight line-clamp-2'>
+                  <h3 class='text-xl font-bold text-gray-800 dark:text-gray-100 mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 leading-tight line-clamp-2'>
                     {post.frontmatter.title}
                   </h3>
                   
@@ -257,7 +257,7 @@ const sortedPosts = publishedPosts.sort(
     {sortedPosts.length === 0 && (
       <div class='text-center py-16 animate-fade-in-up' style='animation-delay: 1s'>
         <div class='text-8xl mb-6 animate-bounce-in' style='animation-delay: 1.5s'>📝</div>
-        <h2 class='text-3xl font-bold text-gray-900 dark:text-white mb-4 animate-reveal-text' style='animation-delay: 1.7s'>No posts yet</h2>
+        <h2 class='text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 animate-reveal-text' style='animation-delay: 1.7s'>No posts yet</h2>
         <p class='text-xl text-gray-700 dark:text-gray-200 animate-reveal-text' style='animation-delay: 1.9s'>Check back soon for new content!</p>
       </div>
     )}
@@ -669,23 +669,14 @@ const sortedPosts = publishedPosts.sort(
 
     /* ===== THE VERGE INSPIRED CARDS ===== */
     .verge-card {
-      background: #ffffff;
-      border: 1px solid #e5e5e5;
       transition: all 0.2s ease;
     }
 
-    .dark .verge-card {
-      background: #111111;
-      border: 1px solid #333333;
-    }
-
     .verge-card:hover {
-      border-color: #000000;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .dark .verge-card:hover {
-      border-color: #ffffff;
       box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
     }
 
