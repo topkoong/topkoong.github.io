@@ -45,7 +45,7 @@ const navItems = [
     <!-- Flex container for navigation items and theme toggle -->
     <div class='flex justify-between items-center h-16'>
       {/* Navigation links section */}
-      <div class='flex space-x-4 sm:space-x-8'>
+      <section class='flex space-x-4 sm:space-x-8' aria-label='Main navigation'>
         {
           navItems.map((item) => (
             <a
@@ -56,10 +56,12 @@ const navItems = [
             </a>
           ))
         }
-      </div>
+      </section>
 
-      {/* Theme toggle button */}
-      <ThemeToggle />
+      {/* Theme toggle section */}
+      <section aria-label='Theme controls'>
+        <ThemeToggle />
+      </section>
     </div>
   </div>
 </nav>

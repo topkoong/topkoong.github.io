@@ -298,6 +298,55 @@ The site is optimized for performance with:
 - **Bundle Optimization**: Separate chunks for better caching
 - **Animation Performance**: GPU-accelerated CSS animations
 
+## ♿ Accessibility & Semantic HTML5
+
+### Semantic Structure
+
+The site uses semantic HTML5 elements for better accessibility and SEO:
+
+- **Navigation**: `<nav>` elements with proper ARIA labels
+- **Content Structure**: `<main>`, `<section>`, `<article>` elements
+- **Headers & Footers**: `<header>` and `<footer>` elements
+- **Time Elements**: `<time>` with datetime attributes
+- **Contact Info**: `<address>` elements for contact information
+- **ARIA Labels**: Descriptive labels for screen readers
+
+### Accessibility Features
+
+- **Screen Reader Support**: Proper semantic structure and ARIA labels
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Color Contrast**: WCAG AA compliant color schemes
+- **Focus Management**: Visible focus indicators
+- **Alternative Text**: Proper alt text for images
+- **Heading Hierarchy**: Logical H1 → H2 → H3 structure
+
+### Implementation
+
+All components follow semantic HTML5 best practices:
+
+```astro
+<!-- Semantic navigation -->
+<nav>
+  <section aria-label='Main navigation'>
+    <!-- Navigation links -->
+  </section>
+</nav>
+
+<!-- Semantic article structure -->
+<article>
+  <header>
+    <h1>Article Title</h1>
+    <section aria-label='Article metadata'>
+      <time datetime='2024-01-01'>January 1, 2024</time>
+      <address>Theeruttop (Toppy)</address>
+    </section>
+  </header>
+  <section>
+    <!-- Article content -->
+  </section>
+</article>
+```
+
 ## 🔍 SEO Optimization
 
 ### Built-in SEO Features
@@ -392,6 +441,7 @@ import Layout from '../layouts/Layout.astro';
 - **BLOG_GUIDE.md**: Blog post structure and content guidelines
 - **SEO_GUIDE.md**: Comprehensive SEO implementation and optimization guide
 - **PERFORMANCE_GUIDE.md**: Performance optimization and Core Web Vitals guide
+- **SEMANTIC_HTML5_GUIDE.md**: Semantic HTML5 implementation and accessibility guide
 
 ### Code Documentation
 

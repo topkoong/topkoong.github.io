@@ -47,62 +47,65 @@ const { title, description, date, slug } = Astro.props;
   - Gradient overlay effects
   - Responsive content layout
   - Dark mode support
+  - Semantic HTML5 structure
 -->
-<a href={`/blog/${slug}`} class='block group h-full'>
+<article class='block group h-full'>
   <!-- Main card container with hover effects -->
-  <div
-    class='relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-1 h-full'
-  >
-    <!-- Subtle gradient overlay that appears on hover -->
+  <a href={`/blog/${slug}`} class='block h-full'>
     <div
-      class='absolute inset-0 bg-gradient-to-br from-purple-500/5 via-blue-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'
+      class='relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-1 h-full'
     >
-    </div>
-
-    <!-- Card content container with flexbox layout -->
-    <div class='relative p-8 h-full flex flex-col'>
-      <!-- Date section with decorative dot -->
-      <div class='flex items-center justify-between mb-4'>
-        <time class='text-sm font-medium text-purple-600 dark:text-purple-400'>
-          {date}
-        </time>
-        <!-- Decorative purple dot -->
-        <div class='w-2 h-2 bg-purple-500 rounded-full opacity-60'></div>
-      </div>
-
-      <!-- Blog post title with hover color change -->
-      <h2
-        class='text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 line-clamp-2 flex-grow'
-      >
-        {title}
-      </h2>
-
-      <!-- Blog post description with text truncation -->
-      <p class='text-gray-600 dark:text-gray-300 line-clamp-3 mb-6'>
-        {description}
-      </p>
-
-      <!-- Call-to-action with arrow icon and slide animation -->
+      <!-- Subtle gradient overlay that appears on hover -->
       <div
-        class='flex items-center text-purple-600 dark:text-purple-400 font-medium group-hover:translate-x-1 transition-transform duration-300 mt-auto'
+        class='absolute inset-0 bg-gradient-to-br from-purple-500/5 via-blue-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300'
       >
-        <span>Read more</span>
-        <!-- Right arrow icon -->
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          class='h-4 w-4 ml-2'
-          viewBox='0 0 20 20'
-          fill='currentColor'
+      </div>
+
+      <!-- Card content container with flexbox layout -->
+      <div class='relative p-8 h-full flex flex-col'>
+        <!-- Date section with decorative dot -->
+        <header class='flex items-center justify-between mb-4'>
+          <time class='text-sm font-medium text-purple-600 dark:text-purple-400' datetime={date}>
+            {date}
+          </time>
+          <!-- Decorative purple dot -->
+          <div class='w-2 h-2 bg-purple-500 rounded-full opacity-60'></div>
+        </header>
+
+        <!-- Blog post title with hover color change -->
+        <h2
+          class='text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300 line-clamp-2 flex-grow'
         >
-          <path
-            fill-rule='evenodd'
-            d='M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z'
-            clip-rule='evenodd'></path>
-        </svg>
+          {title}
+        </h2>
+
+        <!-- Blog post description with text truncation -->
+        <section class='text-gray-600 dark:text-gray-300 line-clamp-3 mb-6'>
+          <p>{description}</p>
+        </section>
+
+        <!-- Call-to-action with arrow icon and slide animation -->
+        <footer
+          class='flex items-center text-purple-600 dark:text-purple-400 font-medium group-hover:translate-x-1 transition-transform duration-300 mt-auto'
+        >
+          <span>Read more</span>
+          <!-- Right arrow icon -->
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            class='h-4 w-4 ml-2'
+            viewBox='0 0 20 20'
+            fill='currentColor'
+          >
+            <path
+              fill-rule='evenodd'
+              d='M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z'
+              clip-rule='evenodd'></path>
+          </svg>
+        </footer>
       </div>
     </div>
-  </div>
-</a>
+  </a>
+</article>
 
 <!-- 
   Component Styles

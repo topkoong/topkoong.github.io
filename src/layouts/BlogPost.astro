@@ -70,8 +70,9 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
         </h1>
         
         <!-- Article metadata: date and author -->
-        <div
+        <section
           class='flex items-center space-x-4 text-gray-600 dark:text-gray-400'
+          aria-label='Article metadata'
         >
           <!-- Publication date with proper datetime attribute -->
           <time class='text-lg' datetime={publishedTime}>
@@ -85,22 +86,22 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
           </time>
           
           <!-- Visual separator dot -->
-          <div class='w-2 h-2 bg-purple-500 rounded-full'></div>
+          <div class='w-2 h-2 bg-purple-500 rounded-full' aria-hidden='true'></div>
           
           <!-- Author name -->
-          <span class='text-lg'>Theeruttop (Toppy)</span>
-        </div>
+          <address class='text-lg not-italic'>Theeruttop (Toppy)</address>
+        </section>
         
         <!-- Article tags (if present) -->
         {
           frontmatter.tags && (
-            <div class='mt-6 flex flex-wrap gap-2'>
+            <nav class='mt-6 flex flex-wrap gap-2' aria-label='Article tags'>
               {frontmatter.tags.map((tag: string) => (
                 <span class='px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium'>
                   {tag}
                 </span>
               ))}
-            </div>
+            </nav>
           )
         }
       </div>
@@ -111,7 +112,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
       This applies beautiful typography styles to the rendered markdown content
       with full dark/light mode support
     -->
-    <div
+    <section
       class='prose prose-gray dark:prose-invert max-w-none
       prose-headings:text-gray-900 dark:prose-headings:text-white
       prose-p:text-gray-700 dark:prose-p:text-gray-300
@@ -129,7 +130,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
     >
       <!-- Rendered markdown content goes here -->
       <slot />
-    </div>
+    </section>
   </article>
 </Layout>
 
@@ -285,7 +286,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
                       htmlEl.style.color = '#ffffff';
                       htmlEl.style.fontWeight = '600';
                       htmlEl.style.textShadow = 'none';
-                      htmlEl.style.webkitFontSmoothing = 'antialiased';
+                      (htmlEl.style as any).webkitFontSmoothing = 'antialiased';
                     });
 
                   // Fix foreignObject width to prevent text cutoff
@@ -381,7 +382,7 @@ const allKeywords = `software engineer, full-stack development, automation, tuto
                           htmlEl.style.color = '#ffffff';
                           htmlEl.style.fontWeight = '600';
                           htmlEl.style.textShadow = 'none';
-                          htmlEl.style.webkitFontSmoothing = 'antialiased';
+                          (htmlEl.style as any).webkitFontSmoothing = 'antialiased';
                         });
                     }
                   }, 100);

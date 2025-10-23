@@ -41,7 +41,7 @@ const currentYear = new Date().getFullYear();
     <!-- Three-column responsive grid -->
     <div class='grid grid-cols-1 md:grid-cols-3 gap-8'>
       <!-- About Section -->
-      <div>
+      <section>
         <h3 class='text-lg font-semibold mb-4'>About</h3>
         <p class='text-gray-900 dark:text-white'>
           Just a laid-back software engineer who loves automating boring stuff,
@@ -49,29 +49,31 @@ const currentYear = new Date().getFullYear();
           Living the Windows/Linux/Mac life because one OS is never enough. Made
           by Toppy with ☕️ and occasional bursts of energy.
         </p>
-      </div>
+      </section>
 
       <!-- Links Section -->
-      <div>
+      <section>
         <h3 class='text-lg font-semibold mb-4'>Links</h3>
-        <ul class='space-y-2'>
-          <!-- Blog link -->
-          <li>
-            <a
-              href='/blog'
-              class='text-gray-900 dark:text-white dark:hover:text-white transition-colors'
-            >
-              Blog
-            </a>
-          </li>
-        </ul>
-      </div>
+        <nav aria-label='Footer navigation'>
+          <ul class='space-y-2'>
+            <!-- Blog link -->
+            <li>
+              <a
+                href='/blog'
+                class='text-gray-900 dark:text-white dark:hover:text-white transition-colors'
+              >
+                Blog
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </section>
 
       <!-- Social Section -->
-      <div>
+      <section>
         <h3 class='text-lg font-semibold mb-4'>Connect</h3>
         <!-- Email contact -->
-        <div class='mb-4'>
+        <address class='mb-4 not-italic'>
           <a
             href='mailto:theeruttop@gmail.com'
             class='text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors flex items-center'
@@ -81,10 +83,10 @@ const currentYear = new Date().getFullYear();
             </svg>
             theeruttop@gmail.com
           </a>
-        </div>
+        </address>
         
         <!-- Social media links -->
-        <div class='flex space-x-4'>
+        <nav aria-label='Social media links' class='flex space-x-4'>
           <!-- GitHub link with icon -->
           <a
             href='https://github.com/topkoong'
@@ -116,8 +118,8 @@ const currentYear = new Date().getFullYear();
               ></path>
             </svg>
           </a>
-        </div>
-      </div>
+        </nav>
+      </section>
     </div>
 
     <!-- Copyright notice -->
