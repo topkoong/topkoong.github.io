@@ -110,9 +110,9 @@ const sortedPosts = publishedPosts
     - Floating particle animation system
     - Layered z-index management for proper stacking
   -->
-
-  <!-- Full Page Container with Minimum Height -->
-  <div class='min-h-screen relative'>
+  
+  <!-- Page Container with Background Effects -->
+  <div class='relative'>
     <!-- 
       Background Gradient Overlay
       - Fixed positioning covers entire viewport
@@ -180,16 +180,16 @@ const sortedPosts = publishedPosts
 
     <!-- 
       ===========================================
-      MAIN CONTENT CONTAINER
+      PAGE CONTENT CONTAINER
       ===========================================
       
-      Semantic HTML5 Structure:
-      - <main>: Primary content area (one per page)
+      Note: <main> element is provided by Layout.astro
+      This div provides additional styling and z-index layering
       - Responsive container with max-width constraint
       - Proper z-index layering above background effects
       - Horizontal padding for mobile responsiveness
     -->
-    <main class='relative z-20 max-w-5xl mx-auto px-4'>
+    <div class='relative z-20 max-w-5xl mx-auto px-4'>
       <!-- 
         ===========================================
         HERO SECTION - INTRODUCTION & BRANDING
@@ -433,7 +433,7 @@ const sortedPosts = publishedPosts
           </div>
         </div>
       </section>
-    </main>
+    </div>
   </div>
 
   <!-- 
