@@ -1,4 +1,21 @@
 ---
+/**
+ * Homepage - Personal Portfolio Landing Page
+ *
+ * This is the main landing page for the personal portfolio website.
+ * Features include:
+ * - Animated hero section with typing effects
+ * - Recent blog posts showcase
+ * - Social media links
+ * - Responsive design with dark mode support
+ * - Floating particle animations
+ *
+ * @file src/pages/index.astro
+ * @author Theeruttop (Top)
+ * @version 1.0.0
+ */
+
+// Layout and Component Imports
 import Layout from '../layouts/Layout.astro';
 import BlogCard from '../components/BlogCard.astro';
 import GradualSpacing from '../components/GradualSpacing.astro';
@@ -6,21 +23,39 @@ import TypingEffect from '../components/TypingEffect.astro';
 import StaggeredFade from '../components/StaggeredFade.astro';
 import RotateWords from '../components/RotateWords.astro';
 
-// Define types for our markdown content
+/**
+ * Frontmatter interface for blog post metadata
+ * Defines the structure of frontmatter data extracted from markdown files
+ */
 interface Frontmatter {
-  title: string;
-  date: string;
-  description: string;
-  published?: boolean; // Optional boolean to control post visibility
+  title: string; // Blog post title
+  date: string; // Publication date (ISO format)
+  description: string; // Post description/summary
+  published?: boolean; // Optional visibility control (defaults to true)
 }
 
-// Type for the resolved markdown module
+/**
+ * Markdown module interface
+ * Represents the structure of imported markdown files
+ */
 interface MarkdownModule {
   frontmatter: Frontmatter;
-  Content: any;
+  Content: any; // Astro's compiled markdown content
 }
 
-// Get all markdown files
+/**
+ * Blog Posts Processing Pipeline
+ *
+ * This section handles the complete blog post processing workflow:
+ * 1. Import all markdown files from the blog/posts directory
+ * 2. Extract frontmatter and content
+ * 3. Generate URL slugs from file paths
+ * 4. Filter published posts
+ * 5. Sort by date (newest first)
+ * 6. Limit to 3 most recent posts for homepage display
+ */
+
+// Import all markdown files from blog posts directory
 const posts = await Promise.all(
   Object.entries(
     import.meta.glob<{ frontmatter: Frontmatter }>('./blog/posts/*.md')
@@ -28,17 +63,19 @@ const posts = await Promise.all(
     const post = await resolver();
     return {
       ...post,
+      // Generate clean URL slug from file path
       slug: path.replace('./blog/posts/', '').replace('.md', ''),
     };
   })
 );
 
-// Filter only published posts (default to true if published field is not specified)
+// Filter posts based on published status
+// Posts are published by default unless explicitly set to false
 const publishedPosts = posts.filter(
   (post) => post.frontmatter.published !== false
 );
 
-// Sort posts by date and get the latest 3
+// Sort posts chronologically and select the 3 most recent for homepage
 const sortedPosts = publishedPosts
   .sort(
     (a, b) =>
@@ -48,20 +85,53 @@ const sortedPosts = publishedPosts
   .slice(0, 3);
 ---
 
+<!-- 
+  ===========================================
+  PAGE LAYOUT CONFIGURATION
+  ===========================================
+  
+  SEO and Meta Configuration:
+  - title: Primary page title for search engines and browser tabs
+  - description: Meta description for search engine snippets
+  - keywords: SEO keywords for content discovery
+-->
 <Layout
   title="Toppy's Digital Playground"
   description='Software Engineer sharing insights on full-stack development, automation, and scaling knowledge through practical tutorials and thoughts.'
   keywords='software engineer, full-stack development, automation, tutorials, blog, programming, web development, Theeruttop, Toppy'
 >
-  <!-- Full Page Background -->
+  <!-- 
+    ===========================================
+    PAGE BACKGROUND AND VISUAL EFFECTS
+    ===========================================
+    
+    This section creates the immersive background experience:
+    - Full-screen gradient overlay with dark mode support
+    - Floating particle animation system
+    - Layered z-index management for proper stacking
+  -->
+
+  <!-- Full Page Container with Minimum Height -->
   <div class='min-h-screen relative'>
-    <!-- Background gradient for entire page -->
+    <!-- 
+      Background Gradient Overlay
+      - Fixed positioning covers entire viewport
+      - Subtle gradient with transparency for readability
+      - Dark mode variants for theme switching
+      - Lowest z-index to stay behind content
+    -->
     <div
       class='fixed inset-0 bg-gradient-to-br from-purple-50/30 via-blue-50/20 to-pink-50/30 dark:from-purple-900/10 dark:via-blue-900/5 dark:to-pink-900/10 z-0'
     >
     </div>
 
-    <!-- Floating Particles for entire page -->
+    <!-- 
+      Floating Particles Animation System
+      - 50 individual particles with unique animations
+      - Fixed positioning for viewport coverage
+      - Pointer events disabled to prevent interaction interference
+      - Layered above background but below content
+    -->
     <div
       class='fixed inset-0 particles-container overflow-hidden pointer-events-none z-1'
     >
@@ -108,17 +178,52 @@ const sortedPosts = publishedPosts
       </div><div class='particle'></div><div class='particle'></div>
     </div>
 
-    <!-- Content with relative positioning -->
-    <main class='relative z-30 max-w-4xl mx-auto'>
-      {/* Hero Section */}
-      <section class='py-20 text-left relative overflow-hidden'>
-        <header class='relative space-y-12'>
-          <!-- Main heading with standout typography -->
-          <section class='text-center'>
-            <GradualSpacing
-              text="Hey, I'm Top."
-              className='text-7xl md:text-8xl font-black tracking-tight mb-8 leading-tight standout-title'
-            />
+    <!-- 
+      ===========================================
+      MAIN CONTENT CONTAINER
+      ===========================================
+      
+      Semantic HTML5 Structure:
+      - <main>: Primary content area (one per page)
+      - Responsive container with max-width constraint
+      - Proper z-index layering above background effects
+      - Horizontal padding for mobile responsiveness
+    -->
+    <main class='relative z-20 max-w-5xl mx-auto px-4'>
+      <!-- 
+        ===========================================
+        HERO SECTION - INTRODUCTION & BRANDING
+        ===========================================
+        
+        Semantic Structure:
+        - <header>: Site introduction and branding
+        - <h1>: Primary page heading (SEO critical)
+        - Progressive enhancement with animations
+        - Accessible markup with proper heading hierarchy
+      -->
+      <header class='py-12 text-center relative overflow-hidden mb-12'>
+        <!-- 
+          Hero Content Container
+          - Vertical spacing between content blocks
+          - Responsive design considerations
+        -->
+        <div class='relative space-y-6'>
+          <!-- 
+            Primary Branding Section
+            - Main name/title with animated typography
+            - Secondary name with typing effect
+            - Proper heading hierarchy (h1)
+          -->
+          <div class='text-center'>
+            <!-- Primary heading with gradient text effect -->
+            <h1 class='mb-8'>
+              <GradualSpacing
+                text="Hey, I'm Top."
+                className='text-7xl md:text-8xl font-black tracking-tight leading-tight standout-title'
+              />
+            </h1>
+
+            <!-- Secondary name with typing animation -->
             <div class='mt-4'>
               <TypingEffect
                 text='Theerut'
@@ -129,8 +234,13 @@ const sortedPosts = publishedPosts
             </div>
           </div>
 
-          <!-- Subtitle with clean design -->
-          <section class='text-center'>
+          <!-- 
+            Professional Title Section
+            - Animated word-by-word reveal
+            - Professional description with staggered timing
+            - Color-coded for visual hierarchy
+          -->
+          <div class='text-center'>
             <StaggeredFade
               words={[
                 'Software',
@@ -150,8 +260,13 @@ const sortedPosts = publishedPosts
             />
           </div>
 
-          <!-- Description with Rotate Words animation -->
-          <section class='text-center space-y-8'>
+          <!-- 
+            Personal Description Section
+            - Rotating action words for dynamic content
+            - Personal narrative and value proposition
+            - Accessible text with proper contrast
+          -->
+          <div class='text-center space-y-6'>
             <div
               class='text-gray-700 dark:text-gray-200 leading-relaxed text-xl max-w-3xl mx-auto px-8 py-6'
             >
@@ -193,14 +308,30 @@ const sortedPosts = publishedPosts
                 techniques I use to make development easier.
               </p>
             </div>
-          </section>
-        </header>
-      </section>
+          </div>
+        </div>
+      </header>
 
-      {/* Blog Section */}
-      <section class='py-16 border-t border-gray-200 dark:border-gray-800'>
+      <!-- 
+        ===========================================
+        RECENT BLOG POSTS SHOWCASE
+        ===========================================
+        
+        Semantic Structure:
+        - <section>: Distinct content area for blog posts
+        - <h2>: Secondary heading (proper hierarchy)
+        - <article>: Individual blog post entries
+        - Responsive grid layout with accessibility considerations
+      -->
+      <section class='py-8'>
+        <!-- 
+          Section Header with Navigation
+          - Animated fade-in for progressive enhancement
+          - Clear section title with proper heading hierarchy
+          - Call-to-action link to full blog listing
+        -->
         <div class='animate-fade-in-up' style='animation-delay: 400ms'>
-          <div class='flex justify-between items-baseline mb-12'>
+          <div class='flex justify-between items-baseline mb-8'>
             <h2 class='text-4xl font-bold text-gray-900 dark:text-white'>
               Recent Posts
             </h2>
@@ -225,10 +356,16 @@ const sortedPosts = publishedPosts
             </a>
           </div>
 
+          <!-- 
+            Blog Posts Grid
+            - Responsive grid layout (1 col mobile, 2 tablet, 3 desktop)
+            - Individual articles with staggered animations
+            - Semantic <article> elements for each post
+          -->
           <div class='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
             {
               sortedPosts.map((post, index) => (
-                <div
+                <article
                   class='animate-fade-in-up'
                   style={`animation-delay: ${600 + index * 100}ms`}
                 >
@@ -238,21 +375,34 @@ const sortedPosts = publishedPosts
                     date={new Date(post.frontmatter.date).toLocaleDateString()}
                     slug={post.slug}
                   />
-                </div>
+                </article>
               ))
             }
           </div>
         </div>
       </section>
 
-      {/* Social Links */}
-      <section class='py-16 border-t border-gray-200 dark:border-gray-800'>
+      <!-- 
+        ===========================================
+        SOCIAL MEDIA LINKS & CONTACT
+        ===========================================
+        
+        Semantic Structure:
+        - <section>: Distinct content area for social links
+        - <h3>: Tertiary heading (proper hierarchy)
+        - <nav>: Navigation element for external links
+        - Accessible social media icons with proper labels
+      -->
+      <section class='py-8'>
         <div class='animate-fade-in-up' style='animation-delay: 800ms'>
           <div class='text-center'>
-            <h3 class='text-2xl font-bold text-gray-900 dark:text-white mb-8'>
+            <h3 class='text-2xl font-bold text-gray-900 dark:text-white mb-6'>
               Let's Connect
             </h3>
-            <div class='flex justify-center space-x-8'>
+            <nav
+              class='flex justify-center space-x-8'
+              aria-label='Social media links'
+            >
               <a
                 href='https://github.com/topkoong'
                 target='_blank'
@@ -279,15 +429,36 @@ const sortedPosts = publishedPosts
                   ></path>
                 </svg>
               </a>
-            </div>
+            </nav>
           </div>
         </div>
       </section>
     </main>
   </div>
 
+  <!-- 
+    ===========================================
+    STYLESHEET - ANIMATIONS & VISUAL EFFECTS
+    ===========================================
+    
+    This stylesheet contains:
+    - CSS animations for progressive enhancement
+    - Responsive design utilities
+    - Dark mode support
+    - Performance optimizations
+    - Accessibility considerations
+  -->
   <style>
-    /* ===== BASE ANIMATIONS ===== */
+    /* 
+      ===========================================
+      BASE ANIMATIONS
+      ===========================================
+      
+      Core animation keyframes for page elements:
+      - Fade-in-up: Standard entrance animation
+      - Typewriter: Text typing effect
+      - Blink-caret: Cursor blinking animation
+    */
     @keyframes fade-in-up {
       from {
         opacity: 0;
