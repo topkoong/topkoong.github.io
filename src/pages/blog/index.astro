@@ -82,7 +82,7 @@ const sortedPosts = publishedPosts.sort(
     </div>
 
     <!-- Content with relative positioning -->
-    <div class='relative z-20 max-w-5xl mx-auto'>
+    <main class='relative z-20 max-w-5xl mx-auto'>
     <!-- Hero Section -->
     <section class='py-16 text-center relative overflow-hidden mb-16'>
       <!-- Background gradient -->
@@ -102,26 +102,26 @@ const sortedPosts = publishedPosts.sort(
         <div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div><div class='particle'></div>
       </div>
       
-      <div class='relative space-y-8 px-8'>
+      <header class='relative space-y-8 px-8'>
         <!-- Main heading with The Verge style -->
-        <div class='animate-fade-in-up'>
+        <section class='animate-fade-in-up'>
           <GradualSpacingPure 
             text="The Blog" 
             className="text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-tight verge-title"
           />
-        </div>
+        </section>
 
         <!-- Subtitle with sophisticated styling -->
-        <div class='animate-fade-in-up' style='animation-delay: 300ms'>
+        <section class='animate-fade-in-up' style='animation-delay: 300ms'>
           <StaggeredFadePure 
             words={["Insights,", "tutorials,", "and", "thoughts", "from", "the", "frontlines", "of", "software", "engineering"]}
             className="text-xl text-slate-600 dark:text-slate-300 font-light leading-relaxed max-w-3xl mx-auto"
             delay={0.12}
           />
-        </div>
+        </section>
 
         <!-- Elegant stats section -->
-        <div class='animate-fade-in-up' style='animation-delay: 600ms'>
+        <section class='animate-fade-in-up' style='animation-delay: 600ms'>
           <div class='flex justify-center items-center space-x-12 mt-12'>
             <div class='stat-item animate-bounce-in' style='animation-delay: 1.5s'>
               <TypingEffectPure 
@@ -261,7 +261,7 @@ const sortedPosts = publishedPosts.sort(
         <p class='text-xl text-gray-600 dark:text-gray-400 animate-reveal-text' style='animation-delay: 1.9s'>Check back soon for new content!</p>
       </div>
     )}
-  </div>
+    </main>
 
   <!-- Enhanced Framer Motion Script -->
   <script>

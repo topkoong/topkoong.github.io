@@ -109,12 +109,12 @@ const sortedPosts = publishedPosts
     </div>
 
     <!-- Content with relative positioning -->
-    <div class='relative z-30 max-w-4xl mx-auto'>
+    <main class='relative z-30 max-w-4xl mx-auto'>
       {/* Hero Section */}
       <section class='py-20 text-left relative overflow-hidden'>
-        <div class='relative space-y-12'>
+        <header class='relative space-y-12'>
           <!-- Main heading with standout typography -->
-          <div class='text-center'>
+          <section class='text-center'>
             <GradualSpacingPure
               text="Hey, I'm Top."
               className='text-7xl md:text-8xl font-black tracking-tight mb-8 leading-tight standout-title'
@@ -130,7 +130,7 @@ const sortedPosts = publishedPosts
           </div>
 
           <!-- Subtitle with clean design -->
-          <div class='text-center'>
+          <section class='text-center'>
             <StaggeredFadePure
               words={[
                 'Software',
@@ -151,7 +151,7 @@ const sortedPosts = publishedPosts
           </div>
 
           <!-- Description with Rotate Words animation -->
-          <div class='text-center space-y-8'>
+          <section class='text-center space-y-8'>
             <div
               class='text-gray-700 dark:text-gray-200 leading-relaxed text-xl max-w-3xl mx-auto px-8 py-6'
             >
@@ -193,8 +193,8 @@ const sortedPosts = publishedPosts
                 techniques I use to make development easier.
               </p>
             </div>
-          </div>
-        </div>
+          </section>
+        </header>
       </section>
 
       {/* Blog Section */}
@@ -283,7 +283,7 @@ const sortedPosts = publishedPosts
           </div>
         </div>
       </section>
-    </div>
+    </main>
   </div>
 
   <style>
